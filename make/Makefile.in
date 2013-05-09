@@ -1,30 +1,53 @@
+# FIXME: Where to add this?
 MAKE_ENV=PATH=$(TARGET_PATH) $(FREETZ_LD_RUN_PATH)
 
-BUILD_FAIL_MSG:= Build failed.
-ifneq ($(strip $(FREETZ_VERBOSITY_LEVEL)),2)
-BUILD_FAIL_MSG += Please re-run make with verbose level set to 2 to see what's going on.
+#BUILD_FAIL_MSG:= Build failed.
+#ifneq ($(strip $(FREETZ_VERBOSITY_LEVEL)),2)
+#BUILD_FAIL_MSG += Please re-run make with verbose level set to 2 to see what's going on.
+#endif
+
+#SUBMAKE1=cmd() { $(MAKE_ENV) $(MAKE1) $(QUIET) "$$@" $(SILENT) || { $(call ERROR,1,$(BUILD_FAIL_MSG)) } }; $(call _ECHO_BUILD) cmd
+#SUBMAKE=cmd() { $(MAKE_ENV) $(MAKE) $(QUIET) "$$@" $(SILENT) || { $(call ERROR,1,$(BUILD_FAIL_MSG)) } }; $(call _ECHO_BUILD) cmd
+#CONFIGURE=conf_cmd() { ./configure $(QUIET) "$$$$@" $(SILENT) || { $(call ERROR,1,$(BUILD_FAIL_MSG)) } };
+CONFIGURE_CMD = ./configure
+
+#HOSTCC:=gcc
+#HOST_STRIP:=strip --strip-all -R .note -R .comment
+
+#HOST_ARCH:=$(shell $(HOSTCC) -dumpmachine | sed -e s'/-.*//' \
+#	-e 's/sparc.*/sparc/' \
+#	-e 's/arm.*/arm/g' \
+#	-e 's/m68k.*/m68k/' \
+#	-e 's/ppc/powerpc/g' \
+#	-e 's/v850.*/v850/g' \
+#	-e 's/sh[234]/sh/' \
+#	-e 's/mips-.*/mips/' \
+#	-e 's/mipsel-.*/mipsel/' \
+#	-e 's/cris.*/cris/' \
+#	-e 's/i[3-9]86/i386/' \
+#	)
+#GNU_HOST_NAME:=$(HOST_ARCH)-pc-linux-gnu
+
+### OpenWRT ###
+#PKG_BUILD_PARALLEL ?=
+
+#Fixme: Fix when $(SUBMAKE) calls are replaced
+PKG_BUILD_PARALLEL:=1
+
+ifneq ($(FREETZ_PKG_BUILD_USE_JOBSERVER),)
+  MAKE_J:=$(if $(MAKE_JOBSERVER),$(MAKE_JOBSERVER) -j)
+else
+  MAKE_J:=-j$(FREETZ_PKG_BUILD_JOBS)
 endif
 
-SUBMAKE1=cmd() { $(MAKE_ENV) $(MAKE1) $(QUIET) "$$@" $(SILENT) || { $(call ERROR,1,$(BUILD_FAIL_MSG)) } }; $(call _ECHO_BUILD) cmd
-SUBMAKE=cmd() { $(MAKE_ENV) $(MAKE) $(QUIET) "$$@" $(SILENT) || { $(call ERROR,1,$(BUILD_FAIL_MSG)) } }; $(call _ECHO_BUILD) cmd
-CONFIGURE=conf_cmd() { ./configure $(QUIET) "$$$$@" $(SILENT) || { $(call ERROR,1,$(BUILD_FAIL_MSG)) } };
+ifeq ($(strip $(FREETZ_PKG_BUILD_PARALLEL)),0)
+PKG_JOBS?=-j1
+else
+PKG_JOBS?=$(if $(PKG_BUILD_PARALLEL)$(FREETZ_PKG_DEFAULT_PARALLEL),\
+        $(if $(FREETZ_PKG_BUILD_PARALLEL),$(MAKE_J),-j1),-j1)
+endif
+### OpenWRT ###
 
-HOSTCC:=gcc
-HOST_STRIP:=strip --strip-all -R .note -R .comment
-
-HOST_ARCH:=$(shell $(HOSTCC) -dumpmachine | sed -e s'/-.*//' \
-	-e 's/sparc.*/sparc/' \
-	-e 's/arm.*/arm/g' \
-	-e 's/m68k.*/m68k/' \
-	-e 's/ppc/powerpc/g' \
-	-e 's/v850.*/v850/g' \
-	-e 's/sh[234]/sh/' \
-	-e 's/mips-.*/mips/' \
-	-e 's/mipsel-.*/mipsel/' \
-	-e 's/cris.*/cris/' \
-	-e 's/i[3-9]86/i386/' \
-	)
-GNU_HOST_NAME:=$(HOST_ARCH)-pc-linux-gnu
 
 ifeq ($(strip $(FREETZ_TARGET_NLS)),y)
 DISABLE_NLS:=
@@ -70,19 +93,19 @@ TARGET_SPECIFIC_ROOT_DIR:=$(PACKAGES_DIR)/root
 unexport CONFIG_SITE
 CONFIG_SITE:=$(FREETZ_BASE_DIR)/$(INCLUDE_DIR)/site/$(TARGET_ARCH)-linux-uclibc
 
-TARGET_AR:=$(TARGET_MAKE_PATH)/$(TARGET_CROSS)ar
-TARGET_AS:=$(TARGET_MAKE_PATH)/$(TARGET_CROSS)as
-TARGET_CC:=$(TARGET_MAKE_PATH)/$(TARGET_CROSS)gcc
-TARGET_CXX:=$(TARGET_MAKE_PATH)/$(TARGET_CROSS)g++-wrapper
-TARGET_LD:=$(TARGET_MAKE_PATH)/$(TARGET_CROSS)ld
-TARGET_LDCONFIG:=$(TARGET_MAKE_PATH)/$(TARGET_CROSS)ldconfig
-TARGET_NM:=$(TARGET_MAKE_PATH)/$(TARGET_CROSS)nm
-TARGET_RANLIB:=$(TARGET_MAKE_PATH)/$(TARGET_CROSS)ranlib
-TARGET_READELF:=$(TARGET_MAKE_PATH)/$(TARGET_CROSS)readelf
-TARGET_STRIP:=$(TARGET_MAKE_PATH)/$(TARGET_CROSS)strip --remove-section={.comment,.note,.pdr}
+TARGET_AR:=$(TARGET_CROSS)ar
+TARGET_AS:=$(TARGET_CROSS)as
+TARGET_CC:=$(TARGET_CROSS)gcc
+TARGET_CXX:$(TARGET_CROSS)g++-wrapper
+TARGET_LD:=$(TARGET_CROSS)ld
+TARGET_LDCONFIG:=$(TARGET_CROSS)ldconfig
+TARGET_NM:=$(TARGET_CROSS)nm
+TARGET_RANLIB:=$(TARGET_CROSS)ranlib
+TARGET_READELF:=$(TARGET_CROSS)readelf
+TARGET_STRIP:=$(TARGET_CROSS)strip --remove-section={.comment,.note,.pdr}
 
 # Don't use TARGET_TOOLCHAIN_PATH here because it's not set
-TARGET_PATH="$(TARGET_MAKE_PATH):$(KERNEL_MAKE_PATH):$(PATH)"
+#TARGET_PATH="$(TOOLCHAIN_DIR_TARGET)/bin:$(TOOLCHAIN_DIR_KERNEL)/bin:$(PATH)"
 
 # We have some libraries (e.g. libcrypto) that should not be used by AVM binaries
 FREETZ_LIBRARY_PATH:=/usr/lib/freetz
@@ -410,6 +433,12 @@ $(PKG)_BUILD_PREREQ_HINT:=
 $(PKG)_CONFIGURE_DEFOPTS:=y
 $(PKG)_SOURCE_DIR:=$(SOURCE_DIR)
 $(PKG)_DIR:=$($(PKG)_SOURCE_DIR)/$(pkg)-$($(PKG)_VERSION)
+
+# OpenWRT: we need to override MAKEFLAGS
+# add + to make jobserver happy
+SUBMAKE:=+$(MAKE_ENV) MAKEFLAGS="" $(MAKE) $(PKG_JOBS)
+SUBMAKE1:=$(MAKE_ENV) $(MAKE)
+
 # $(pkg)-precompiled--int must be the first target, it will depend on DEPENDS_ON
 $(pkg)-precompiled: $(pkg)-precompiled--int $(pkg)-clean-echo-item $(pkg) $(pkg)-clean-not-included--int
 $(pkg)-clean-echo-item:
@@ -599,11 +628,11 @@ PKG_SOURCE_DOWNLOAD=$(eval $(PKG_SOURCE_DOWNLOAD__INT))
 # $2: directory files to be unpacked to
 # $3: file extension
 define UNPACK_CMD__INT
-	$(if $(filter .gz .tgz .taz,$(3)),$(TOOLS_DIR)/gunzip -c $(1)) \
-	$(if $(filter .bzip2 .bz2 .bz .tbz2 .tbz .tz2,$(3)),$(TOOLS_DIR)/bunzip2 -c $(1)) \
-	$(if $(filter .xz .txz,$(3)),$(TOOLS_DIR)/unxz -c $(1)) \
-	$(if $(filter .lzma .tlz,$(3)),$(TOOLS_DIR)/unlzma -c $(1)) \
-	$(if $(filter .Z .taZ,$(3)),$(TOOLS_DIR)/uncompress -c $(1)) \
+	$(if $(filter .gz .tgz .taz,$(3)),gunzip -c $(1)) \
+	$(if $(filter .bzip2 .bz2 .bz .tbz2 .tbz .tz2,$(3)),bunzip2 -c $(1)) \
+	$(if $(filter .xz .txz,$(3)),unxz -c $(1)) \
+	$(if $(filter .lzma .tlz,$(3)),/unlzma -c $(1)) \
+	$(if $(filter .Z .taZ,$(3)),uncompress -c $(1)) \
 	$(if $(filter .tar,$(3)),cat $(1)) \
 	$(if $(filter .zip,$(3)),unzip $(QUIETSHORT) -u $(1) -d $(2)) \
 	$(if $(filter .gz .tgz .taz .bzip2 .bz2 .bz .tbz2 .tbz .tz2 .xz .txz .lzma .tlz .Z .taZ .tar,$(3)),| tar -C $(2) $(VERBOSE) -x)
@@ -665,7 +694,7 @@ endef
 
 ## Unpack and patch binary package
 define PKG_UNPACKED_BIN__INT
-$($(PKG)_DIR)/.unpacked: $(DL_DIR)/$($(PKG)_SOURCE) $(if $($(PKG)_CUSTOM_UNPACK),$($(PKG)_DIR)/.build-prereq-checked) | $(PKG)_SOURCE_DIR busybox-tools
+$($(PKG)_DIR)/.unpacked: $(DL_DIR)/$($(PKG)_SOURCE) $(if $($(PKG)_CUSTOM_UNPACK),$($(PKG)_DIR)/.build-prereq-checked) | $(PKG)_SOURCE_DIR $(tools/stamp-install)
 	@$(call _ECHO,preparing... )
 	@$(call RMDIR_KEEP_FILES__INT,$($(PKG)_DIR),.build-prereq-checked)
 	$(call PKG_UNPACK)
@@ -689,7 +718,7 @@ endef
 
 ## Unpack and patch library package
 define PKG_UNPACKED_LIB__INT
-$($(PKG)_DIR)/.unpacked: $(DL_DIR)/$($(PKG)_SOURCE) $(if $($(PKG)_CUSTOM_UNPACK),$($(PKG)_DIR)/.build-prereq-checked) | $(PKG)_SOURCE_DIR busybox-tools
+$($(PKG)_DIR)/.unpacked: $(DL_DIR)/$($(PKG)_SOURCE) $(if $($(PKG)_CUSTOM_UNPACK),$($(PKG)_DIR)/.build-prereq-checked) | $(PKG)_SOURCE_DIR $(tools/stamp-install)
 	@$(call _ECHO,preparing... )
 	@$(call RMDIR_KEEP_FILES__INT,$($(PKG)_DIR),.build-prereq-checked)
 	$(call PKG_UNPACK)
@@ -776,8 +805,8 @@ $(PKG)_FREETZ_CHANGES_CHECK: $(PKG)_SOURCE_DIR
 		mv $($(PKG)_FREETZ_CHANGES_FILE).temp $($(PKG)_FREETZ_CHANGES_FILE); \
 	fi
 	@$(RM) $($(PKG)_FREETZ_CHANGES_FILE).temp
-$(pkg) $(pkg)-precompiled $(pkg)-build-prereq: $(PKG)_FREETZ_CHANGES_CHECK
-.PHONY: $(PKG)_FREETZ_CHANGES_CHECK
+$(pkg) $(pkg)-precompiled $(pkg)-build-prereq: #$(PKG)_FREETZ_CHANGES_CHECK
+#.PHONY: $(PKG)_FREETZ_CHANGES_CHECK
 endef
 
 PKG_UNPACKED=$(eval $(PKG_UNPACKED_SOURCE__INT))
@@ -801,22 +830,23 @@ define PKG_CONFIGURED_CONFIGURE__INT
 $(PKG_CONFIGURED_COMMON__INT)
 $($(PKG)_DIR)/.configured: $($(PKG)_DIR)/.build-prereq-checked $($(PKG)_DIR)/.unpacked
 	@$(call _ECHO,configuring... )
-	($(CONFIGURE) \
-		cd $($(PKG)_DIR); \
-		$(if $(strip $(FREETZ_BACKUP_CONFIG_CACHE)),$(call BACKUP_CONFIG_CACHE,before-$(pkg)),) \
+	(cd $($(PKG)_DIR); \
 		$(TARGET_CONFIGURE_PRE_CMDS) \
 		$($(PKG)_CONFIGURE_PRE_CMDS) \
-		$(if $(strip $($(PKG)_BUILD_SUBDIR)),cd $(strip $($(PKG)_BUILD_SUBDIR));,) \
-		$(TARGET_CONFIGURE_ENV) \
-		$($(PKG)_CONFIGURE_ENV) \
-		FREETZ_TARGET_LFS="$(strip $(FREETZ_TARGET_LFS))" \
-		CONFIG_SITE=$(CONFIG_SITE) \
-		conf_cmd \
-		$(if $(findstring y,$($(PKG)_CONFIGURE_DEFOPTS)), $(TARGET_CONFIGURE_OPTIONS)) \
-		$($(PKG)_CONFIGURE_OPTIONS) \
-		$(if $(strip $($(PKG)_BUILD_SUBDIR)),&& { cd $(abspath $($(PKG)_DIR)); },) \
-		$(if $($(PKG)_CONFIGURE_POST_CMDS),&& { $($(PKG)_CONFIGURE_POST_CMDS) },) \
-		$(if $(strip $(FREETZ_BACKUP_CONFIG_CACHE)),&& { $(call BACKUP_CONFIG_CACHE,after-$(pkg)) },) \
+		if [ -x $(CONFIGURE_CMD) ]; then \
+			$(if $(strip $(FREETZ_BACKUP_CONFIG_CACHE)),$(call BACKUP_CONFIG_CACHE,before-$(pkg)),) \
+			$(if $(strip $($(PKG)_BUILD_SUBDIR)),cd $(strip $($(PKG)_BUILD_SUBDIR));,) \
+			$(TARGET_CONFIGURE_ENV) \
+			$($(PKG)_CONFIGURE_ENV) \
+			FREETZ_TARGET_LFS="$(strip $(FREETZ_TARGET_LFS))" \
+			CONFIG_SITE=$(CONFIG_SITE) \
+			$(CONFIGURE_CMD) \
+			$(if $(findstring y,$($(PKG)_CONFIGURE_DEFOPTS)), $(TARGET_CONFIGURE_OPTIONS)) \
+			$($(PKG)_CONFIGURE_OPTIONS) \
+			$(if $(strip $($(PKG)_BUILD_SUBDIR)),&& { cd $(abspath $($(PKG)_DIR)); },) \
+			$(if $($(PKG)_CONFIGURE_POST_CMDS),&& { $($(PKG)_CONFIGURE_POST_CMDS) },) \
+			$(if $(strip $(FREETZ_BACKUP_CONFIG_CACHE)),&& { $(call BACKUP_CONFIG_CACHE,after-$(pkg)) },); \
+		fi; \
 	)
 	@touch $$@
 endef

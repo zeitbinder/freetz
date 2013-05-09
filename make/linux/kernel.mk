@@ -24,18 +24,24 @@ KERNEL_COMMON_MAKE_OPTIONS += ARCH="$(KERNEL_ARCH)"
 #KERNEL_COMMON_MAKE_OPTIONS += KERNEL_LAYOUT="$(KERNEL_LAYOUT)"
 KERNEL_COMMON_MAKE_OPTIONS += INSTALL_HDR_PATH=$(KERNEL_HEADERS_DEVEL_DIR)
 KERNEL_COMMON_MAKE_OPTIONS += INSTALL_MOD_PATH="$(FREETZ_BASE_DIR)/$(KERNEL_DIR)"
-ifeq ($(strip $(FREETZ_VERBOSITY_LEVEL)),2)
+ifeq ($(strip $(FREETZ_VERBOSITY_LEVEL)),3)
 KERNEL_COMMON_MAKE_OPTIONS += V=1
+else
+KERNEL_COMMON_MAKE_OPTIONS += V=''
 endif
+
+### OpenWRT ###
+SUBMAKE:=$(MAKE) $(PKG_JOBS)
+### OpenWRT ###
 
 $(DL_FW_DIR)/$(AVM_SOURCE): | $(DL_FW_DIR)
 	@$(call _ECHO, downloading...)
-	$(DL_TOOL) $(DL_FW_DIR) $(FREETZ_DL_KERNEL_SOURCE) $(FREETZ_DL_KERNEL_SITE) $(FREETZ_DL_KERNEL_SOURCE_MD5) $(SILENT)
+	$(DL_TOOL) $(DL_FW_DIR) $(AVM_SOURCE) $(FREETZ_DL_KERNEL_SITE) $(FREETZ_DL_KERNEL_SOURCE_MD5) $(SILENT)
 
 # Make sure that a perfectly clean build is performed whenever Freetz package
 # options have changed. The safest way to achieve this is by starting over
 # with the source directory.
-$(KERNEL_DIR)/.unpacked: $(DL_FW_DIR)/$(AVM_SOURCE) | gcc-kernel
+$(KERNEL_DIR)/.unpacked: $(DL_FW_DIR)/$(AVM_SOURCE) | $(tools/stamp-install) gcc-kernel
 	$(RM) -r $(KERNEL_DIR)
 	mkdir -p $(KERNEL_BUILD_DIR)
 	@$(call _ECHO,checking structure... )
@@ -157,13 +163,13 @@ $(TARGET_TOOLCHAIN_KERNEL_VERSION_HEADER): $(TOPDIR)/.config $(KERNEL_HEADERS_DE
 	@$(call COPY_KERNEL_HEADERS,$(KERNEL_HEADERS_DEVEL_DIR),$(TARGET_TOOLCHAIN_STAGING_DIR)/usr)
 	@touch $@
 
-$(KERNEL_BUILD_ROOT_DIR)/$(KERNEL_IMAGE): $(KERNEL_DIR)/.prepared $(TOOLS_DIR)/lzma $(TOOLS_DIR)/lzma2eva
+$(KERNEL_BUILD_ROOT_DIR)/$(KERNEL_IMAGE): $(KERNEL_DIR)/.prepared
 	$(call _ECHO, kernel image... )
 	$(SUBMAKE) $(KERNEL_COMMON_MAKE_OPTIONS) $(KERNEL_IMAGE)
 	touch -c $@
 
 kernel-force:
-	$(SUBMAKE) $(KERNEL_COMMON_MAKE_OPTIONS) $(KERNEL_IMAGE)
+	$(SUBMAKE) $(KERNEL_COMMON_MAKE_OPTIONS) drivers/net/ifxmips_switch_api/ifx_ethsw_flow_api.i #$(KERNEL_IMAGE)
 
 $(KERNEL_TARGET_DIR)/$(KERNEL_TARGET_BINARY): $(KERNEL_BUILD_ROOT_DIR)/$(KERNEL_IMAGE)
 	cp $(KERNEL_BUILD_ROOT_DIR)/$(KERNEL_IMAGE) $(KERNEL_TARGET_DIR)/$(KERNEL_TARGET_BINARY)
@@ -173,7 +179,7 @@ $(KERNEL_TARGET_DIR)/$(KERNEL_TARGET_BINARY): $(KERNEL_BUILD_ROOT_DIR)/$(KERNEL_
 
 $(KERNEL_DIR)/.modules-$(KERNEL_LAYOUT): $(KERNEL_BUILD_ROOT_DIR)/$(KERNEL_IMAGE)
 	@$(call _ECHO, modules... )
-	$(SUBMAKE) $(KERNEL_COMMON_MAKE_OPTIONS) modules
+	+$(SUBMAKE) $(KERNEL_COMMON_MAKE_OPTIONS) modules
 	$(SUBMAKE) $(KERNEL_COMMON_MAKE_OPTIONS) modules_install
 	touch $@
 
@@ -194,7 +200,7 @@ kernel-help:
 	$(SUBMAKE) $(KERNEL_COMMON_MAKE_OPTIONS) help
 
 kernel-menuconfig: $(KERNEL_DIR)/.configured
-	$(SUBMAKE) $(KERNEL_COMMON_MAKE_OPTIONS) menuconfig
+	$(_SINGLE)$(NO_TRACE_MAKE) $(KERNEL_COMMON_MAKE_OPTIONS) menuconfig
 	-cp -f $(KERNEL_BUILD_ROOT_DIR)/.config $(KERNEL_CONFIG_FILE) && \
 	touch $(KERNEL_DIR)/.configured
 
