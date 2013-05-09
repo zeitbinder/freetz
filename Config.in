@@ -1109,12 +1109,41 @@ menu "Build system options"
 		help
 			Show uncompressed sizes of libs, packages & modules too"
 
-
-	config FREETZ_JLEVEL
-		int "Number of jobs to run simultaneously"
-		default 2
+	config FREETZ_PKG_BUILD_PARALLEL
+		bool
+		prompt "Compile certain packages parallelized"
+		default y
 		help
-			Number of jobs to run simultanesouly
+		  This adds a -jX option to certain packages that are known to
+		  behave well for parallel build. By default the package make processes
+		  use the main jobserver, in which case this option only takes effect
+		  when you add -jX to the make command.
+
+		  If you are unsure, select N.
+
+       config FREETZ_PKG_BUILD_USE_JOBSERVER
+		bool
+		prompt "Use top-level make jobserver for packages"
+		depends on FREETZ_PKG_BUILD_PARALLEL
+		default y
+		help
+		  This passes the main make process jobserver fds to package builds,
+		  enabling full parallelization across different packages
+
+		  Note that disabling this may overcommit CPU resources depending on the
+		  -j level of the main make process, the number of package
+		  submake jobs selected below and the number of actual CPUs present.
+		  Example: If the main make is passed a -j4 and the submake -j
+		  is also set to 4, we may end up with 16 parallel make processes
+		  in the worst case.
+
+	config FREETZ_PKG_BUILD_JOBS
+		int "Number of package submake jobs (2-512)"
+		range 2 512
+		default 2
+		depends on FREETZ_PKG_BUILD_PARALLEL && !FREETZ_PKG_BUILD_USE_JOBSERVER
+                help
+		  The number of jobs (-jX) to pass to packages submake.
 
 	config FREETZ_CHECK_CHANGED
 		bool "Force package clean if it has changed"
@@ -1325,6 +1354,7 @@ menu "Override options"
 		default "7170_04.76-release_kernel.tar.xz" if FREETZ_AVM_VERSION_04_76
 		default "7170_04.80-release_kernel.tar.xz" if FREETZ_AVM_VERSION_04_80
 		default "7170_04.87-release_kernel.tar.xz" if FREETZ_AVM_VERSION_04_87
+		default "7330_05.50-release_kernel.tar.xz" if FREETZ_AVM_VERSION_7360_05_50
 		default "${FREETZ_AVM_VERSION_STRING}-release_kernel.tar.xz"
 
 	config FREETZ_DL_KERNEL_SOURCE_MD5
