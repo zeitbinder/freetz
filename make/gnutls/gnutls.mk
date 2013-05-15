@@ -19,7 +19,7 @@ $(PKG)_NOT_INCLUDED += $(patsubst %,$($(PKG)_DEST_DIR)/usr/bin/%,$(filter-out $(
 $(PKG)_LIBS_ALL := $($(PKG)_LIB) $($(PKG)_LIB_EXTRA) $($(PKG)_LIB_OPENSSL)
 $(PKG)_LIBS_EXTRA := $(if $(FREETZ_LIB_libgnutls_extra),$($(PKG)_LIB_EXTRA)) $(if $(FREETZ_LIB_libgnutls_openssl),$($(PKG)_LIB_OPENSSL))
 $(PKG)_LIBS_BUILD_DIR := $($(PKG)_LIB:%=$($(PKG)_DIR)/lib/.libs/%) $($(PKG)_LIBS_EXTRA:%=$($(PKG)_DIR)/libextra/.libs/%)
-$(PKG)_LIBS_STAGING_DIR := $(addprefix $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/,$($(PKG)_LIB) $($(PKG)_LIBS_EXTRA))
+$(PKG)_LIBS_STAGING_DIR := $(addprefix $(STAGING_DIR)/usr/lib/,$($(PKG)_LIB) $($(PKG)_LIBS_EXTRA))
 $(PKG)_LIBS_TARGET_DIR := $(addprefix $($(PKG)_TARGET_LIBDIR)/,$($(PKG)_LIB) $($(PKG)_LIBS_EXTRA))
 $(PKG)_NOT_INCLUDED += $(addprefix $($(PKG)_TARGET_LIBDIR)/, \
 	$(if $(FREETZ_LIB_libgnutls_extra),,$($(PKG)_LIB_EXTRA) libgnutls-extra.so.26 libgnutls-extra.so) \
@@ -46,10 +46,10 @@ $(PKG)_CONFIGURE_OPTIONS += --disable-gtk-doc-html
 $(PKG)_CONFIGURE_OPTIONS += --disable-gtk-doc-pdf
 $(PKG)_CONFIGURE_OPTIONS += --disable-openpgp-authentication
 $(PKG)_CONFIGURE_OPTIONS += --with-included-libcfg
-$(PKG)_CONFIGURE_OPTIONS += --with-libgcrypt-prefix="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
-$(PKG)_CONFIGURE_OPTIONS += --with-libtasn1-prefix="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
-$(PKG)_CONFIGURE_OPTIONS += --with-libreadline-prefix="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
-$(PKG)_CONFIGURE_OPTIONS += --with-libz-prefix="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-libgcrypt-prefix="$(STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-libtasn1-prefix="$(STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-libreadline-prefix="$(STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-libz-prefix="$(STAGING_DIR)/usr"
 $(PKG)_CONFIGURE_OPTIONS += --with-lzo=no
 $(PKG)_CONFIGURE_OPTIONS += --without-libreadline-prefix
 
@@ -62,16 +62,16 @@ $($(PKG)_BINARIES_BUILD_DIR) $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
 	$(SUBMAKE) -C $(GNUTLS_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libgnutls*.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/gnutls*.pc
+		$(STAGING_DIR)/usr/lib/libgnutls*.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/gnutls*.pc
 
 $($(PKG)_BINARIES_TARGET_DIR): $($(PKG)_DEST_DIR)/usr/bin/%: $($(PKG)_DIR)/src/.libs/%
 	$(INSTALL_BINARY_STRIP)
 
-$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_LIBDIR)/%: $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%
+$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_LIBDIR)/%: $(STAGING_DIR)/usr/lib/%
 	$(INSTALL_LIBRARY_STRIP)
 
 $(pkg):
@@ -81,10 +81,10 @@ $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR) $($(PKG)_LIBS_TARGET_DIR)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(GNUTLS_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libgnutls* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/gnutls*.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/gnutls \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/{certtool,gnutls*,psktool,srptool}
+		$(STAGING_DIR)/usr/lib/libgnutls* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/gnutls*.pc \
+		$(STAGING_DIR)/usr/include/gnutls \
+		$(STAGING_DIR)/usr/bin/{certtool,gnutls*,psktool,srptool}
 
 $(pkg)-uninstall:
 	$(RM) $(GNUTLS_BINARIES_ALL:%=$(GNUTLS_DEST_DIR)/usr/bin/%) $(GNUTLS_TARGET_LIBDIR)/libgnutls*

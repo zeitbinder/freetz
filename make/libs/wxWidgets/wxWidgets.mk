@@ -7,7 +7,7 @@ $(PKG)_SITE:=@SF/wxwindows
 
 $(PKG)_LIBNAME:=libwx_baseu-$($(PKG)_MAJOR_VERSION).so.$($(PKG)_LIB_VERSION)
 $(PKG)_BINARY:=$($(PKG)_DIR)/lib/$($(PKG)_LIBNAME)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$($(PKG)_LIBNAME)
 
 $(PKG)_DEPENDS_ON += $(STDCXXLIB)
@@ -66,13 +66,13 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(WXWIDGETS_DIR) \
 		HOST_SUFFIX="" \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install_monolib_static \
 		install
 	$(SED) -i -r \
-		-e 's,TARGET_TOOLCHAIN_STAGING_DIR_PLACEHOLDER,$(TARGET_TOOLCHAIN_STAGING_DIR),g' \
+		-e 's,STAGING_DIR_PLACEHOLDER,$(STAGING_DIR),g' \
 		-e 's,(wx_baseu-$(WXWIDGETS_MAJOR_VERSION))-$(TARGET_ARCH)-linux,\1,g' \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/wx/config/*-$(WXWIDGETS_MAJOR_VERSION)
+		$(STAGING_DIR)/usr/lib/wx/config/*-$(WXWIDGETS_MAJOR_VERSION)
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP_WILDCARD_BEFORE_SO)
@@ -84,12 +84,12 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(WXWIDGETS_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libwx_* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/wx/ \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/wx-config \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/wx-$(WXWIDGETS_MAJOR_VERSION) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/aclocal/wx* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/bakefile/presets/wx*
+		$(STAGING_DIR)/usr/lib/libwx_* \
+		$(STAGING_DIR)/usr/lib/wx/ \
+		$(STAGING_DIR)/usr/bin/wx-config \
+		$(STAGING_DIR)/usr/include/wx-$(WXWIDGETS_MAJOR_VERSION) \
+		$(STAGING_DIR)/usr/share/aclocal/wx* \
+		$(STAGING_DIR)/usr/share/bakefile/presets/wx*
 
 $(pkg)-uninstall:
 	$(RM) $(WXWIDGETS_TARGET_DIR)/libwx_*.so*

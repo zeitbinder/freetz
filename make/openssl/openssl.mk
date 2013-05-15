@@ -14,7 +14,7 @@ $(PKG)_LIBNAMES_SHORT := libssl libcrypto
 $(PKG)_LIBNAMES_LONG := $($(PKG)_LIBNAMES_SHORT:%=%.so.$($(PKG)_LIB_VERSION))
 
 $(PKG)_LIBS_BUILD_DIR :=$($(PKG)_LIBNAMES_LONG:%=$($(PKG)_DIR)/%)
-$(PKG)_LIBS_STAGING_DIR := $($(PKG)_LIBNAMES_LONG:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%)
+$(PKG)_LIBS_STAGING_DIR := $($(PKG)_LIBNAMES_LONG:%=$(STAGING_DIR)/usr/lib/%)
 $(PKG)_LIBS_TARGET_DIR := $($(PKG)_LIBNAMES_LONG:%=$($(PKG)_TARGET_LIBDIR)/%)
 
 $(PKG)_REBUILD_SUBOPTS += FREETZ_OPENSSL_VERSION_0
@@ -45,7 +45,7 @@ $(PKG)_MAKE_FLAGS += RANLIB="$(TARGET_RANLIB)"
 $(PKG)_MAKE_FLAGS += NM="$(TARGET_NM)"
 $(PKG)_MAKE_FLAGS += FREETZ_MOD_OPTIMIZATION_FLAGS="$(TARGET_CFLAGS)"
 $(PKG)_MAKE_FLAGS += SHARED_LDFLAGS=""
-$(PKG)_MAKE_FLAGS += INSTALL_PREFIX="$(TARGET_TOOLCHAIN_STAGING_DIR)"
+$(PKG)_MAKE_FLAGS += INSTALL_PREFIX="$(STAGING_DIR)"
 
 $(PKG_SOURCE_DOWNLOAD)
 $(PKG_UNPACKED)
@@ -64,12 +64,12 @@ $($(PKG)_BINARY_BUILD_DIR) $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
 	$(SUBMAKE) $(OPENSSL_MAKE_FLAGS) install
 	$(call PKG_FIX_LIBTOOL_LA,prefix) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/{libcrypto,libssl,openssl}.pc
+		$(STAGING_DIR)/usr/lib/pkgconfig/{libcrypto,libssl,openssl}.pc
 
 $($(PKG)_BINARY_TARGET_DIR): $($(PKG)_BINARY_BUILD_DIR)
 	$(INSTALL_BINARY_STRIP)
 
-$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_LIBDIR)/%: $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%
+$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_LIBDIR)/%: $(STAGING_DIR)/usr/lib/%
 	$(INSTALL_LIBRARY_STRIP)
 
 $(pkg): $($(PKG)_LIBS_STAGING_DIR)
@@ -81,10 +81,10 @@ $(pkg)-clean: $(pkg)-clean-staging
 
 $(pkg)-clean-staging:
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/openssl* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/{libssl,libcrypto}* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/{libssl,libcrypto,openssl}* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/openssl
+		$(STAGING_DIR)/usr/bin/openssl* \
+		$(STAGING_DIR)/usr/lib/{libssl,libcrypto}* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/{libssl,libcrypto,openssl}* \
+		$(STAGING_DIR)/usr/include/openssl
 
 $(pkg)-uninstall:
 	$(RM) $(OPENSSL_BINARY_TARGET_DIR) $(OPENSSL_TARGET_LIBDIR)/{libssl,libcrypto}*.so*

@@ -6,13 +6,13 @@ $(PKG)_SITE:=ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
 $(PKG)_LIB_VERSION:=1.2.0
 $(PKG)_LIBNAME=libpcre.so.$($(PKG)_LIB_VERSION)
 $(PKG)_BINARY:=$($(PKG)_DIR)/.libs/$($(PKG)_LIBNAME)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$($(PKG)_LIBNAME)
 
 $(PKG)_POSIX_LIB_VERSION:=0.0.1
 $(PKG)_POSIX_LIBNAME=libpcreposix.so.$($(PKG)_POSIX_LIB_VERSION)
 $(PKG)_POSIX_BINARY:=$($(PKG)_DIR)/.libs/$($(PKG)_POSIX_LIBNAME)
-$(PKG)_POSIX_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$($(PKG)_POSIX_LIBNAME)
+$(PKG)_POSIX_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$($(PKG)_POSIX_LIBNAME)
 $(PKG)_POSIX_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$($(PKG)_POSIX_LIBNAME)
 
 $(PKG)_AC_VARIABLES := header_zlib_h header_bzlib_h header_readline_readline_h header_readline_history_h
@@ -40,12 +40,12 @@ $($(PKG)_BINARY) $($(PKG)_POSIX_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY) $($(PKG)_POSIX_STAGING_BINARY): $($(PKG)_BINARY) $($(PKG)_POSIX_BINARY)
 	$(SUBMAKE) -C $(PCRE_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libpcre*.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/pcre-config \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libpcre*.pc
+		$(STAGING_DIR)/usr/lib/libpcre*.la \
+		$(STAGING_DIR)/usr/bin/pcre-config \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libpcre*.pc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -60,12 +60,12 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_POSIX_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(PCRE_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libpcre*.* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/pcre*.h \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/pcre* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libpcre*.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/man/man?/pcre* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/doc/pcre/
+		$(STAGING_DIR)/usr/lib/libpcre*.* \
+		$(STAGING_DIR)/usr/include/pcre*.h \
+		$(STAGING_DIR)/usr/bin/pcre* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libpcre*.pc \
+		$(STAGING_DIR)/usr/share/man/man?/pcre* \
+		$(STAGING_DIR)/usr/share/doc/pcre/
 
 $(pkg)-uninstall:
 	$(RM) $(PCRE_TARGET_DIR)/libpcre*.so*

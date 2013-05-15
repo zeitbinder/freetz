@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=1be543bc30c56fb6bea1d7bf6a64e66c
 $(PKG)_SITE:=@SF/mad
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/.libs/$(pkg).so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$(pkg).so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
@@ -24,10 +24,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LIBMAD_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libmad.la
+		$(STAGING_DIR)/usr/lib/libmad.la
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -38,7 +38,7 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBMAD_DIR) clean
-	$(RM) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libmad*
+	$(RM) $(STAGING_DIR)/usr/lib/libmad*
 
 $(pkg)-uninstall:
 	$(RM) $(LIBMAD_TARGET_DIR)/libmad*.so*

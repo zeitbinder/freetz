@@ -10,7 +10,7 @@ else
 $(PKG)_PREFIX:=/usr/lib/$(pkg)
 endif
 $(PKG)_BINARY:=$($(PKG)_DIR)/lib/.libs/$(pkg).so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)$($(PKG)_PREFIX)/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)$($(PKG)_PREFIX)/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$(pkg).so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
@@ -26,15 +26,15 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 	$(SUBMAKE) -C $(LIBICONV_DIR)
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	mkdir -p $(TARGET_TOOLCHAIN_STAGING_DIR)$(LIBICONV_PREFIX)/{include,lib}
-	cp -a $(LIBICONV_DIR)/include/iconv.h.inst $(TARGET_TOOLCHAIN_STAGING_DIR)$(LIBICONV_PREFIX)/include/iconv.h
-	chmod 644 $(TARGET_TOOLCHAIN_STAGING_DIR)$(LIBICONV_PREFIX)/include/iconv.h
+	mkdir -p $(STAGING_DIR)$(LIBICONV_PREFIX)/{include,lib}
+	cp -a $(LIBICONV_DIR)/include/iconv.h.inst $(STAGING_DIR)$(LIBICONV_PREFIX)/include/iconv.h
+	chmod 644 $(STAGING_DIR)$(LIBICONV_PREFIX)/include/iconv.h
 	cat $(LIBICONV_DIR)/lib/libiconv.la \
 		| sed -r -e 's,^(installed=)no,\1yes,g' -e "s,^(libdir=)'.*',\1'$(LIBICONV_PREFIX)/lib',g" \
-		> $(TARGET_TOOLCHAIN_STAGING_DIR)$(LIBICONV_PREFIX)/lib/libiconv.la
-	chmod 755 $(TARGET_TOOLCHAIN_STAGING_DIR)$(LIBICONV_PREFIX)/lib/libiconv.la
-	$(PKG_FIX_LIBTOOL_LA) $(TARGET_TOOLCHAIN_STAGING_DIR)$(LIBICONV_PREFIX)/lib/libiconv.la
-	cp -a $(LIBICONV_DIR)/lib/.libs/libiconv.{a,so*} $(TARGET_TOOLCHAIN_STAGING_DIR)$(LIBICONV_PREFIX)/lib/
+		> $(STAGING_DIR)$(LIBICONV_PREFIX)/lib/libiconv.la
+	chmod 755 $(STAGING_DIR)$(LIBICONV_PREFIX)/lib/libiconv.la
+	$(PKG_FIX_LIBTOOL_LA) $(STAGING_DIR)$(LIBICONV_PREFIX)/lib/libiconv.la
+	cp -a $(LIBICONV_DIR)/lib/.libs/libiconv.{a,so*} $(STAGING_DIR)$(LIBICONV_PREFIX)/lib/
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -46,8 +46,8 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBICONV_DIR) clean
 	$(RM) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)$(LIBICONV_PREFIX)/lib/libiconv* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)$(LIBICONV_PREFIX)/include/iconv.h
+		$(STAGING_DIR)$(LIBICONV_PREFIX)/lib/libiconv* \
+		$(STAGING_DIR)$(LIBICONV_PREFIX)/include/iconv.h
 
 $(pkg)-uninstall:
 	$(RM) $(LIBICONV_TARGET_DIR)/libiconv*.so*

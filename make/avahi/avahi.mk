@@ -11,7 +11,7 @@ $(PKG)_LIB_VERSIONS := 3.5.3 7.0.2 3.2.9
 $(PKG)_LIBNAMES_SHORT := avahi-common avahi-core avahi-client
 $(PKG)_LIBNAMES_LONG := $(join $($(PKG)_LIBNAMES_SHORT:%=lib%),$($(PKG)_LIB_VERSIONS:%=.so.%))
 $(PKG)_LIBS_BUILD_DIR := $(join $($(PKG)_LIBNAMES_SHORT:%=$($(PKG)_DIR)/%/.libs/),$($(PKG)_LIBNAMES_LONG))
-$(PKG)_LIBS_STAGING_DIR := $($(PKG)_LIBNAMES_LONG:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%)
+$(PKG)_LIBS_STAGING_DIR := $($(PKG)_LIBNAMES_LONG:%=$(STAGING_DIR)/usr/lib/%)
 $(PKG)_LIBS_TARGET_DIR := $($(PKG)_LIBNAMES_LONG:%=$($(PKG)_TARGET_LIBDIR)/%)
 
 $(PKG)_DEPENDS_ON := dbus expat libdaemon
@@ -63,12 +63,12 @@ $($(PKG)_LIBS_BUILD_DIR) $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
 		$(SUBMAKE) -C $(AVAHI_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 		$(PKG_FIX_LIBTOOL_LA) \
-			$(AVAHI_LIBNAMES_SHORT:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/lib%.la) \
-			$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/avahi-client.pc \
-			$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/avahi-core.pc
+			$(AVAHI_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/lib%.la) \
+			$(STAGING_DIR)/usr/lib/pkgconfig/avahi-client.pc \
+			$(STAGING_DIR)/usr/lib/pkgconfig/avahi-core.pc
 
 $(foreach binary,$($(PKG)_BINARIES_BUILD_DIR),$(eval $(call INSTALL_BINARY_STRIP_RULE,$(binary),/usr/sbin)))
 $(foreach library,$($(PKG)_LIBS_STAGING_DIR),$(eval $(call INSTALL_LIBRARY_STRIP_RULE,$(library),$(FREETZ_LIBRARY_PATH),$(TARGET_SPECIFIC_ROOT_DIR))))
@@ -81,16 +81,16 @@ $(pkg)-clean:
 	-$(SUBMAKE) -C $(AVAHI_DIR) clean
 	$(RM) -r \
 		$(AVAHI_DIR)/.configured \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libavahi* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/avahi-client.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/avahi-core.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/avahi* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/sbin/avahi* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/avahi* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/etc/avahi \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/avahi \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/avahi \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/man/man{1,5,8}/avahi*
+		$(STAGING_DIR)/usr/lib/libavahi* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/avahi-client.pc \
+		$(STAGING_DIR)/usr/lib/pkgconfig/avahi-core.pc \
+		$(STAGING_DIR)/usr/bin/avahi* \
+		$(STAGING_DIR)/usr/sbin/avahi* \
+		$(STAGING_DIR)/usr/include/avahi* \
+		$(STAGING_DIR)/usr/etc/avahi \
+		$(STAGING_DIR)/usr/lib/avahi \
+		$(STAGING_DIR)/usr/share/avahi \
+		$(STAGING_DIR)/usr/share/man/man{1,5,8}/avahi*
 
 $(pkg)-uninstall:
 	$(RM) $(AVAHI_TARGET_BINARY) $(AVAHI_DEST_LIBDIR)/libavahi-*

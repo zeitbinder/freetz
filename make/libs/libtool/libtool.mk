@@ -5,10 +5,10 @@ $(PKG)_SOURCE_MD5:=aa9c5107f3ec9ef4200eb6556f3b3c29
 $(PKG)_SITE:=@GNU/$(pkg)
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/libltdl/.libs/libltdl.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libltdl.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libltdl.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libltdl.so.$($(PKG)_LIB_VERSION)
 
-TARGET_CONFIGURE_ENV += GLOBAL_LIBDIR=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib
+TARGET_CONFIGURE_ENV += GLOBAL_LIBDIR=$(STAGING_DIR)/usr/lib
 
 # touch some patched files to ensure no file except for ltmain.sh gets regenerated
 $(PKG)_CONFIGURE_PRE_CMDS += \
@@ -28,10 +28,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LIBTOOL_DIR)/libltdl \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libltdl.la
+		$(STAGING_DIR)/usr/lib/libltdl.la
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -42,7 +42,7 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBTOOL_DIR) clean
-	$(RM) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libltdl.* $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/ltdl.h
+	$(RM) $(STAGING_DIR)/usr/lib/libltdl.* $(STAGING_DIR)/usr/include/ltdl.h
 
 $(pkg)-uninstall:
 	$(RM) $(LIBTOOL_TARGET_DIR)/libltdl*.so*

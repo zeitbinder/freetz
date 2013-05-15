@@ -24,8 +24,8 @@ $(PKG)_CONFIGURE_ENV += bash_cv_func_sigsetjmp=present
 $(PKG)_CONFIGURE_ENV += bash_cv_have_mbstate_t=yes
 
 $(PKG)_CONFIGURE_ENV += CFLAGS_FOR_TARGET="$(TARGET_CFLAGS)"
-$(PKG)_CONFIGURE_ENV += CPPFLAGS_FOR_TARGET="-I$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include"
-$(PKG)_CONFIGURE_ENV += LDFLAGS_FOR_TARGET="-L$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib"
+$(PKG)_CONFIGURE_ENV += CPPFLAGS_FOR_TARGET="-I$(STAGING_DIR)/usr/include"
+$(PKG)_CONFIGURE_ENV += LDFLAGS_FOR_TARGET="-L$(STAGING_DIR)/usr/lib"
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-gdbserver
 $(PKG)_CONFIGURE_OPTIONS += --enable-threads
@@ -74,14 +74,14 @@ $(PKG_FINISH)
 ####################################################################################
 GDB_HOST_DIR:=$(TARGET_TOOLCHAIN_DIR)/gdbhost-$(GDB_VERSION)
 GDB_HOST_BINARY_BUILDDIR:=$(GDB_HOST_DIR)/gdb/gdb
-GDB_HOST_BINARY_DESTDIR:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/$(TARGET_CROSS)gdb
+GDB_HOST_BINARY_DESTDIR:=$(STAGING_DIR)/usr/bin/$(TARGET_CROSS)gdb
 
 $(GDB_HOST_DIR)/.configured: | $(GDB_DIR)/.unpacked
 	mkdir -p $(GDB_HOST_DIR)
 	(cd $(GDB_HOST_DIR); PATH=$(TARGET_PATH) \
 		$(FREETZ_BASE_DIR)/$(GDB_DIR)/configure \
 		--cache-file=/dev/null \
-		--prefix=$(TARGET_TOOLCHAIN_STAGING_DIR) \
+		--prefix=$(STAGING_DIR) \
 		--build=$(GNU_HOST_NAME) \
 		--host=$(GNU_HOST_NAME) \
 		--target=$(REAL_GNU_TARGET_NAME) \

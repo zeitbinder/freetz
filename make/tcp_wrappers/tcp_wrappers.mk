@@ -9,7 +9,7 @@ $(PKG)_DIR:=$($(PKG)_SOURCE_DIR)/$(pkg)_$($(PKG)_VERSION)
 $(PKG)_BINARY:=$($(PKG)_DIR)/tcpd
 $(PKG)_TARGET_BINARY:=$($(PKG)_DEST_DIR)/sbin/tcpd
 $(PKG)_LIB_BINARY:=$($(PKG)_DIR)/shared/libwrap.so.$($(PKG)_LIB_VERSION)
-$(PKG)_LIB_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libwrap.so.$($(PKG)_LIB_VERSION)
+$(PKG)_LIB_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libwrap.so.$($(PKG)_LIB_VERSION)
 $(PKG)_LIB_TARGET_BINARY:=$($(PKG)_DEST_LIBDIR)/libwrap.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_REBUILD_SUBOPTS += FREETZ_TARGET_IPV6_SUPPORT
@@ -42,9 +42,9 @@ $($(PKG)_BINARY) $($(PKG)_LIB_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_LIB_STAGING_BINARY): $($(PKG)_LIB_BINARY)
 	chmod 644 $(TCP_WRAPPERS_DIR)/tcpd.h
-	cp $(TCP_WRAPPERS_DIR)/tcpd.h $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include
-	cp $(TCP_WRAPPERS_DIR)/libwrap.a $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib
-	cp -a $(TCP_WRAPPERS_DIR)/shared/libwrap*.so* $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib
+	cp $(TCP_WRAPPERS_DIR)/tcpd.h $(STAGING_DIR)/usr/include
+	cp $(TCP_WRAPPERS_DIR)/libwrap.a $(STAGING_DIR)/usr/lib
+	cp -a $(TCP_WRAPPERS_DIR)/shared/libwrap*.so* $(STAGING_DIR)/usr/lib
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
@@ -59,9 +59,9 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIB_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(TCP_WRAPPERS_DIR) clean
 	$(RM) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/tcpd.h \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libwrap.a \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libwrap*.so*
+		$(STAGING_DIR)/usr/include/tcpd.h \
+		$(STAGING_DIR)/usr/lib/libwrap.a \
+		$(STAGING_DIR)/usr/lib/libwrap*.so*
 
 $(pkg)-uninstall:
 	$(RM) \

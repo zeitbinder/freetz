@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=a3e00fccbfe356174ab515b5c00641c7
 $(PKG)_SITE:=@SF/libpng
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/.libs/libpng12.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libpng12.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libpng12.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libpng12.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_DEPENDS_ON := zlib
@@ -29,12 +29,12 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LIBPNG_DIR)\
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libpng12.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libpng12.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/libpng12-config
+		$(STAGING_DIR)/usr/lib/libpng12.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libpng12.pc \
+		$(STAGING_DIR)/usr/bin/libpng12-config
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -45,13 +45,13 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBPNG_DIR) clean
-	$(RM) -r $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libpng* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libpng*.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/libpng*-config \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/png*.h \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/libpng12 \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/man/man3/libpng*.3 \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/man/man5/png.5
+	$(RM) -r $(STAGING_DIR)/usr/lib/libpng* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libpng*.pc \
+		$(STAGING_DIR)/usr/bin/libpng*-config \
+		$(STAGING_DIR)/usr/include/png*.h \
+		$(STAGING_DIR)/usr/include/libpng12 \
+		$(STAGING_DIR)/usr/share/man/man3/libpng*.3 \
+		$(STAGING_DIR)/usr/share/man/man5/png.5
 
 $(pkg)-uninstall:
 	$(RM) $(LIBPNG_TARGET_DIR)/libpng*.so*

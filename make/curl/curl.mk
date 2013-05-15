@@ -7,7 +7,7 @@ $(PKG)_SITE:=http://curl.haxx.se/download
 $(PKG)_BINARY:=$($(PKG)_DIR)/src$(if $(FREETZ_PACKAGE_CURL_STATIC),,/.libs)/curl
 $(PKG)_TARGET_BINARY:=$($(PKG)_DEST_DIR)/usr/bin/curl
 $(PKG)_LIB_BINARY:=$($(PKG)_DIR)/lib/.libs/libcurl.so.$($(PKG)_LIB_VERSION)
-$(PKG)_LIB_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libcurl.so.$($(PKG)_LIB_VERSION)
+$(PKG)_LIB_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libcurl.so.$($(PKG)_LIB_VERSION)
 $(PKG)_LIB_TARGET_BINARY:=$($(PKG)_TARGET_LIBDIR)/libcurl.so.$($(PKG)_LIB_VERSION)
 
 ifeq ($(strip $(FREETZ_LIB_libcurl_WITH_CYASSL)),y)
@@ -58,13 +58,13 @@ $(PKG)_CONFIGURE_OPTIONS += --disable-sspi
 $(PKG)_CONFIGURE_OPTIONS += --disable-telnet
 $(PKG)_CONFIGURE_OPTIONS += --disable-verbose
 $(PKG)_CONFIGURE_OPTIONS += --with-random="/dev/urandom"
-$(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_LIB_libcurl_WITH_CYASSL),--with-cyassl="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr",--without-cyassl)
+$(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_LIB_libcurl_WITH_CYASSL),--with-cyassl="$(STAGING_DIR)/usr",--without-cyassl)
 $(PKG)_CONFIGURE_OPTIONS += --without-gnutls
-$(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_LIB_libcurl_WITH_OPENSSL),--with-ssl="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr",--without-ssl)
-$(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_LIB_libcurl_WITH_POLARSSL),--with-polarssl="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr",--without-polarssl)
+$(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_LIB_libcurl_WITH_OPENSSL),--with-ssl="$(STAGING_DIR)/usr",--without-ssl)
+$(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_LIB_libcurl_WITH_POLARSSL),--with-polarssl="$(STAGING_DIR)/usr",--without-polarssl)
 $(PKG)_CONFIGURE_OPTIONS += --without-ca-bundle
 $(PKG)_CONFIGURE_OPTIONS += --without-libidn
-$(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_LIB_libcurl_WITH_ZLIB),--with-zlib="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr",--without-zlib)
+$(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_LIB_libcurl_WITH_ZLIB),--with-zlib="$(STAGING_DIR)/usr",--without-zlib)
 
 $(PKG_SOURCE_DOWNLOAD)
 $(PKG_UNPACKED)
@@ -76,12 +76,12 @@ $($(PKG)_BINARY) $($(PKG)_LIB_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_LIB_STAGING_BINARY): $($(PKG)_LIB_BINARY)
 	$(SUBMAKE) -C $(CURL_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libcurl.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libcurl.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/curl-config
+		$(STAGING_DIR)/usr/lib/pkgconfig/libcurl.pc \
+		$(STAGING_DIR)/usr/lib/libcurl.la \
+		$(STAGING_DIR)/usr/bin/curl-config
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
@@ -96,10 +96,10 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIB_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(CURL_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libcurl* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/lib/pkgconfig/libcurl.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/curl \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/curl*
+		$(STAGING_DIR)/usr/lib/libcurl* \
+		$(STAGING_DIR)/lib/pkgconfig/libcurl.pc \
+		$(STAGING_DIR)/usr/include/curl \
+		$(STAGING_DIR)/usr/bin/curl*
 
 $(pkg)-uninstall:
 	$(RM) $(CURL_TARGET_BINARY) $(CURL_TARGET_LIBDIR)/libcurl*.so*

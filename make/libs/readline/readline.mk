@@ -6,8 +6,8 @@ $(PKG)_SITE:=@GNU/$(pkg)
 
 $(PKG)_$(PKG)_BINARY:=$($(PKG)_DIR)/shlib/libreadline.so.$($(PKG)_LIB_VERSION)
 $(PKG)_HISTORY_BINARY:=$($(PKG)_DIR)/shlib/libhistory.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_$(PKG)_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libreadline.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_HISTORY_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libhistory.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_$(PKG)_BINARY:=$(STAGING_DIR)/usr/lib/libreadline.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_HISTORY_BINARY:=$(STAGING_DIR)/usr/lib/libhistory.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_$(PKG)_BINARY:=$($(PKG)_TARGET_DIR)/libreadline.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_HISTORY_BINARY:=$($(PKG)_TARGET_DIR)/libhistory.so.$($(PKG)_LIB_VERSION)
 
@@ -28,7 +28,7 @@ $($(PKG)_READLINE_BINARY) $($(PKG)_HISTORY_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_READLINE_BINARY) $($(PKG)_STAGING_HISTORY_BINARY): $($(PKG)_READLINE_BINARY) $($(PKG)_HISTORY_BINARY)
 	$(SUBMAKE) -C $(READLINE_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 
 $($(PKG)_TARGET_READLINE_BINARY): $($(PKG)_STAGING_READLINE_BINARY)
@@ -43,9 +43,9 @@ $(pkg)-precompiled: $($(PKG)_TARGET_READLINE_BINARY) $($(PKG)_TARGET_HISTORY_BIN
 
 $(pkg)-clean:
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libreadline* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libhistory* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/readline
+		$(STAGING_DIR)/usr/lib/libreadline* \
+		$(STAGING_DIR)/usr/lib/libhistory* \
+		$(STAGING_DIR)/usr/include/readline
 	-$(SUBMAKE) -C $(READLINE_DIR) clean
 
 $(pkg)-uninstall:

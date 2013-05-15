@@ -16,7 +16,7 @@ ifeq ($(strip $(FREETZ_PACKAGE_WGET_WITH_SSL)),y)
 ifeq ($(strip $(FREETZ_PACKAGE_WGET_USE_GNUTLS)),y)
 $(PKG)_DEPENDS_ON += gnutls
 $(PKG)_CONFIGURE_OPTIONS += --with-ssl=gnutls
-$(PKG)_CONFIGURE_OPTIONS += --with-libgnutls-prefix="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-libgnutls-prefix="$(STAGING_DIR)/usr"
 $(PKG)_CONFIGURE_OPTIONS += --without-libssl-prefix
 ifeq ($(strip $(FREETZ_PACKAGE_WGET_STATIC)),y)
 $(PKG)_STATIC_LIBS := -ltasn1 -lz
@@ -25,7 +25,7 @@ else
 $(PKG)_REBUILD_SUBOPTS += FREETZ_OPENSSL_SHLIB_VERSION
 $(PKG)_DEPENDS_ON += openssl
 $(PKG)_CONFIGURE_OPTIONS += --with-ssl=openssl
-$(PKG)_CONFIGURE_OPTIONS += --with-libssl-prefix="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-libssl-prefix="$(STAGING_DIR)/usr"
 $(PKG)_CONFIGURE_OPTIONS += --without-libgnutls-prefix
 endif
 endif

@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=1bca27d206970badae248cfa471bbb47
 $(PKG)_SITE:=http://www.tcpdump.org/release/
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/$(pkg).so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$(pkg).so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_REBUILD_SUBOPTS += FREETZ_TARGET_IPV6_SUPPORT
@@ -31,10 +31,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LIBPCAP_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/pcap-config
+		$(STAGING_DIR)/usr/bin/pcap-config
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -45,9 +45,9 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBPCAP_DIR) clean
-	$(RM) -r $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libpcap* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/pcap-config \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/pcap*
+	$(RM) -r $(STAGING_DIR)/usr/lib/libpcap* \
+		$(STAGING_DIR)/usr/bin/pcap-config \
+		$(STAGING_DIR)/usr/include/pcap*
 
 $(pkg)-uninstall:
 	$(RM) $(LIBPCAP_TARGET_DIR)/libpcap*.so*

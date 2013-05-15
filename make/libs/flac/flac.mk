@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=153c8b15a54da428d1f0fadc756c22c7
 $(PKG)_SITE:=@SF/flac
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/src/libFLAC/.libs/libFLAC.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libFLAC.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libFLAC.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libFLAC.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
@@ -31,11 +31,11 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(FLAC_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libFLAC.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/flac.pc
+		$(STAGING_DIR)/usr/lib/libFLAC.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/flac.pc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -47,11 +47,11 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(FLAC_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/*flac \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/FLAC/ \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libFLAC.* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/flac.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/aclocal/libFLAC.m4
+		$(STAGING_DIR)/usr/bin/*flac \
+		$(STAGING_DIR)/usr/include/FLAC/ \
+		$(STAGING_DIR)/usr/lib/libFLAC.* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/flac.pc \
+		$(STAGING_DIR)/usr/share/aclocal/libFLAC.m4
 
 $(pkg)-uninstall:
 	$(RM) $(FLAC_TARGET_DIR)/libFLAC*.so*

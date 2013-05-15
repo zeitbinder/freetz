@@ -19,10 +19,10 @@ $(PKG)_CONFIGURE_OPTIONS += --disable-vorbistest
 ifeq ($(strip $(FREETZ_PACKAGE_STREAMRIPPER_WITH_OGGVORBIS)),y)
 $(PKG)_DEPENDS_ON += libogg libvorbis
 
-$(PKG)_CONFIGURE_OPTIONS += --with-ogg-libraries="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib"
-$(PKG)_CONFIGURE_OPTIONS += --with-ogg-includes="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include"
-$(PKG)_CONFIGURE_OPTIONS += --with-vorbis-libraries="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib"
-$(PKG)_CONFIGURE_OPTIONS += --with-vorbis-includes="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include"
+$(PKG)_CONFIGURE_OPTIONS += --with-ogg-libraries="$(STAGING_DIR)/usr/lib"
+$(PKG)_CONFIGURE_OPTIONS += --with-ogg-includes="$(STAGING_DIR)/usr/include"
+$(PKG)_CONFIGURE_OPTIONS += --with-vorbis-libraries="$(STAGING_DIR)/usr/lib"
+$(PKG)_CONFIGURE_OPTIONS += --with-vorbis-includes="$(STAGING_DIR)/usr/include"
 else
 $(PKG)_CONFIGURE_ENV += sr_disable_oggvorbis_support=yes
 $(PKG)_CONFIGURE_OPTIONS += --without-ogg

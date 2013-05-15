@@ -9,7 +9,7 @@ $(PKG)_TARGET_BINARY:=$($(PKG)_DEST_DIR)/usr/bin/lua
 $(PKG)_INCLUDE_DIR:=/usr/include/$(pkg)
 $(PKG)_LIBNAME:=liblua.so.$($(PKG)_VERSION)
 $(PKG)_LIB_BINARY:=$($(PKG)_DIR)/src/$($(PKG)_LIBNAME)
-$(PKG)_LIB_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
+$(PKG)_LIB_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
 $(PKG)_LIB_TARGET_BINARY:=$($(PKG)_TARGET_LIBDIR)/$($(PKG)_LIBNAME)
 
 ifeq ($(strip $(FREETZ_PACKAGE_LUA_READLINE)),y)
@@ -26,10 +26,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 	$(SUBMAKE) -C $(LUA_DIR) \
 		CC="$(TARGET_CC)" \
 		LD="$(TARGET_LD)" \
-		MYCFLAGS="-I$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include $(TARGET_CFLAGS) $(FPIC)" \
+		MYCFLAGS="-I$(STAGING_DIR)/usr/include $(TARGET_CFLAGS) $(FPIC)" \
 		AR="$(TARGET_AR) rcu" \
 		RANLIB="$(TARGET_RANLIB)" \
-		MYLDFLAGS="-L$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib" \
+		MYLDFLAGS="-L$(STAGING_DIR)/usr/lib" \
 		USE_READLINE="$(strip $(FREETZ_PACKAGE_LUA_READLINE))" \
 		linux
 
@@ -37,23 +37,23 @@ $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
 
 $($(PKG)_LIB_STAGING_BINARY): $($(PKG)_LIB_BINARY)
-	mkdir -p $(TARGET_TOOLCHAIN_STAGING_DIR)$(LUA_INCLUDE_DIR) \
-	&& cp $(LUA_DIR)/src/{lua.h,luaconf.h,lualib.h,lauxlib.h} $(TARGET_TOOLCHAIN_STAGING_DIR)$(LUA_INCLUDE_DIR)
-	mkdir -p $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig && \
+	mkdir -p $(STAGING_DIR)$(LUA_INCLUDE_DIR) \
+	&& cp $(LUA_DIR)/src/{lua.h,luaconf.h,lualib.h,lauxlib.h} $(STAGING_DIR)$(LUA_INCLUDE_DIR)
+	mkdir -p $(STAGING_DIR)/usr/lib/pkgconfig && \
 	echo -ne \
-	"prefix=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr\n"\
-	"exec_prefix=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr\n"\
-	"libdir=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib\n"\
-	"includedir=$(TARGET_TOOLCHAIN_STAGING_DIR)$(LUA_INCLUDE_DIR)\n"\
+	"prefix=$(STAGING_DIR)/usr\n"\
+	"exec_prefix=$(STAGING_DIR)/usr\n"\
+	"libdir=$(STAGING_DIR)/usr/lib\n"\
+	"includedir=$(STAGING_DIR)$(LUA_INCLUDE_DIR)\n"\
 	"\n"\
 	"Name: lua\n"\
 	"Description: LUA Library\n"\
 	"Version: $(LUA_VERSION)\n"\
 	"Libs: -L\$${libdir} -llua\n"\
 	"Cflags: -I\$${includedir}\n"\
-	>$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/lua.pc
-	mkdir -p $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib && \
-	cp $(LUA_DIR)/src/liblua.a $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib
+	>$(STAGING_DIR)/usr/lib/pkgconfig/lua.pc
+	mkdir -p $(STAGING_DIR)/usr/lib && \
+	cp $(LUA_DIR)/src/liblua.a $(STAGING_DIR)/usr/lib
 	$(INSTALL_LIBRARY)
 
 $($(PKG)_LIB_TARGET_BINARY): $($(PKG)_LIB_STAGING_BINARY)
@@ -66,9 +66,9 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIB_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LUA_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/liblua* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)$(LUA_INCLUDE_DIR) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/lua.pc
+		$(STAGING_DIR)/usr/lib/liblua* \
+		$(STAGING_DIR)$(LUA_INCLUDE_DIR) \
+		$(STAGING_DIR)/usr/lib/pkgconfig/lua.pc
 
 $(pkg)-uninstall:
 	$(RM) $(LUA_TARGET_BINARY)

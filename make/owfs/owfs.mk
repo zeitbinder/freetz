@@ -53,9 +53,9 @@ $(PKG)_CONFIGURE_OPTIONS += --disable-owcapi
 $(PKG)_CONFIGURE_OPTIONS += --disable-debug
 $(PKG)_CONFIGURE_OPTIONS += --disable-zero
 $(PKG)_CONFIGURE_OPTIONS += --disable-rpath
-$(PKG)_CONFIGURE_OPTIONS += --with-libusb-config="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/libusb-config"
-$(PKG)_CONFIGURE_OPTIONS += --with-fuseinclude="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include"
-$(PKG)_CONFIGURE_OPTIONS += --with-fuselib="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib"
+$(PKG)_CONFIGURE_OPTIONS += --with-libusb-config="$(STAGING_DIR)/usr/bin/libusb-config"
+$(PKG)_CONFIGURE_OPTIONS += --with-fuseinclude="$(STAGING_DIR)/usr/include"
+$(PKG)_CONFIGURE_OPTIONS += --with-fuselib="$(STAGING_DIR)/usr/lib"
 
 $(PKG_SOURCE_DOWNLOAD)
 $(PKG_UNPACKED)

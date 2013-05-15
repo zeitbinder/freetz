@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=4aa921c9d65af281d1a16d6c1788b15f
 $(PKG)_SITE:=http://ftp.debian.org/debian/pool/main/d/devmapper
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/lib/ioctl/libdevmapper.so
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libdevmapper.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libdevmapper.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libdevmapper.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-pkgconfig
@@ -25,10 +25,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(DEVMAPPER_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/devmapper.pc
+		$(STAGING_DIR)/usr/lib/pkgconfig/devmapper.pc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -39,7 +39,7 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(DEVMAPPER_DIR) clean
-	$(RM) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libdevmapper.*
+	$(RM) $(STAGING_DIR)/usr/lib/libdevmapper.*
 
 $(pkg)-uninstall:
 	$(RM) $(DEVMAPPER_TARGET_DIR)/libdevmapper*.so*

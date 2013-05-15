@@ -38,7 +38,7 @@ $(PKG)_LIBNAMES_LONG := $(join $($(PKG)_LIBNAMES_SHORT:%=lib%.so.),$($(PKG)_LIBV
 $(PKG)_LIBS_TARGET_DIR  := $($(PKG)_LIBNAMES_LONG:%=$($(PKG)_TARGET_LIBDIR)/%)
 endif
 $(PKG)_LIBS_BUILD_DIR	:= $($(PKG)_LIBNAMES_LONG:%=$($(PKG)_DIR)/lib/%)
-$(PKG)_LIBS_STAGING_DIR	:= $($(PKG)_LIBNAMES_LONG:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%)
+$(PKG)_LIBS_STAGING_DIR	:= $($(PKG)_LIBNAMES_LONG:%=$(STAGING_DIR)/usr/lib/%)
 
 $(PKG)_MAKE_ALL_EXTRAS	:= && ln -fsT et $($(PKG)_DIR)/lib/com_err
 
@@ -119,27 +119,27 @@ $($(PKG)_LIBS_BUILD_DIR) $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
 		all \
 		$(E2FSPROGS_MAKE_ALL_EXTRAS)
 
-$($(PKG)_LIBS_STAGING_DIR): $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%: $($(PKG)_DIR)/lib/%
+$($(PKG)_LIBS_STAGING_DIR): $(STAGING_DIR)/usr/lib/%: $($(PKG)_DIR)/lib/%
 # ensure no shared/static-pic library from previous builds exists in STAGING_DIR
 ifeq ($(strip $(FREETZ_PACKAGE_E2FSPROGS_STATIC)),y)
-	$(RM) $(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/lib%.so*)
+	$(RM) $(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(STAGING_DIR)/usr/lib/lib%.so*)
 else
-	$(RM) $(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/lib%_pic.a)
+	$(RM) $(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(STAGING_DIR)/usr/lib/lib%_pic.a)
 endif
 	LIBSUBDIR=`echo $(notdir $@) | $(SED) -r -e 's|^lib||g' -e 's|[.]so[.].*$$||g' -e 's|[.]a$$||g'` \
 	&& \
 	$(SUBMAKE) -C $(E2FSPROGS_DIR)/lib/$${LIBSUBDIR} \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		STRIP=true \
 		LDCONFIG=true \
 		INFO=true \
 		install \
 	&& \
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/$${LIBSUBDIR}.pc
+		$(STAGING_DIR)/usr/lib/pkgconfig/$${LIBSUBDIR}.pc
 
 ifneq ($(strip $(FREETZ_PACKAGE_E2FSPROGS_STATIC)),y)
-$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_LIBDIR)/%: $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%
+$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_LIBDIR)/%: $(STAGING_DIR)/usr/lib/%
 	$(INSTALL_LIBRARY_STRIP)
 endif
 
@@ -167,12 +167,12 @@ $(pkg)-clean:
 		$(E2FSPROGS_DIR)/lib/com_err $(E2FSPROGS_DIR)/misc/e2fsck \
 		$(E2FSPROGS_DIR)/misc/debugfs $(E2FSPROGS_DIR)/misc/resize2fs
 	$(RM) \
-		$(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/lib%.so*) \
-		$(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/lib%.a) \
-		$(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/lib%_pic.a) \
-		$(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/%.pc)
+		$(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(STAGING_DIR)/usr/lib/lib%.so*) \
+		$(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(STAGING_DIR)/usr/lib/lib%.a) \
+		$(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(STAGING_DIR)/usr/lib/lib%_pic.a) \
+		$(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(STAGING_DIR)/usr/lib/pkgconfig/%.pc)
 	$(RM) -r \
-		$(subst com_err,et,$(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/%))
+		$(subst com_err,et,$(E2FSPROGS_LIBNAMES_SHORT_ALL:%=$(STAGING_DIR)/usr/include/%))
 
 $(pkg)-uninstall:
 	$(RM) \

@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=ddf02f4e1d2dc30f76734df806e613eb
 $(PKG)_SITE:=http://developer.kde.org/~wheeler/files/src
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/taglib/.libs/libtag.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libtag.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libtag.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libtag.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_DEPENDS_ON := $(STDCXXLIB) zlib
@@ -27,12 +27,12 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(TAGLIB_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libtag.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/taglib*.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/taglib-config
+		$(STAGING_DIR)/usr/lib/libtag.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/taglib*.pc \
+		$(STAGING_DIR)/usr/bin/taglib-config
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -44,10 +44,10 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(TAGLIB_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/taglib \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libtag* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/taglib*.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/taglib-config
+		$(STAGING_DIR)/usr/include/taglib \
+		$(STAGING_DIR)/usr/lib/libtag* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/taglib*.pc \
+		$(STAGING_DIR)/usr/bin/taglib-config
 
 $(pkg)-uninstall:
 	$(RM) $(TAGLIB_TARGET_DIR)/libtag*.so*

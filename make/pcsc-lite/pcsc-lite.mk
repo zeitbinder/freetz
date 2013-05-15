@@ -7,7 +7,7 @@ $(PKG)_BINARY:=$($(PKG)_DIR)/src/pcscd
 $(PKG)_TARGET_BINARY:=$($(PKG)_DEST_DIR)/usr/bin/pcscd
 $(PKG)_LIB:=$($(PKG)_DIR)/src/.libs/libpcsclite.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_LIB:=$($(PKG)_DEST_LIBDIR)/libpcsclite.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libpcsclite.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libpcsclite.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_PRE_CMDS += $(call PKG_PREVENT_RPATH_HARDCODING,./configure)  
 
@@ -35,11 +35,11 @@ $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_LIB)
 	$(SUBMAKE) -C $(PCSC_LITE_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libpcsclite.a \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libpcsclite.la
+		$(STAGING_DIR)/usr/lib/libpcsclite.a \
+		$(STAGING_DIR)/usr/lib/libpcsclite.la
 
 
 $($(PKG)_TARGET_LIB): $($(PKG)_STAGING_BINARY)

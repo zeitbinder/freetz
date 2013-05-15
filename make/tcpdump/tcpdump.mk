@@ -16,7 +16,7 @@ $(PKG)_REBUILD_SUBOPTS += FREETZ_PACKAGE_TCPDUMP_MINI
 $(PKG)_REBUILD_SUBOPTS += FREETZ_TARGET_IPV6_SUPPORT
 
 $(PKG)_CONFIGURE_ENV += td_cv_buggygetaddrinfo="no"
-$(PKG)_CONFIGURE_ENV += ac_cv_path_PCAP_CONFIG=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/pcap-config
+$(PKG)_CONFIGURE_ENV += ac_cv_path_PCAP_CONFIG=$(STAGING_DIR)/usr/bin/pcap-config
 
 $(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_TARGET_IPV6_SUPPORT),--enable-ipv6,--disable-ipv6)
 $(PKG)_CONFIGURE_OPTIONS += --without-crypto

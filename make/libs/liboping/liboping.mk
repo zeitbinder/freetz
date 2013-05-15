@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=748554a18e1771913f4f402ee9f957c9
 $(PKG)_SITE:=http://verplant.org/liboping/files
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/src/.libs/$(pkg).so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$(pkg).so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_REBUILD_SUBOPTS += FREETZ_TARGET_IPV6_SUPPORT
@@ -23,10 +23,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LIBOPING_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/liboping.la
+		$(STAGING_DIR)/usr/lib/liboping.la
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -38,10 +38,10 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBOPING_DIR) clean
 	$(RM) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/liboping* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/oping.h \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/{oping,noping} \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/man/man?/*oping*
+		$(STAGING_DIR)/usr/lib/liboping* \
+		$(STAGING_DIR)/usr/include/oping.h \
+		$(STAGING_DIR)/usr/bin/{oping,noping} \
+		$(STAGING_DIR)/usr/share/man/man?/*oping*
 
 $(pkg)-uninstall:
 	$(RM) $(LIBOPING_TARGET_DIR)/liboping*.so*

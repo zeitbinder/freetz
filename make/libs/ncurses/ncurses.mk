@@ -7,17 +7,17 @@ $(PKG)_SITE:=@GNU/$(pkg)
 $(PKG)_LIBNAMES_SHORT := ncurses form menu panel
 $(PKG)_LIBNAMES_LONG := $($(PKG)_LIBNAMES_SHORT:%=lib%.so.$($(PKG)_LIB_VERSION))
 $(PKG)_LIBS_BUILD_DIR := $($(PKG)_LIBNAMES_LONG:%=$($(PKG)_DIR)/lib/%)
-$(PKG)_LIBS_STAGING_DIR := $($(PKG)_LIBNAMES_LONG:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%)
+$(PKG)_LIBS_STAGING_DIR := $($(PKG)_LIBNAMES_LONG:%=$(STAGING_DIR)/usr/lib/%)
 $(PKG)_LIBS_TARGET_DIR := $($(PKG)_LIBNAMES_LONG:%=$($(PKG)_TARGET_DIR)/%)
 
 $(PKG)_TABSET_MARKER_FILE := std
 $(PKG)_TABSET_DIR := /usr/share/tabset
-$(PKG)_TABSET_STAGING_DIR := $(TARGET_TOOLCHAIN_STAGING_DIR)$($(PKG)_TABSET_DIR)
+$(PKG)_TABSET_STAGING_DIR := $(STAGING_DIR)$($(PKG)_TABSET_DIR)
 $(PKG)_TABSET_TARGET_DIR := $($(PKG)_DEST_DIR)$($(PKG)_TABSET_DIR)
 
 $(PKG)_TERMINFO_MARKER_FILE := .installed
 $(PKG)_TERMINFO_DIR := /usr/share/terminfo
-$(PKG)_TERMINFO_STAGING_DIR := $(TARGET_TOOLCHAIN_STAGING_DIR)$($(PKG)_TERMINFO_DIR)
+$(PKG)_TERMINFO_STAGING_DIR := $(STAGING_DIR)$($(PKG)_TERMINFO_DIR)
 $(PKG)_TERMINFO_TARGET_DIR := $($(PKG)_DEST_DIR)$($(PKG)_TERMINFO_DIR)
 
 $(PKG)_CONFIGURE_ENV += cf_cv_func_nanosleep=yes
@@ -57,22 +57,22 @@ $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
 	$(SUBMAKE) -C $(NCURSES_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install.libs
-	$(PKG_FIX_LIBTOOL_LA) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/ncurses5-config
-	$(call PKG_FIX_LIBTOOL_LA,bindir datadir mandir) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/ncurses5-config
-	$(PKG_FIX_LIBTOOL_LA) $(NCURSES_LIBNAMES_SHORT:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/%.pc)
+	$(PKG_FIX_LIBTOOL_LA) $(STAGING_DIR)/usr/bin/ncurses5-config
+	$(call PKG_FIX_LIBTOOL_LA,bindir datadir mandir) $(STAGING_DIR)/usr/bin/ncurses5-config
+	$(PKG_FIX_LIBTOOL_LA) $(NCURSES_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/pkgconfig/%.pc)
 
 $($(PKG)_TABSET_STAGING_DIR)/$($(PKG)_TABSET_MARKER_FILE): $($(PKG)_DIR)/.configured
 	$(SUBMAKE) -C $(NCURSES_DIR)/misc \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		all install.data
 	touch $@
 
 $($(PKG)_TERMINFO_STAGING_DIR)/$($(PKG)_TERMINFO_MARKER_FILE): $($(PKG)_TABSET_STAGING_DIR)/$($(PKG)_TABSET_MARKER_FILE)
 	touch $@
 
-$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_DIR)/%: $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%
+$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_DIR)/%: $(STAGING_DIR)/usr/lib/%
 	$(INSTALL_LIBRARY_STRIP)
 
 define $(PKG)_INSTALL_T_RULE
@@ -98,11 +98,11 @@ $(pkg)-terminfo-clean:
 $(pkg)-clean: $(pkg)-terminfo-clean
 	-$(SUBMAKE) -C $(NCURSES_DIR) clean
 	$(RM) \
-		$(NCURSES_LIBNAMES_SHORT:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/lib%*) \
-		$(NCURSES_LIBNAMES_SHORT:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/%.pc) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libcurses* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/{ncurses,ncurses_dll,term,curses,unctrl,termcap,eti,menu,form,panel}.h \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/ncurses5-config
+		$(NCURSES_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/lib%*) \
+		$(NCURSES_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/pkgconfig/%.pc) \
+		$(STAGING_DIR)/usr/lib/libcurses* \
+		$(STAGING_DIR)/usr/include/{ncurses,ncurses_dll,term,curses,unctrl,termcap,eti,menu,form,panel}.h \
+		$(STAGING_DIR)/usr/bin/ncurses5-config
 
 $(pkg)-terminfo-uninstall:
 	$(RM) -r $(NCURSES_TABSET_TARGET_DIR) $(NCURSES_TERMINFO_TARGET_DIR)

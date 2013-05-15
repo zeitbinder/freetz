@@ -39,10 +39,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 		\
 		LDFLAGS="$(TARGET_LDFLAGS)" \
 		\
-		PKCS11_INC="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/pkcs11" \
+		PKCS11_INC="$(STAGING_DIR)/usr/include/pkcs11" \
 		\
-		PKG_CONFIG_PATH="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig" \
-		WX_CONFIG="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/wx-config" \
+		PKG_CONFIG_PATH="$(STAGING_DIR)/usr/lib/pkgconfig" \
+		WX_CONFIG="$(STAGING_DIR)/usr/bin/wx-config" \
 		AR="$(TARGET_AR)" \
 		LD="$(TARGET_LD)" \
 		RANLIB="$(TARGET_RANLIB)" \

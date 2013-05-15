@@ -34,8 +34,8 @@ $(PKG)_INSTALL_SUBDIRS := config web
 ifeq ($(strip $(FREETZ_PACKAGE_MEDIATOMB_WITH_PLAYLIST_SUPPORT)),y)
 $(PKG)_INSTALL_SUBDIRS   += scripts/js
 $(PKG)_CONFIGURE_OPTIONS += --enable-libjs
-$(PKG)_CONFIGURE_OPTIONS += --with-js-h="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/js"
-$(PKG)_CONFIGURE_OPTIONS += --with-js-libs="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib"
+$(PKG)_CONFIGURE_OPTIONS += --with-js-h="$(STAGING_DIR)/usr/include/js"
+$(PKG)_CONFIGURE_OPTIONS += --with-js-libs="$(STAGING_DIR)/usr/lib"
 else
 $(PKG)_CONFIGURE_OPTIONS += --disable-libjs
 endif
@@ -55,7 +55,7 @@ $(PKG_CONFIGURED_CONFIGURE)
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 	$(SUBMAKE) -C $(MEDIATOMB_DIR) \
 	$(if $(FREETZ_PACKAGE_MEDIATOMB_STATIC),\
-		CURL_LIBS="$$($(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/curl-config --static-libs)" \
+		CURL_LIBS="$$($(STAGING_DIR)/usr/bin/curl-config --static-libs)" \
 		LDFLAGS="-static" \
 		STATIC_LINKING_LIBS="-lavcodec -lavutil $(if $(FREETZ_PACKAGE_FFMPEG_DECODER_libopenjpeg),-lopenjpeg) -ldl -lz -lm" \
 	)

@@ -8,7 +8,7 @@ $(PKG)_SITE:=@GNU/$(pkg)
 $(PKG)_BUILD_SUBDIR := gettext-runtime
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/$($(PKG)_BUILD_SUBDIR)/intl/.libs/libintl.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libintl.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libintl.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libintl.so.$($(PKG)_LIB_VERSION)
 
 ifeq ($(strip $(FREETZ_TARGET_UCLIBC_0_9_28)),y)
@@ -46,10 +46,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(GETTEXT_DIR)/$(GETTEXT_BUILD_SUBDIR)/intl \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libintl.la
+		$(STAGING_DIR)/usr/lib/libintl.la
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -61,9 +61,9 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(GETTEXT_DIR)/$(GETTEXT_BUILD_SUBDIR) clean
 	$(RM) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libgettext* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libintl* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/libintl.h
+		$(STAGING_DIR)/usr/lib/libgettext* \
+		$(STAGING_DIR)/usr/lib/libintl* \
+		$(STAGING_DIR)/usr/include/libintl.h
 
 $(pkg)-uninstall:
 	$(RM) $(GETTEXT_TARGET_DIR)/libintl*.so*

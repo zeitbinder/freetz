@@ -10,7 +10,7 @@ $(PKG)_SOURCE_MD5:=232bde228c7af1960f8ef5df6ff19fbb
 $(PKG)_SITE:=http://freetz.magenbrot.net
 
 $(PKG)_HEADER:=$($(PKG)_DIR)/$(pkg).h
-$(PKG)_STAGING_HEADER:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/$(pkg)/$(pkg).h
+$(PKG)_STAGING_HEADER:=$(STAGING_DIR)/usr/include/$(pkg)/$(pkg).h
 
 $(PKG_SOURCE_DOWNLOAD)
 $(PKG_UNPACKED)

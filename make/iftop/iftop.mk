@@ -10,7 +10,7 @@ $(PKG)_CONFIGURE_PRE_CMDS += $(call PKG_PREVENT_RPATH_HARDCODING,./configure)
 $(PKG)_DEPENDS_ON := ncurses libpcap
 $(PKG)_LIBS := -lpcap -lm  -lncurses -lpthread
 
-$(PKG)_CONFIGURE_OPTIONS += --with-libpcap="$(TARGET_TOOLCHAIN_STAGING_DIR)/include/pcap"
+$(PKG)_CONFIGURE_OPTIONS += --with-libpcap="$(STAGING_DIR)/include/pcap"
 #$(PKG)_CONFIGURE_OPTIONS += --with-resolver=none
 
 $(PKG_SOURCE_DOWNLOAD)

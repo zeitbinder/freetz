@@ -9,7 +9,7 @@ $(PKG)_DIR:=$($(PKG)_SOURCE_DIR)/glib-$($(PKG)_VERSION)
 $(PKG)_LIBNAMES_SHORT := glib gobject gmodule gthread gio
 $(PKG)_LIBNAMES_LONG := $($(PKG)_LIBNAMES_SHORT:%=lib%-$($(PKG)_MAJOR_VERSION).so.$($(PKG)_LIB_VERSION))
 $(PKG)_LIBS_BUILD_DIR := $(join $($(PKG)_LIBNAMES_SHORT:%=$($(PKG)_DIR)/%/.libs/),$($(PKG)_LIBNAMES_LONG))
-$(PKG)_LIBS_STAGING_DIR := $($(PKG)_LIBNAMES_LONG:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%)
+$(PKG)_LIBS_STAGING_DIR := $($(PKG)_LIBNAMES_LONG:%=$(STAGING_DIR)/usr/lib/%)
 $(PKG)_LIBS_TARGET_DIR := $($(PKG)_LIBNAMES_LONG:%=$($(PKG)_TARGET_DIR)/%)
 
 $(PKG)_PKGCONFIGS_SHORT := $($(PKG)_LIBNAMES_SHORT) gmodule-no-export gmodule-export gio-unix
@@ -76,13 +76,13 @@ $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
 	$(SUBMAKE) -C $(GLIB2_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(GLIB2_LIBNAMES_SHORT:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/lib%-$(GLIB2_MAJOR_VERSION).la) \
-		$(GLIB2_PKGCONFIGS_SHORT:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/%-$(GLIB2_MAJOR_VERSION).pc)
+		$(GLIB2_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/lib%-$(GLIB2_MAJOR_VERSION).la) \
+		$(GLIB2_PKGCONFIGS_SHORT:%=$(STAGING_DIR)/usr/lib/pkgconfig/%-$(GLIB2_MAJOR_VERSION).pc)
 
-$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_DIR)/%: $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%
+$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_DIR)/%: $(STAGING_DIR)/usr/lib/%
 	$(INSTALL_LIBRARY_STRIP)
 
 $(pkg): $($(PKG)_LIBS_STAGING_DIR)
@@ -92,21 +92,21 @@ $(pkg)-precompiled: $($(PKG)_LIBS_TARGET_DIR)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(GLIB2_DIR) clean
 	$(RM) -r \
-		$(GLIB2_LIBNAMES_SHORT:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/lib%-$(GLIB2_MAJOR_VERSION)*) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/glib-$(GLIB2_MAJOR_VERSION) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/gdbus-$(GLIB2_MAJOR_VERSION) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/gio \
+		$(GLIB2_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/lib%-$(GLIB2_MAJOR_VERSION)*) \
+		$(STAGING_DIR)/usr/lib/glib-$(GLIB2_MAJOR_VERSION) \
+		$(STAGING_DIR)/usr/lib/gdbus-$(GLIB2_MAJOR_VERSION) \
+		$(STAGING_DIR)/usr/lib/gio \
 		\
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/glib-$(GLIB2_MAJOR_VERSION) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/gio-unix-$(GLIB2_MAJOR_VERSION) \
+		$(STAGING_DIR)/usr/include/glib-$(GLIB2_MAJOR_VERSION) \
+		$(STAGING_DIR)/usr/include/gio-unix-$(GLIB2_MAJOR_VERSION) \
 		\
-		$(GLIB2_PKGCONFIGS_SHORT:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/%-$(GLIB2_MAJOR_VERSION).pc) \
+		$(GLIB2_PKGCONFIGS_SHORT:%=$(STAGING_DIR)/usr/lib/pkgconfig/%-$(GLIB2_MAJOR_VERSION).pc) \
 		\
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/glib-* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/gio-* \
+		$(STAGING_DIR)/usr/bin/glib-* \
+		$(STAGING_DIR)/usr/bin/gio-* \
 		\
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/glib-$(GLIB2_MAJOR_VERSION) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/aclocal/glib*
+		$(STAGING_DIR)/usr/share/glib-$(GLIB2_MAJOR_VERSION) \
+		$(STAGING_DIR)/usr/share/aclocal/glib*
 
 $(pkg)-uninstall:
 	$(RM) $(GLIB2_LIBNAMES_SHORT:%=$(GLIB2_TARGET_DIR)/lib%-$(GLIB2_MAJOR_VERSION).so*)

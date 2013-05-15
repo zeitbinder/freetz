@@ -18,7 +18,7 @@ $(PKG)_TOOLS_EXCLUDED:=$(filter-out $($(PKG)_TOOLS_SELECTED),$($(PKG)_TOOLS))
 
 $(PKG)_LIBNAME:=lib$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_LIBRARY_BUILD_DIR:=$($(PKG)_DIR)/api/.libs/$($(PKG)_LIBNAME)
-$(PKG)_LIBRARY_STAGING_DIR:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
+$(PKG)_LIBRARY_STAGING_DIR:=$(STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
 $(PKG)_LIBRARY_TARGET_DIR:=$($(PKG)_TARGET_LIBDIR)/$($(PKG)_LIBNAME)
 
 $(PKG)_DEPENDS_ON += $(STDCXXLIB) leptonica
@@ -29,7 +29,7 @@ $(PKG)_CONFIGURE_PRE_CMDS += $(foreach flag,-O[0-9],$(SED) -i -r -e 's,(C(XX|PP)
 
 $(PKG)_CONFIGURE_PRE_CMDS += $(call PKG_PREVENT_RPATH_HARDCODING,./configure)
 
-$(PKG)_CONFIGURE_ENV += LIBLEPT_HEADERSDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include"
+$(PKG)_CONFIGURE_ENV += LIBLEPT_HEADERSDIR="$(STAGING_DIR)/usr/include"
 
 $(PKG_SOURCE_DOWNLOAD)
 $(PKG_UNPACKED)
@@ -40,19 +40,19 @@ $($(PKG)_BINARY_BUILD_DIR) $($(PKG)_TOOLS_BUILD_DIR) $($(PKG)_LIBRARY_BUILD_DIR)
 
 $($(PKG)_LIBRARY_STAGING_DIR): $($(PKG)_LIBRARY_BUILD_DIR)
 	$(SUBMAKE) -C $(TESSERACT_DIR)/api \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install-libLTLIBRARIES
 	for subdir in api ccutil ccmain ccstruct; do \
 		$(SUBMAKE) -C $(TESSERACT_DIR)/$${subdir} \
-			DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+			DESTDIR="$(STAGING_DIR)" \
 			install-includeHEADERS; \
 	done
 	$(SUBMAKE) -C $(TESSERACT_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install-pkgconfigDATA
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libtesseract.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/tesseract.pc
+		$(STAGING_DIR)/usr/lib/libtesseract.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/tesseract.pc
 
 $($(PKG)_BINARY_TARGET_DIR): $($(PKG)_BINARY_BUILD_DIR)
 	$(SUBMAKE) -C $(TESSERACT_DIR)/tessdata \
@@ -76,9 +76,9 @@ $(pkg)-precompiled: $($(PKG)_BINARY_TARGET_DIR) $($(PKG)_TOOLS_TARGET_DIR) $($(P
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(TESSERACT_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libtesseract.* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/tesseract.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/tesseract/
+		$(STAGING_DIR)/usr/lib/libtesseract.* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/tesseract.pc \
+		$(STAGING_DIR)/usr/include/tesseract/
 
 $(pkg)-uninstall:
 	$(RM) -r \

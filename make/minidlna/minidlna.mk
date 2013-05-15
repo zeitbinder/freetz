@@ -12,7 +12,7 @@ $(PKG)_DEPENDS_ON += ffmpeg libexif flac libid3tag jpeg libogg libvorbis sqlite
 ifeq ($(strip $(FREETZ_TARGET_UCLIBC_0_9_28)),y)
 $(PKG)_DEPENDS_ON += libiconv
 $(PKG)_ICONV_LIB += -liconv
-$(PKG)_CONFIGURE_OPTIONS += --with-libiconv-prefix="$(TARGET_TOOLCHAIN_STAGING_DIR)"
+$(PKG)_CONFIGURE_OPTIONS += --with-libiconv-prefix="$(STAGING_DIR)"
 else
 $(PKG)_CONFIGURE_OPTIONS += --without-libiconv-prefix
 endif

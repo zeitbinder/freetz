@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=06fe2ca164221c59ce74867155cfc1ac
 $(PKG)_SITE:=@GNU/$(pkg)
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/.libs/libgmp.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libgmp.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libgmp.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libgmp.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_PRE_CMDS += $(call PKG_MAKE_AC_VARIABLES_PACKAGE_SPECIFIC,path_LDCXX,,lt)
@@ -25,10 +25,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(GMP_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libgmp.la
+		$(STAGING_DIR)/usr/lib/libgmp.la
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -40,8 +40,8 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(GMP_DIR) clean
 	$(RM) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libgmp.* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/gmp*.h
+		$(STAGING_DIR)/usr/lib/libgmp.* \
+		$(STAGING_DIR)/usr/include/gmp*.h
 
 $(pkg)-uninstall:
 	$(RM) $(GMP_TARGET_DIR)/libgmp*.so*

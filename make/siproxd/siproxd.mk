@@ -25,7 +25,7 @@ $(PKG)_CONFIGURE_PRE_CMDS += $(call PKG_PREVENT_RPATH_HARDCODING,./configure)
 # use system libltdl, not the bundled one
 $(PKG)_CONFIGURE_PRE_CMDS += rm -rf libltdl; $(SED) -i -r -e '/^SUBDIRS( )*=/s,libltdl,,g' Makefile.in;
 
-$(PKG)_CONFIGURE_OPTIONS += --with-libosip-prefix="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-libosip-prefix="$(STAGING_DIR)/usr"
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
 $(PKG)_CONFIGURE_OPTIONS += --disable-debug
 
@@ -46,7 +46,7 @@ $($(PKG)_MODULES_SO_TARGET_DIR): $($(PKG)_DEST_DIR)$($(PKG)_MODULES_DIR)/%: $($(
 $($(PKG)_MODULES_LA_TARGET_DIR): $($(PKG)_DEST_DIR)$($(PKG)_MODULES_DIR)/%: $($(PKG)_DIR)/src/%
 	$(INSTALL_FILE)
 	sed -i -r \
-		-e 's,$(TARGET_TOOLCHAIN_STAGING_DIR),,g' \
+		-e 's,$(STAGING_DIR),,g' \
 		-e 's,/usr/lib/siproxd,$(SIPROXD_MODULES_DIR),g' \
 		-e 's,/usr/lib/lib([^.]+)[.]la,-l\1,g;s,-L/usr/lib/?,,g' \
 		-e 's,(installed=)no,\1yes,g' \

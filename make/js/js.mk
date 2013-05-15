@@ -9,7 +9,7 @@ $(PKG)_BINARY_TARGET_DIR:=$($(PKG)_DEST_DIR)/usr/bin/js
 
 $(PKG)_LIBNAME:=lib$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_LIBRARY_BUILD_DIR:=$($(PKG)_DIR)/.libs/$($(PKG)_LIBNAME)
-$(PKG)_LIBRARY_STAGING_DIR:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
+$(PKG)_LIBRARY_STAGING_DIR:=$(STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
 $(PKG)_LIBRARY_TARGET_DIR:=$($(PKG)_TARGET_LIBDIR)/$($(PKG)_LIBNAME)
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
@@ -30,11 +30,11 @@ $($(PKG)_BINARY_BUILD_DIR) $($(PKG)_LIBRARY_BUILD_DIR): $($(PKG)_DIR)/.configure
 
 $($(PKG)_LIBRARY_STAGING_DIR): $($(PKG)_LIBRARY_BUILD_DIR)
 	$(SUBMAKE) -C $(JS_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
-	$(PKG_FIX_LIBTOOL_LA) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libjs.la
-	$(call PKG_FIX_LIBTOOL_LA,prefix) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/js.pc
-	$(call PKG_FIX_LIBTOOL_LA,prefix exec_prefix js_bindir js_libdir js_includedir js_mandir js_datadir js_acdir) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/js-config
+	$(PKG_FIX_LIBTOOL_LA) $(STAGING_DIR)/usr/lib/libjs.la
+	$(call PKG_FIX_LIBTOOL_LA,prefix) $(STAGING_DIR)/usr/lib/pkgconfig/js.pc
+	$(call PKG_FIX_LIBTOOL_LA,prefix exec_prefix js_bindir js_libdir js_includedir js_mandir js_datadir js_acdir) $(STAGING_DIR)/usr/bin/js-config
 
 $($(PKG)_BINARY_TARGET_DIR): $($(PKG)_BINARY_BUILD_DIR)
 	$(INSTALL_BINARY_STRIP)
@@ -49,10 +49,10 @@ $(pkg)-precompiled: $($(PKG)_BINARY_TARGET_DIR) $($(PKG)_LIBRARY_TARGET_DIR)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(JS_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libjs.* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/js.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/js-config \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/js/
+		$(STAGING_DIR)/usr/lib/libjs.* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/js.pc \
+		$(STAGING_DIR)/usr/bin/js-config \
+		$(STAGING_DIR)/usr/include/js/
 
 $(pkg)-uninstall:
 	$(RM) $(JS_BINARY_TARGET_DIR)

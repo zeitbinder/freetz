@@ -46,10 +46,10 @@ $(PKG)_DEPENDS_ON += pcre
 endif
 
 $(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_TARGET_IPV6_SUPPORT),--enable-ipv6,--disable-ipv6)
-$(PKG)_CONFIGURE_OPTIONS += --with-libpcap="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
-$(PKG)_CONFIGURE_OPTIONS += --with-libdnet="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
-$(PKG)_CONFIGURE_OPTIONS += --with-liblua=$(if $(FREETZ_PACKAGE_NMAP_WITH_SHARED_LUA),"$(TARGET_TOOLCHAIN_STAGING_DIR)/usr",included)
-$(PKG)_CONFIGURE_OPTIONS += --with-libpcre=$(if $(FREETZ_PACKAGE_NMAP_WITH_SHARED_PCRE),"$(TARGET_TOOLCHAIN_STAGING_DIR)/usr",included)
+$(PKG)_CONFIGURE_OPTIONS += --with-libpcap="$(STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-libdnet="$(STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-liblua=$(if $(FREETZ_PACKAGE_NMAP_WITH_SHARED_LUA),"$(STAGING_DIR)/usr",included)
+$(PKG)_CONFIGURE_OPTIONS += --with-libpcre=$(if $(FREETZ_PACKAGE_NMAP_WITH_SHARED_PCRE),"$(STAGING_DIR)/usr",included)
 # ssl support requires openssl built with ripemd enabled
 $(PKG)_CONFIGURE_OPTIONS += --without-openssl
 $(PKG)_CONFIGURE_OPTIONS += --without-zenmap
@@ -62,7 +62,7 @@ else
 # FREETZ_PACKAGE_NMAP_VERSION_4
 $(PKG)_CONFIGURE_OPTIONS += --with-nmapfe=no
 ifeq ($(strip $(FREETZ_PACKAGE_NMAP_WITH_SHARED_LUA)),y)
-$(PKG)_CONFIGURE_ENV += LUAINCLUDE=-I"$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/lua"
+$(PKG)_CONFIGURE_ENV += LUAINCLUDE=-I"$(STAGING_DIR)/usr/include/lua"
 endif
 endif
 

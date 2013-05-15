@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=c5e06418a89cc4209f677a776a798fd9
 $(PKG)_SITE:=@SF/$(pkg)-dev
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/src/.libs/$(pkg).so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$(pkg).so.$($(PKG)_LIB_VERSION)
 
 # evaluated by running test program on target platform
@@ -13,7 +13,7 @@ $(PKG)_CONFIGURE_ENV += ac_cv_libnet_endianess=$(if $(FREETZ_TARGET_ARCH_BE),big
 $(PKG)_CONFIGURE_ENV += ac_cv_lbl_unaligned_fail=no
 $(PKG)_CONFIGURE_ENV += libnet_cv_have_packet_socket=yes
 $(PKG)_CONFIGURE_ENV += ac_cv_libnet_linux_procfs=yes
-$(PKG)_CONFIGURE_ENV += CROSS_TOOLCHAIN_STAGING_DIR=$(TARGET_TOOLCHAIN_STAGING_DIR)
+$(PKG)_CONFIGURE_ENV += CROSS_TOOLCHAIN_STAGING_DIR=$(STAGING_DIR)
 
 $(PKG)_CONFIGURE_OPTIONS += --with-pf_packet=yes
 
@@ -26,10 +26,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LIBNET_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libnet.la
+		$(STAGING_DIR)/usr/lib/libnet.la
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -41,11 +41,11 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBNET_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libnet* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/libnet.h \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/libnet \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/libnet-config \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/share/man/man?/libnet*
+		$(STAGING_DIR)/usr/lib/libnet* \
+		$(STAGING_DIR)/usr/include/libnet.h \
+		$(STAGING_DIR)/usr/include/libnet \
+		$(STAGING_DIR)/usr/bin/libnet-config \
+		$(STAGING_DIR)/share/man/man?/libnet*
 
 $(pkg)-uninstall:
 	$(RM) $(LIBNET_TARGET_DIR)/libnet*.so*

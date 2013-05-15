@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=27339b89850f28c8f1c237f233e05b27
 $(PKG)_SITE:=@SF/libexif
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/libexif/.libs/libexif.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libexif.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libexif.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libexif.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
@@ -22,11 +22,11 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		-C $(LIBEXIF_DIR) install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libexif.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libexif.pc
+		$(STAGING_DIR)/usr/lib/libexif.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libexif.pc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -38,9 +38,9 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBEXIF_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/libexif \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libexif* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libexif.pc
+		$(STAGING_DIR)/usr/include/libexif \
+		$(STAGING_DIR)/usr/lib/libexif* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libexif.pc
 
 $(pkg)-uninstall:
 	$(RM) $(LIBEXIF_TARGET_DIR)/libexif*.so*

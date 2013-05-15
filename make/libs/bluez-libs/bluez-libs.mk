@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=ebc8408c9a74c785786a2ef7185fe628
 $(PKG)_SITE:=@SF/bluez
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/src/.libs/libbluetooth.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libbluetooth.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libbluetooth.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libbluetooth.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
@@ -20,11 +20,11 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(BLUEZ_LIBS_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libbluetooth.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/bluez.pc
+		$(STAGING_DIR)/usr/lib/libbluetooth.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/bluez.pc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -35,10 +35,10 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(BLUEZ_LIBS_DIR) clean
-	$(RM) -r $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libbluetooth.* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/include/bluetooth \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/bluez.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/aclocal/bluez.m4
+	$(RM) -r $(STAGING_DIR)/usr/lib/libbluetooth.* \
+		$(STAGING_DIR)/include/bluetooth \
+		$(STAGING_DIR)/usr/lib/pkgconfig/bluez.pc \
+		$(STAGING_DIR)/usr/share/aclocal/bluez.m4
 
 $(pkg)-uninstall:
 	$(RM) $(BLUEZ_LIBS_TARGET_DIR)/libbluetooth*.so*

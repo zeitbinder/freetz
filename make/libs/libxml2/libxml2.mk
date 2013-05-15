@@ -5,7 +5,7 @@ $(PKG)_SITE:=ftp://xmlsoft.org/$(pkg)
 
 $(PKG)_LIBNAME:=$(pkg).so.$($(PKG)_VERSION)
 $(PKG)_BINARY:=$($(PKG)_DIR)/.libs/$($(PKG)_LIBNAME)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$($(PKG)_LIBNAME)
 
 $(PKG)_REBUILD_SUBOPTS += FREETZ_LIB_libxml2_WITH_HTML
@@ -63,13 +63,13 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		-C $(LIBXML2_DIR) install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libxml2.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/xml2-config \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libxml-2.0.pc
-		ln -sf libxml2/libxml $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/libxml
+		$(STAGING_DIR)/usr/lib/libxml2.la \
+		$(STAGING_DIR)/usr/bin/xml2-config \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libxml-2.0.pc
+		ln -sf libxml2/libxml $(STAGING_DIR)/usr/include/libxml
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -81,10 +81,10 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBXML2_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libxml2* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/xml2-config \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/libxml* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libxml-2.0.pc
+		$(STAGING_DIR)/usr/lib/libxml2* \
+		$(STAGING_DIR)/usr/bin/xml2-config \
+		$(STAGING_DIR)/usr/include/libxml* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libxml-2.0.pc
 
 $(pkg)-uninstall:
 	$(RM) $(LIBXML2_TARGET_DIR)/libxml2*.so*

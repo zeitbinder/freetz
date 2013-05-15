@@ -55,11 +55,14 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY_BUILD_DIR) $($(PKG)_CLIENT_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	for target in $(if $(FREETZ_SAMBA_VERSION_3_0),headers) all; do \
+ifeq ($strip $(FREETZ_SAMBA_VERSION_3_0)),y)
 	$(SUBMAKE) -C $(SAMBA_DIR)/$(SAMBA_BUILD_SUBDIR) \
 		$(SAMBA_MAKE_FLAGS) \
-		$$target; \
-	done
+		headers
+endif
+	$(SUBMAKE) -C $(SAMBA_DIR)/$(SAMBA_BUILD_SUBDIR) \
+		$(SAMBA_MAKE_FLAGS) \
+		all
 
 $($(PKG)_CODEPAGES_BUILD_DIR): $($(PKG)_DIR)/.unpacked
 	@touch $@

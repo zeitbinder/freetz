@@ -19,23 +19,25 @@ $(PKG)_EXTRA_LDFLAGS += -all-static
 endif
 
 $(PKG)_DEPENDS_ON += pcre
-$(PKG)_CONFIGURE_OPTIONS += --with-pcre-regex="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-pcre-regex="$(STAGING_DIR)/usr"
 
 ifeq ($(strip $(FREETZ_PACKAGE_PHP_WITH_CURL)),y)
 $(PKG)_REBUILD_SUBOPTS += $(filter FREETZ_LIB_libcurl_%,$(CURL_REBUILD_SUBOPTS))
 $(PKG)_DEPENDS_ON += curl
-$(PKG)_CONFIGURE_OPTIONS += --with-curl="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-curl="$(STAGING_DIR)/usr"
 endif
 
 ifeq ($(strip $(FREETZ_PACKAGE_PHP_WITH_GD)),y)
 $(PKG)_DEPENDS_ON += gd
-$(PKG)_CONFIGURE_OPTIONS += --with-gd="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-gd="$(STAGING_DIR)/usr"
 $(PKG)_CONFIGURE_OPTIONS += --enable-gd-native-ttf
+$(PKG)_CONFIGURE_OPTIONS += --with-jpeg-dir="$(STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-png-dir="$(STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-freetype-dir="$(STAGING_DIR)/usr"
 endif
 
 ifeq ($(strip $(FREETZ_PACKAGE_PHP_WITH_ICONV)),y)
-$(PKG)_CONFIGURE_OPTIONS += --with-iconv
-$(PKG)_CONFIGURE_OPTIONS += --with-iconv-dir="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-iconv="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
 
 ifeq ($(strip $(FREETZ_TARGET_UCLIBC_0_9_28)),y)
 $(PKG)_DEPENDS_ON += libiconv
@@ -55,7 +57,7 @@ endif
 
 ifeq ($(strip $(FREETZ_PACKAGE_PHP_WITH_LIBXML)),y)
 $(PKG)_DEPENDS_ON += libxml2
-$(PKG)_CONFIGURE_OPTIONS += --with-libxml-dir="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-libxml-dir="$(STAGING_DIR)/usr"
 endif
 $(PKG)_CONFIGURE_OPTIONS += --without-libexpat-dir #we only want libxml-based XML support to be enabled
 $(PKG)_XML_SUPPORT:=$(if $(FREETZ_PACKAGE_PHP_WITH_LIBXML),enable,disable)
@@ -92,8 +94,8 @@ endif
 
 ifeq ($(strip $(FREETZ_PACKAGE_PHP_WITH_SQLITE3)),y)
 $(PKG)_DEPENDS_ON += sqlite
-$(PKG)_CONFIGURE_OPTIONS += --with-sqlite3="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
-$(PKG)_CONFIGURE_OPTIONS += --with-pdo-sqlite="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-sqlite3="$(STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-pdo-sqlite="$(STAGING_DIR)/usr"
 else
 $(PKG)_CONFIGURE_OPTIONS += --without-sqlite3
 $(PKG)_CONFIGURE_OPTIONS += --without-pdo-sqlite
@@ -102,7 +104,7 @@ endif
 ifeq ($(strip $(FREETZ_PACKAGE_PHP_WITH_SSL)),y)
 $(PKG)_REBUILD_SUBOPTS += FREETZ_OPENSSL_SHLIB_VERSION
 $(PKG)_DEPENDS_ON += openssl
-$(PKG)_CONFIGURE_OPTIONS += --with-openssl="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-openssl="$(STAGING_DIR)/usr"
 $(PKG)_LIBS += -ldl
 endif
 
@@ -114,7 +116,7 @@ $(PKG)_CONFIGURE_OPTIONS += --$($(PKG)_SYSVIPC_SUPPORT)-sysvmsg
 ifeq ($(strip $(FREETZ_PACKAGE_PHP_WITH_ZLIB)),y)
 $(PKG)_DEPENDS_ON += zlib
 $(PKG)_CONFIGURE_OPTIONS += --with-zlib
-$(PKG)_CONFIGURE_OPTIONS += --with-zlib-dir="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-zlib-dir="$(STAGING_DIR)/usr"
 endif
 
 ifeq ($(strip $(FREETZ_PACKAGE_PHP_WITH_ZIP)),y)
@@ -186,7 +188,7 @@ $(PKG_CONFIGURED_CONFIGURE)
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 	$(SUBMAKE) -C $(PHP_DIR) \
 		EXTRA_CFLAGS="$(PHP_EXTRA_CFLAGS)" \
-		EXTRA_LDFLAGS_PROGRAM="$(PHP_EXTRA_LDFLAGS)" \
+		LDFLAGS="$(PHP_EXTRA_LDFLAGS)" \
 		ZEND_EXTRA_LIBS="$(PHP_LIBS)"
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)

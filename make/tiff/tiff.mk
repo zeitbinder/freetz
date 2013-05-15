@@ -15,7 +15,7 @@ $(PKG)_LIBNAMES_SHORT := libtiff libtiffxx
 $(PKG)_LIBNAMES_LONG := $($(PKG)_LIBNAMES_SHORT:%=%.so.$($(PKG)_LIB_VERSION))
 
 $(PKG)_LIBS_BUILD_DIR :=$($(PKG)_LIBNAMES_LONG:%=$($(PKG)_DIR)/libtiff/.libs/%)
-$(PKG)_LIBS_STAGING_DIR := $($(PKG)_LIBNAMES_LONG:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%)
+$(PKG)_LIBS_STAGING_DIR := $($(PKG)_LIBNAMES_LONG:%=$(STAGING_DIR)/usr/lib/%)
 $(PKG)_LIBS_TARGET_DIR := $($(PKG)_LIBNAMES_LONG:%=$($(PKG)_TARGET_LIBDIR)/%)
 
 $(PKG)_DEPENDS_ON := $(STDCXXLIB) zlib jpeg
@@ -39,8 +39,8 @@ $(PKG)_CONFIGURE_OPTIONS += --disable-old-jpeg
 $(PKG)_CONFIGURE_OPTIONS += --disable-jbig
 $(PKG)_CONFIGURE_OPTIONS += --without-apple-opengl-framework
 
-$(PKG)_CONFIGURE_OPTIONS += --with-jpeg-include-dir="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include"
-$(PKG)_CONFIGURE_OPTIONS += --with-jpeg-lib-dir="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib"
+$(PKG)_CONFIGURE_OPTIONS += --with-jpeg-include-dir="$(STAGING_DIR)/usr/include"
+$(PKG)_CONFIGURE_OPTIONS += --with-jpeg-lib-dir="$(STAGING_DIR)/usr/lib"
 
 $(PKG_SOURCE_DOWNLOAD)
 $(PKG_UNPACKED)
@@ -54,16 +54,16 @@ $($(PKG)_BINARIES_TARGET_DIR): $($(PKG)_DEST_DIR)/usr/bin/%: $($(PKG)_DIR)/tools
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
 	$(SUBMAKE) -C $(TIFF_DIR)/libtiff \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(SUBMAKE) -C $(TIFF_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install-pkgconfigDATA
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libtiff*.pc \
-		$(TIFF_LIBNAMES_SHORT:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%.la)
+		$(STAGING_DIR)/usr/lib/pkgconfig/libtiff*.pc \
+		$(TIFF_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/%.la)
 
-$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_LIBDIR)/%: $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%
+$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_LIBDIR)/%: $(STAGING_DIR)/usr/lib/%
 	$(INSTALL_LIBRARY_STRIP)
 
 $(pkg): $($(PKG)_LIBS_STAGING_DIR)
@@ -73,9 +73,9 @@ $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR) $($(PKG)_LIBS_TARGET_DIR)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(TIFF_DIR) clean
 	$(RM) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libtiff* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libtiff*.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/tiff*
+		$(STAGING_DIR)/usr/lib/libtiff* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libtiff*.pc \
+		$(STAGING_DIR)/usr/include/tiff*
 
 $(pkg)-uninstall:
 	$(RM) \

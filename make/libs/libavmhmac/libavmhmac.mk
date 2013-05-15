@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=b7dba580f887d3d10c2df808eed00e69
 $(PKG)_SITE:=http://freetz.magenbrot.net
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/$(pkg).so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_DEST_LIB)/$(pkg).so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_DEPENDS_ON := openssl
@@ -19,13 +19,13 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 	$(SUBMAKE) -C $(LIBAVMHMAC_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS) $(FPIC)" \
-		CPPFLAGS="-I$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include" \
-		LFLAGS="-L$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib" \
+		CPPFLAGS="-I$(STAGING_DIR)/usr/include" \
+		LFLAGS="-L$(STAGING_DIR)/usr/lib" \
 		all
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LIBAVMHMAC_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
@@ -37,7 +37,7 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBAVMHMAC_DIR) clean
-	$(RM) $(TARGET_TOOLCHAIN_STAGING_DIR)/lib/libavmhmac*
+	$(RM) $(STAGING_DIR)/lib/libavmhmac*
 
 $(pkg)-uninstall:
 	$(RM) $(LIBAVMHMAC_DEST_LIB)/libavmhmac*.so*

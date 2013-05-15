@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=e46c72219bff559f4bb1615613671942
 $(PKG)_SITE:=@SF/synce
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/lib/.libs/$(pkg).so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$(pkg).so.$($(PKG)_LIB_VERSION)
 
 ifeq ($(strip $(FREETZ_TARGET_UCLIBC_0_9_28)),y)
@@ -27,11 +27,11 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LIBSYNCE_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libsynce.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libsynce.pc
+		$(STAGING_DIR)/usr/lib/libsynce.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libsynce.pc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -42,9 +42,9 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBSYNCE_DIR) clean
-	$(RM) $(TARGET_TOOLCHAIN_STAGING_DIR)/lib/libsynce* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/lib/pkgconfig/libsynce.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/include/synce*.h
+	$(RM) $(STAGING_DIR)/lib/libsynce* \
+		$(STAGING_DIR)/lib/pkgconfig/libsynce.pc \
+		$(STAGING_DIR)/include/synce*.h
 
 $(pkg)-uninstall:
 	$(RM) $(LIBSYNCE_TARGET_DIR)/libsynce*.so*

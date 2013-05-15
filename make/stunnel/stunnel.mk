@@ -29,7 +29,7 @@ $(PKG)_CONFIGURE_ENV += ac_cv_file__dev_urandom=yes
 
 $(PKG)_CONFIGURE_OPTIONS += --disable-libwrap
 $(PKG)_CONFIGURE_OPTIONS += --with-threads=pthread
-$(PKG)_CONFIGURE_OPTIONS += --with-ssl="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-ssl="$(STAGING_DIR)/usr"
 $(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_TARGET_IPV6_SUPPORT),--enable-ipv6,--disable-ipv6)
 
 $(PKG)_REBUILD_SUBOPTS += FREETZ_PACKAGE_STUNNEL_STATIC

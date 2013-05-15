@@ -12,7 +12,7 @@ $(PKG)_TARGET_TYPES_DB:=$($(PKG)_DEST_DIR)/usr/share/$(pkg)/types.db
 $(PKG)_DEPENDS_ON := libtool
 # ensure system libltdl is used and not the included one
 $(PKG)_CONFIGURE_PRE_CMDS += $(RM) -r libltdl; sed -i -r -e '/SUBDIRS/ s/libltdl//g' ./Makefile.in;
-$(PKG)_CONFIGURE_ENV += LIBLTDL_PREFIX="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_ENV += LIBLTDL_PREFIX="$(STAGING_DIR)/usr"
 
 # remove -Werror flag
 $(PKG)_CONFIGURE_PRE_CMDS += sed -i -r -e 's,-Werror,,g' ./configure ./src/Makefile.in ./src/libcollectdclient/Makefile.in ./src/owniptc/Makefile.in;
@@ -49,15 +49,15 @@ $(PKG)_CONFIGURE_OPTIONS += $(foreach feature,$($(PKG)_FEATURES_DISABLED),--with
 
 ifeq ($(strip $(FREETZ_PACKAGE_COLLECTD_PLUGIN_apache)),y)
 $(PKG)_DEPENDS_ON += curl
-$(PKG)_CONFIGURE_OPTIONS += --with-libcurl=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr
+$(PKG)_CONFIGURE_OPTIONS += --with-libcurl=$(STAGING_DIR)/usr
 endif
 ifeq ($(strip $(FREETZ_PACKAGE_COLLECTD_PLUGIN_ping)),y)
 $(PKG)_DEPENDS_ON += liboping
-$(PKG)_CONFIGURE_OPTIONS += --with-liboping=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr
+$(PKG)_CONFIGURE_OPTIONS += --with-liboping=$(STAGING_DIR)/usr
 endif
 ifeq ($(strip $(FREETZ_PACKAGE_COLLECTD_PLUGIN_rrdtool)),y)
 $(PKG)_DEPENDS_ON += rrdtool
-$(PKG)_CONFIGURE_OPTIONS += --with-librrd=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr
+$(PKG)_CONFIGURE_OPTIONS += --with-librrd=$(STAGING_DIR)/usr
 endif
 
 # plugins

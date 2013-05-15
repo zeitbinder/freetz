@@ -6,7 +6,7 @@ $(PKG)_SITE:=@SF/netpbm/super_stable/$($(PKG)_VERSION)
 
 $(PKG)_LIBNAME := libnetpbm.so.$($(PKG)_LIB_VERSION)
 $(PKG)_LIB_BUILD_DIR := $($(PKG)_DIR)/lib/$($(PKG)_LIBNAME)
-$(PKG)_LIB_STAGING_DIR := $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
+$(PKG)_LIB_STAGING_DIR := $(STAGING_DIR)/usr/lib/$($(PKG)_LIBNAME)
 $(PKG)_LIB_TARGET_DIR := $($(PKG)_TARGET_LIBDIR)/$($(PKG)_LIBNAME)
 
 # see INTERFACE_HEADERS variable in lib/Makefile
@@ -37,28 +37,28 @@ $($(PKG)_DIR)/buildtools/.compiled: $($(PKG)_DIR)/.configured
 
 $($(PKG)_DIR)/Makefile.depend: $($(PKG)_DIR)/buildtools/.compiled
 	$(SUBMAKE1) -C $(NETPBM_DIR) \
-		FAKEROOTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		FAKEROOTDIR="$(STAGING_DIR)" \
 		TARGET_CROSS_PREFIX="$(TARGET_CROSS)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
 		dep
 
 $($(PKG)_LIB_BUILD_DIR): $($(PKG)_DIR)/Makefile.depend
 	$(SUBMAKE1) -C $(NETPBM_DIR)/lib \
-		FAKEROOTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		FAKEROOTDIR="$(STAGING_DIR)" \
 		TARGET_CROSS_PREFIX="$(TARGET_CROSS)" \
 		CFLAGS="$(TARGET_CFLAGS) $(FPIC)" \
 		all
 
 $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/converter/other/%: $($(PKG)_DIR)/Makefile.depend $($(PKG)_LIB_BUILD_DIR)
 	$(SUBMAKE1) -C $(NETPBM_DIR)/converter/other \
-		FAKEROOTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		FAKEROOTDIR="$(STAGING_DIR)" \
 		TARGET_CROSS_PREFIX="$(TARGET_CROSS)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
 		$(notdir $@)
 
 $($(PKG)_LIB_STAGING_DIR): $($(PKG)_LIB_BUILD_DIR)
-	mkdir -p $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/netpbm/ \
-	&& cp -a $(NETPBM_INTERFACE_HEADERS:%=$(NETPBM_DIR)/%) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/netpbm/
+	mkdir -p $(STAGING_DIR)/usr/include/netpbm/ \
+	&& cp -a $(NETPBM_INTERFACE_HEADERS:%=$(NETPBM_DIR)/%) $(STAGING_DIR)/usr/include/netpbm/
 	$(INSTALL_LIBRARY_INCLUDE_STATIC)
 
 $($(PKG)_LIB_TARGET_DIR): $($(PKG)_LIB_STAGING_DIR)
@@ -75,8 +75,8 @@ $(pkg)-clean:
 	-$(SUBMAKE1) -C $(NETPBM_DIR)/lib clean
 	-$(SUBMAKE1) -C $(NETPBM_DIR)/converter/other clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/netpbm/ \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libnetpbm*
+		$(STAGING_DIR)/usr/include/netpbm/ \
+		$(STAGING_DIR)/usr/lib/libnetpbm*
 
 $(pkg)-uninstall:
 	$(RM) \

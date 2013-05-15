@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=355d4474e3faa81b485d6a604b06951f
 $(PKG)_SITE:=http://www.intra2net.com/de/produkte/opensource/ftdi/TGZ
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/src/.libs/$(pkg).so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$(pkg).so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_DEPENDS_ON := libusb
@@ -25,12 +25,12 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LIBFTDI_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libftdi.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libftdi.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/libftdi-config
+		$(STAGING_DIR)/usr/lib/libftdi.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libftdi.pc \
+		$(STAGING_DIR)/usr/bin/libftdi-config
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -41,10 +41,10 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBFTDI_DIR) clean
-	$(RM) $(TARGET_TOOLCHAIN_STAGING_DIR)/lib/libftdi* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/lib/pkgconfig/libftdi.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/bin/libftdi-config \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/include/ftdi.h
+	$(RM) $(STAGING_DIR)/lib/libftdi* \
+		$(STAGING_DIR)/lib/pkgconfig/libftdi.pc \
+		$(STAGING_DIR)/bin/libftdi-config \
+		$(STAGING_DIR)/include/ftdi.h
 
 $(pkg)-uninstall:
 	$(RM) $(LIBFTDI_TARGET_DIR)/libftdi*.so*

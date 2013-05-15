@@ -8,7 +8,7 @@ $(PKG)_SITE:=http://tuxera.com/opensource
 $(PKG)_DIR:=$($(PKG)_SOURCE_DIR)/$($(PKG)_TARBALL_DIRNAME)
 
 $(PKG)_LIB_BINARY:=$($(PKG)_DIR)/libntfs-3g/.libs/libntfs-3g.so.$($(PKG)_LIB_VERSION)
-$(PKG)_LIB_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libntfs-3g.so.$($(PKG)_LIB_VERSION)
+$(PKG)_LIB_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libntfs-3g.so.$($(PKG)_LIB_VERSION)
 $(PKG)_LIB_TARGET_BINARY:=$($(PKG)_TARGET_LIBDIR)/libntfs-3g.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_BINARIES_ALL := mkntfs ntfscat ntfsclone ntfscluster ntfscmp ntfscp ntfsfix ntfsinfo ntfslabel ntfsls ntfsresize ntfsundelete
@@ -54,14 +54,14 @@ $($(PKG)_LIB_BINARY) $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
 $($(PKG)_LIB_STAGING_BINARY): $($(PKG)_LIB_BINARY)
 	$(SUBMAKE) -C $(NTFS_DIR)/libntfs-3g \
 		$(NTFS_MAKE_FLAGS) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libntfs-3g.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libntfs-3g.pc
+		$(STAGING_DIR)/usr/lib/libntfs-3g.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libntfs-3g.pc
 	$(SUBMAKE) -C $(NTFS_DIR)/include/ntfs-3g \
 		$(NTFS_MAKE_FLAGS) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 
 $(foreach binary,$($(PKG)_BINARIES_BUILD_DIR),$(eval $(call INSTALL_BINARY_STRIP_RULE,$(binary),/usr/bin)))
@@ -76,9 +76,9 @@ $(pkg)-precompiled: $($(PKG)_LIB_TARGET_BINARY) $($(PKG)_BINARIES_TARGET_DIR)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(NTFS_DIR) $(NTFS_MAKE_FLAGS) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libntfs-3g* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libntfs-3g.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/ntfs-3g
+		$(STAGING_DIR)/usr/lib/libntfs-3g* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libntfs-3g.pc \
+		$(STAGING_DIR)/usr/include/ntfs-3g
 
 $(pkg)-uninstall:
 	$(RM) $(NTFS_BINARIES_ALL:%=$(NTFS_DEST_DIR)/usr/bin/%) $(NTFS_TARGET_LIBDIR)/libntfs-3g.so*

@@ -17,7 +17,7 @@ $(PKG)_DEPENDS_ON := libevent
 $(PKG)_CONFIGURE_PRE_CMDS += touch -t 200001010000.00 ./configure.in ./config.h.in ./acconfig.h;
 $(PKG)_CONFIGURE_PRE_CMDS += $(call PKG_PREVENT_RPATH_HARDCODING,./configure)
 
-$(PKG)_CONFIGURE_OPTIONS += --with-libevent="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-libevent="$(STAGING_DIR)/usr"
 
 $(PKG_SOURCE_DOWNLOAD)
 $(PKG_UNPACKED)

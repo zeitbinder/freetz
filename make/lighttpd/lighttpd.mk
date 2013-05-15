@@ -40,17 +40,17 @@ $(PKG)_DEPENDS_ON := pcre
 
 ifeq ($(strip $(FREETZ_PACKAGE_LIGHTTPD_WITH_SSL)),y)
 $(PKG)_CONFIGURE_OPTIONS += --with-openssl=yes
-$(PKG)_CONFIGURE_OPTIONS += --with-openssl-libs="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib"
+$(PKG)_CONFIGURE_OPTIONS += --with-openssl-libs="$(STAGING_DIR)/usr/lib"
 ifeq ($(strip $(FREETZ_PACKAGE_LIGHTTPD_USE_CYASSL)),y)
 $(PKG)_DEPENDS_ON += cyassl
-$(PKG)_CONFIGURE_OPTIONS += --with-openssl-includes="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/cyassl"
+$(PKG)_CONFIGURE_OPTIONS += --with-openssl-includes="$(STAGING_DIR)/usr/include/cyassl"
 $(PKG)_CONFIGURE_ENV += OPENSSL_ALTERNATIVE=cyassl
 $(PKG)_CONFIGURE_ENV += OPENSSL_ALTERNATIVE_FCT_PREFIX=Cya
 $(PKG)_CONFIGURE_ENV += OPENSSL_ALTERNATIVE_EXTRALIBS="-lm -lz"
 else
 $(PKG)_REBUILD_SUBOPTS += FREETZ_OPENSSL_SHLIB_VERSION
 $(PKG)_DEPENDS_ON += openssl
-$(PKG)_CONFIGURE_OPTIONS += --with-openssl-includes="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include"
+$(PKG)_CONFIGURE_OPTIONS += --with-openssl-includes="$(STAGING_DIR)/usr/include"
 endif
 endif
 

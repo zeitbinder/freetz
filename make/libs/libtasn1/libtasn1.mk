@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=f4f4035b84550100ffeb8ad4b261dea9
 $(PKG)_SITE:=@GNU/$(pkg)
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/lib/.libs/$(pkg).so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$(pkg).so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
@@ -20,11 +20,11 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LIBTASN1_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libtasn1.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libtasn1.pc
+		$(STAGING_DIR)/usr/lib/libtasn1.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libtasn1.pc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -36,9 +36,9 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBTASN1_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libtasn1* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libtasn1.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/libtasn1.h
+		$(STAGING_DIR)/usr/lib/libtasn1* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libtasn1.pc \
+		$(STAGING_DIR)/usr/include/libtasn1.h
 
 $(pkg)-uninstall:
 	$(RM) $(LIBTASN1_TARGET_DIR)/libtasn1*.so*

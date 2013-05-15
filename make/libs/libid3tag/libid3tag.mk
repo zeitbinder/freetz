@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=e5808ad997ba32c498803822078748c3
 $(PKG)_SITE:=@SF/mad
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/.libs/$(pkg).so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$(pkg).so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_DEPENDS_ON := zlib
@@ -25,10 +25,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LIBID3TAG_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libid3tag.la
+		$(STAGING_DIR)/usr/lib/libid3tag.la
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -39,7 +39,7 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBID3TAG_DIR) clean
-	$(RM) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libid3tag*
+	$(RM) $(STAGING_DIR)/usr/lib/libid3tag*
 
 $(pkg)-uninstall:
 	$(RM) $(LIBID3TAG_TARGET_DIR)/libid3tag*.so*

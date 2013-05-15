@@ -20,7 +20,7 @@ $(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_TARGET_IPV6_SUPPORT),--enable-ipv6,--d
 $(PKG)_CONFIGURE_OPTIONS += --disable-java
 $(PKG)_CONFIGURE_OPTIONS += --enable-agent
 $(PKG)_CONFIGURE_OPTIONS += --enable-server
-$(PKG)_CONFIGURE_OPTIONS += --with-sqlite3="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-sqlite3="$(STAGING_DIR)/usr"
 $(PKG)_CONFIGURE_OPTIONS += --enable-proxy
 
 $(PKG)_MAKE_FLAGS := ARCH=linux

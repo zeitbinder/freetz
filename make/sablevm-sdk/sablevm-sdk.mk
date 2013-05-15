@@ -14,7 +14,7 @@ $(PKG)_LIB_BINARY:=$($(PKG)_DIR)/sablevm/src/libsablevm/.libs/libsablevm-$($(PKG
 $(PKG)_LIB_TARGET_BINARY:=$($(PKG)_DEST_LIBDIR)/libsablevm-$($(PKG)_VERSION).so
 
 $(PKG)_LIB_CLASSPATH_BINARY:=$($(PKG)_DIR)/sablevm-classpath/native/jni/java-io/.libs/libjavaio-$($(PKG)_VERSION).so
-$(PKG)_LIB_STAGING_CLASSPATH_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/sablevm-classpath/libjavaio-$($(PKG)_VERSION).so
+$(PKG)_LIB_STAGING_CLASSPATH_BINARY:=$(STAGING_DIR)/usr/lib/sablevm-classpath/libjavaio-$($(PKG)_VERSION).so
 $(PKG)_LIB_TARGET_CLASSPATH_BINARY:=$($(PKG)_DEST_DIR)/usr/lib/sablevm-classpath/libjavaio-$($(PKG)_VERSION).so
 
 $(PKG)_DEPENDS_ON := libffi libtool popt zlib
@@ -94,20 +94,20 @@ $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 
 $($(PKG)_LIB_STAGING_CLASSPATH_BINARY): $($(PKG)_LIB_BINARY)
 	$(SUBMAKE) -C $(SABLEVM_SDK_DIR)/sablevm-classpath/native/jni \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" install
+		DESTDIR="$(STAGING_DIR)" install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/sablevm-classpath/libjavaio.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/sablevm-classpath/libjavalang.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/sablevm-classpath/libjavalangreflect.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/sablevm-classpath/libjavanet.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/sablevm-classpath/libjavanio.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/sablevm-classpath/libjavautil.la
+		$(STAGING_DIR)/usr/lib/sablevm-classpath/libjavaio.la \
+		$(STAGING_DIR)/usr/lib/sablevm-classpath/libjavalang.la \
+		$(STAGING_DIR)/usr/lib/sablevm-classpath/libjavalangreflect.la \
+		$(STAGING_DIR)/usr/lib/sablevm-classpath/libjavanet.la \
+		$(STAGING_DIR)/usr/lib/sablevm-classpath/libjavanio.la \
+		$(STAGING_DIR)/usr/lib/sablevm-classpath/libjavautil.la
 
 $($(PKG)_LIB_TARGET_BINARY): $($(PKG)_LIB_BINARY)
 	$(INSTALL_LIBRARY_STRIP_WILDCARD_BEFORE_SO)
 
 $($(PKG)_LIB_TARGET_CLASSPATH_BINARY): $($(PKG)_LIB_STAGING_CLASSPATH_BINARY)
-	cp -a $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/sablevm-classpath/libjava*.so* $(SABLEVM_SDK_DEST_DIR)/usr/lib/sablevm-classpath/
+	cp -a $(STAGING_DIR)/usr/lib/sablevm-classpath/libjava*.so* $(SABLEVM_SDK_DEST_DIR)/usr/lib/sablevm-classpath/
 	$(TARGET_STRIP) $(SABLEVM_SDK_DEST_DIR)/usr/lib/sablevm-classpath/libjava*.so*
 	cp $(SABLEVM_SDK_DIR)/sablevm-classpath/lib/resources.jar $(SABLEVM_SDK_DEST_DIR)/usr/share/sablevm-classpath/
 ifeq ($(strip $(FREETZ_PACKAGE_SABLEVM_SDK_MINI)),y)

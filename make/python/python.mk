@@ -13,7 +13,7 @@ $(PKG)_LIB_PYTHON_TARGET_DIR:=$($(PKG)_TARGET_LIBDIR)/libpython$($(PKG)_MAJOR_VE
 $(PKG)_ZIPPED_PYC:=usr/lib/python$(subst .,,$($(PKG)_MAJOR_VERSION)).zip
 $(PKG)_ZIPPED_PYC_TARGET_DIR:=$($(PKG)_DEST_DIR)/$($(PKG)_ZIPPED_PYC)
 
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/python$($(PKG)_MAJOR_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/bin/python$($(PKG)_MAJOR_VERSION)
 
 include $(MAKE_DIR)/python/python-module-macros.mk.in
 
@@ -85,7 +85,7 @@ $(PKG)_CONFIGURE_PRE_CMDS += cp $(HOST_TOOLS_DIR)/usr/bin/python$($(PKG)_MAJOR_V
 # directories PYTHON_FOR_BUILD should look in for libpython while cross-compiling.
 $(PKG)_CONFIGURE_PRE_CMDS += touch pybuilddir.txt;
 
-$(PKG)_MAKE_OPTIONS  := CROSS_TOOLCHAIN_SYSROOT="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_MAKE_OPTIONS  := CROSS_TOOLCHAIN_SYSROOT="$(STAGING_DIR)/usr"
 $(PKG)_MAKE_OPTIONS  += PYTHON_FOR_COMPILE="$(abspath $(HOST_TOOLS_DIR)/usr/bin/python)"
 $(PKG)_CONFIGURE_ENV += PYTHON_INTERPRETER_FOR_BUILD="$(abspath $($(PKG)_DIR)/hostpython)"
 $(PKG)_MAKE_OPTIONS  += PGEN_FOR_BUILD="$(abspath $($(PKG)_DIR)/hostpgen)"
@@ -123,12 +123,12 @@ $($(PKG)_DIR)/.installed: $($(PKG)_DIR)/.compiled
 	touch $@
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_DIR)/.installed
-	@tar -c -C $(PYTHON_LOCAL_INSTALL_DIR)/usr --exclude='*.pyc' . | tar -x -C $(TARGET_TOOLCHAIN_STAGING_DIR)/usr; \
-	$(PKG_FIX_LIBTOOL_LA) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/python-$(PYTHON_MAJOR_VERSION).pc; \
-	$(RM) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/python$(PYTHON_MAJOR_VERSION).bin ; \
-	cp $(HOST_TOOLS_DIR)/usr/bin/python$(PYTHON_MAJOR_VERSION) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/hostpython; \
-	ln -sf hostpython $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/python$(PYTHON_MAJOR_VERSION); \
-	$(SED) -ri -e 's,^#!.*,#!/usr/bin/env python$(PYTHON_MAJOR_VERSION),g' $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/python$(PYTHON_MAJOR_VERSION)-config; \
+	@tar -c -C $(PYTHON_LOCAL_INSTALL_DIR)/usr --exclude='*.pyc' . | tar -x -C $(STAGING_DIR)/usr; \
+	$(PKG_FIX_LIBTOOL_LA) $(STAGING_DIR)/usr/lib/pkgconfig/python-$(PYTHON_MAJOR_VERSION).pc; \
+	$(RM) $(STAGING_DIR)/usr/bin/python$(PYTHON_MAJOR_VERSION).bin ; \
+	cp $(HOST_TOOLS_DIR)/usr/bin/python$(PYTHON_MAJOR_VERSION) $(STAGING_DIR)/usr/bin/hostpython; \
+	ln -sf hostpython $(STAGING_DIR)/usr/bin/python$(PYTHON_MAJOR_VERSION); \
+	$(SED) -ri -e 's,^#!.*,#!/usr/bin/env python$(PYTHON_MAJOR_VERSION),g' $(STAGING_DIR)/usr/bin/python$(PYTHON_MAJOR_VERSION)-config; \
 	touch -c $@
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_DIR)/.installed
@@ -185,11 +185,11 @@ $(pkg)-clean:
 	$(RM) $(PYTHON_TARGET_DIR)/py.lst $(PYTHON_TARGET_DIR)/pyc.lst
 	$(RM) $(PYTHON_TARGET_DIR)/excluded-module-files.lst $(PYTHON_TARGET_DIR)/excluded-module-files-zip.lst $(PYTHON_TARGET_DIR)/.excluded
 	$(RM) -r $(PYTHON_LOCAL_INSTALL_DIR)
-	$(RM) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/python* $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/hostpython
-	$(RM) -r $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/python$(PYTHON_MAJOR_VERSION)
-	$(RM) -r $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/python$(PYTHON_MAJOR_VERSION)
-	$(RM) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libpython$(PYTHON_MAJOR_VERSION).*
-	$(RM) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/python*
+	$(RM) $(STAGING_DIR)/usr/bin/python* $(STAGING_DIR)/usr/bin/hostpython
+	$(RM) -r $(STAGING_DIR)/usr/include/python$(PYTHON_MAJOR_VERSION)
+	$(RM) -r $(STAGING_DIR)/usr/lib/python$(PYTHON_MAJOR_VERSION)
+	$(RM) $(STAGING_DIR)/usr/lib/libpython$(PYTHON_MAJOR_VERSION).*
+	$(RM) $(STAGING_DIR)/usr/lib/pkgconfig/python*
 
 $(pkg)-uninstall:
 	$(RM) -r \

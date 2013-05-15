@@ -7,7 +7,7 @@ $(PKG)_SOURCE_MD5:=66b935e6a4a3fdb6e77b3717e94ebed3
 $(PKG)_SITE:=svn@http://libdnet.googlecode.com/svn/trunk
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/src/.libs/$(pkg).so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$(pkg).so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_OPTIONS += --with-python=no
@@ -25,11 +25,11 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LIBDNET_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libdnet.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/dnet-config
+		$(STAGING_DIR)/usr/lib/libdnet.la \
+		$(STAGING_DIR)/usr/bin/dnet-config
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -41,10 +41,10 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBDNET_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libdnet* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/dnet \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/dnet.h \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/dnet-config
+		$(STAGING_DIR)/usr/lib/libdnet* \
+		$(STAGING_DIR)/usr/include/dnet \
+		$(STAGING_DIR)/usr/include/dnet.h \
+		$(STAGING_DIR)/usr/bin/dnet-config
 
 $(pkg)-uninstall:
 	$(RM) $(LIBDNET_TARGET_DIR)/libdnet*

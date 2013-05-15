@@ -13,7 +13,7 @@ ifeq ($(strip $(FREETZ_LIB_librrd_th)),y)
 $(PKG)_LIBS_SELECTED+=librrd_th.so.$($(PKG)_LIBRRD_TH_VERSION)
 endif
 $(PKG)_LIBS_BUILD_DIR:=$($(PKG)_LIBS_SELECTED:%=$($(PKG)_DIR)/src/.libs/%)
-$(PKG)_LIBS_STAGING_DIR:=$($(PKG)_LIBS_SELECTED:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%)
+$(PKG)_LIBS_STAGING_DIR:=$($(PKG)_LIBS_SELECTED:%=$(STAGING_DIR)/usr/lib/%)
 $(PKG)_LIBS_TARGET_DIR:=$($(PKG)_LIBS_SELECTED:%=$($(PKG)_TARGET_LIBDIR)/%)
 
 $(PKG)_DEPENDS_ON := libpng freetype libart_lgpl zlib
@@ -35,8 +35,8 @@ $(PKG)_CONFIGURE_OPTIONS += --disable-tcl
 $(PKG)_CONFIGURE_OPTIONS += --disable-ruby
 $(PKG)_CONFIGURE_OPTIONS += --without-x
 
-$(PKG)_LIBART_CPPFLAGS:="-I$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/libart-2.0"
-$(PKG)_FREETYPE_CPPFLAGS:="-I$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/freetype2"
+$(PKG)_LIBART_CPPFLAGS:="-I$(STAGING_DIR)/usr/include/libart-2.0"
+$(PKG)_FREETYPE_CPPFLAGS:="-I$(STAGING_DIR)/usr/include/freetype2"
 
 $(PKG_SOURCE_DOWNLOAD)
 $(PKG_UNPACKED)
@@ -51,14 +51,14 @@ $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
 	$(SUBMAKE) -C $(RRDTOOL_DIR)/src \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install-includeHEADERS \
 		install-libLTLIBRARIES
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/librrd.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/librrd_th.la
+		$(STAGING_DIR)/usr/lib/librrd.la \
+		$(STAGING_DIR)/usr/lib/librrd_th.la
 
-$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_LIBDIR)/%: $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%
+$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_LIBDIR)/%: $(STAGING_DIR)/usr/lib/%
 	$(INSTALL_LIBRARY_STRIP)
 
 $(pkg):
@@ -68,8 +68,8 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIBS_TARGET_DIR)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(RRDTOOL_DIR) clean
 	$(RM) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/librrd* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/rrd.h
+		$(STAGING_DIR)/usr/lib/librrd* \
+		$(STAGING_DIR)/usr/include/rrd.h
 
 $(pkg)-uninstall:
 	$(RM) $(RRDTOOL_TARGET_BINARY)

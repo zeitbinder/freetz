@@ -7,7 +7,7 @@ $(PKG)_SITE:=http://git.uclibc.org/uClibc++/snapshot
 $(PKG)_DIR:=$($(PKG)_SOURCE_DIR)/uClibc++-$($(PKG)_VERSION)
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/src/libuClibc++-$($(PKG)_LIB_VERSION).so
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libuClibc++-$($(PKG)_LIB_VERSION).so
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libuClibc++-$($(PKG)_LIB_VERSION).so
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libuClibc++-$($(PKG)_LIB_VERSION).so
 
 $(PKG)_REBUILD_SUBOPTS += FREETZ_LIB_libuClibc__WITH_WCHAR
@@ -36,13 +36,13 @@ $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(UCLIBCXX_DIR) \
 		CPU_CFLAGS="$(TARGET_CFLAGS)" \
 		CROSS="$(TARGET_CROSS)" \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr" \
+		DESTDIR="$(STAGING_DIR)/usr" \
 		install
-	$(SED) -i -e 's|-I/include/uClibc++|-I$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/uClibc++|g' $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/g++-uc
-	$(SED) -i -e 's|-L/lib/|-L$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/|g' $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/g++-uc
-	mv	$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/g++-uc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/$(REAL_GNU_TARGET_NAME)-g++-uc
-	ln -sf $(REAL_GNU_TARGET_NAME)-g++-uc $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/$(GNU_TARGET_NAME)-g++-uc
+	$(SED) -i -e 's|-I/include/uClibc++|-I$(STAGING_DIR)/usr/include/uClibc++|g' $(STAGING_DIR)/usr/bin/g++-uc
+	$(SED) -i -e 's|-L/lib/|-L$(STAGING_DIR)/usr/lib/|g' $(STAGING_DIR)/usr/bin/g++-uc
+	mv	$(STAGING_DIR)/usr/bin/g++-uc \
+		$(STAGING_DIR)/usr/bin/$(REAL_GNU_TARGET_NAME)-g++-uc
+	ln -sf $(REAL_GNU_TARGET_NAME)-g++-uc $(STAGING_DIR)/usr/bin/$(GNU_TARGET_NAME)-g++-uc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP_WILDCARD_BEFORE_SO)
@@ -54,10 +54,10 @@ uclibcxx-precompiled: $($(PKG)_TARGET_BINARY)
 uclibcxx-clean:
 	-$(SUBMAKE) -C $(UCLIBCXX_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/$(GNU_TARGET_NAME)-g++-uc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/bin/$(REAL_GNU_TARGET_NAME)-g++-uc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libuClibc++* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/uClibc++
+		$(STAGING_DIR)/usr/bin/$(GNU_TARGET_NAME)-g++-uc \
+		$(STAGING_DIR)/usr/bin/$(REAL_GNU_TARGET_NAME)-g++-uc \
+		$(STAGING_DIR)/usr/lib/libuClibc++* \
+		$(STAGING_DIR)/usr/include/uClibc++
 
 uclibcxx-uninstall:
 	$(RM) $(UCLIBCXX_TARGET_DIR)/libuClibc++*.so*

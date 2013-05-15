@@ -31,9 +31,9 @@ $(PKG)_CONFIGURE_OPTIONS += --with-expat
 $(PKG)_CONFIGURE_OPTIONS += --with-iconv
 $(PKG)_CONFIGURE_OPTIONS += --with-openssl
 ifeq ($(strip $(FREETZ_PACKAGE_GIT_WITH_PCRE)),y)
-$(PKG)_CONFIGURE_OPTIONS += --with-libpcre="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-libpcre="$(STAGING_DIR)/usr"
 endif
-$(PKG)_CONFIGURE_OPTIONS += --with-zlib="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr"
+$(PKG)_CONFIGURE_OPTIONS += --with-zlib="$(STAGING_DIR)/usr"
 $(PKG)_CONFIGURE_OPTIONS += --without-perl
 $(PKG)_CONFIGURE_OPTIONS += --without-python
 $(PKG)_CONFIGURE_OPTIONS += --without-tcltk

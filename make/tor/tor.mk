@@ -23,8 +23,8 @@ $(PKG)_CONFIGURE_ENV += tor_cv_ldflags__pie=no
 $(PKG)_CONFIGURE_OPTIONS += --sysconfdir=/mod/etc
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
 $(PKG)_CONFIGURE_OPTIONS += --enable-static
-$(PKG)_CONFIGURE_OPTIONS += --with-openssl-dir="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib"
-$(PKG)_CONFIGURE_OPTIONS += --with-libevent-dir="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib"
+$(PKG)_CONFIGURE_OPTIONS += --with-openssl-dir="$(STAGING_DIR)/usr/lib"
+$(PKG)_CONFIGURE_OPTIONS += --with-libevent-dir="$(STAGING_DIR)/usr/lib"
 
 $(PKG)_REBUILD_SUBOPTS += FREETZ_OPENSSL_SHLIB_VERSION
 $(PKG)_REBUILD_SUBOPTS += FREETZ_PACKAGE_TOR_STATIC

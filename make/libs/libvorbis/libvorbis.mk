@@ -7,7 +7,7 @@ $(PKG)_LIBVERSIONS      := 0.4.6 2.0.9 3.3.5
 $(PKG)_LIBNAMES_SHORT   := vorbis vorbisenc vorbisfile
 $(PKG)_LIBNAMES_LONG    := $(join $($(PKG)_LIBNAMES_SHORT:%=lib%.so.),$($(PKG)_LIBVERSIONS))
 $(PKG)_LIBS_BUILD_DIR   := $($(PKG)_LIBNAMES_LONG:%=$($(PKG)_DIR)/lib/.libs/%)
-$(PKG)_LIBS_STAGING_DIR := $($(PKG)_LIBNAMES_LONG:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%)
+$(PKG)_LIBS_STAGING_DIR := $($(PKG)_LIBNAMES_LONG:%=$(STAGING_DIR)/usr/lib/%)
 $(PKG)_LIBS_TARGET_DIR  := $($(PKG)_LIBNAMES_LONG:%=$($(PKG)_TARGET_DIR)/%)
 
 $(PKG)_DEPENDS_ON := libogg
@@ -20,8 +20,8 @@ $(PKG)_CONFIGURE_PRE_CMDS += $(RM) lib/books/coupled/*51.h lib/modes/*44p51.h;
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
 $(PKG)_CONFIGURE_OPTIONS += --enable-static
-$(PKG)_CONFIGURE_OPTIONS += --with-ogg-libraries="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib"
-$(PKG)_CONFIGURE_OPTIONS += --with-ogg-includes="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include"
+$(PKG)_CONFIGURE_OPTIONS += --with-ogg-libraries="$(STAGING_DIR)/usr/lib"
+$(PKG)_CONFIGURE_OPTIONS += --with-ogg-includes="$(STAGING_DIR)/usr/include"
 
 $(PKG_SOURCE_DOWNLOAD)
 $(PKG_UNPACKED)
@@ -32,13 +32,13 @@ $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
 	$(SUBMAKE) -C $(LIBVORBIS_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(LIBVORBIS_LIBNAMES_SHORT:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/lib%.la) \
-		$(LIBVORBIS_LIBNAMES_SHORT:%=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/%.pc)
+		$(LIBVORBIS_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/lib%.la) \
+		$(LIBVORBIS_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/pkgconfig/%.pc)
 
-$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_DIR)/%: $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/%
+$($(PKG)_LIBS_TARGET_DIR): $($(PKG)_TARGET_DIR)/%: $(STAGING_DIR)/usr/lib/%
 	$(INSTALL_LIBRARY_STRIP)
 
 $(pkg): $($(PKG)_LIBS_STAGING_DIR)
@@ -48,10 +48,10 @@ $(pkg)-precompiled: $($(PKG)_LIBS_TARGET_DIR)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBVORBIS_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libvorbis* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/vorbis* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/vorbis* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/aclocal/vorvis*
+		$(STAGING_DIR)/usr/lib/libvorbis* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/vorbis* \
+		$(STAGING_DIR)/usr/include/vorbis* \
+		$(STAGING_DIR)/usr/share/aclocal/vorvis*
 
 $(pkg)-uninstall:
 	$(RM) $(LIBVORBIS_TARGET_DIR)/libvorbis*.so*

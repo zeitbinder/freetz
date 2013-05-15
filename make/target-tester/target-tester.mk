@@ -79,7 +79,7 @@ $(pkg)-math-functions: $($(PKG)_DIR)/.configured
 		$(MAKE) -C $(TARGET_TESTER_DIR) \
 		CC="$(TARGET_CXX)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
-		LDFLAGS="-L$(TARGET_TOOLCHAIN_STAGING_DIR)/lib" \
+		LDFLAGS="-L$(STAGING_DIR)/lib" \
 		math-functions
 
 $(pkg):

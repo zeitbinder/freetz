@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=28f1205d8dd2001f26fec1e8c2cebe37
 $(PKG)_SITE:=http://zlib.net
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/libz.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libz.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libz.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libz.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_DEFOPTS := n
@@ -30,10 +30,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(ZLIB_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(call PKG_FIX_LIBTOOL_LA,prefix) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/zlib.pc
+		$(STAGING_DIR)/usr/lib/pkgconfig/zlib.pc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -45,10 +45,10 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(ZLIB_DIR) clean
 	$(RM) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libz.* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/zlib.h \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/zconf.h \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/zlib.pc
+		$(STAGING_DIR)/usr/lib/libz.* \
+		$(STAGING_DIR)/usr/include/zlib.h \
+		$(STAGING_DIR)/usr/include/zconf.h \
+		$(STAGING_DIR)/usr/lib/pkgconfig/zlib.pc
 
 $(pkg)-uninstall:
 	$(RM) $(ZLIB_TARGET_DIR)/libz*.so*

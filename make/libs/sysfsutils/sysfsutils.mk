@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=14e7dcd0436d2f49aa403f67e1ef7ddc
 $(PKG)_SITE:=@SF/linux-diag
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/lib/.libs/libsysfs.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libsysfs.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libsysfs.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libsysfs.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
@@ -20,10 +20,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(SYSFSUTILS_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libsysfs.la
+		$(STAGING_DIR)/usr/lib/libsysfs.la
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -34,8 +34,8 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(SYSFSUTILS_DIR) clean
-	$(RM) -r $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libsysfs.* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/sysfs
+	$(RM) -r $(STAGING_DIR)/usr/lib/libsysfs.* \
+		$(STAGING_DIR)/usr/include/sysfs
 
 $(pkg)-uninstall:
 	$(RM) $(SYSFSUTILS_TARGET_DIR)/libsysfs*.so*

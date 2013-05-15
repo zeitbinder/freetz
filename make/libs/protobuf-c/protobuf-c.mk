@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=73ff0c8df50d2eee75269ad8f8c07dc8
 $(PKG)_SITE:=http://$(pkg).googlecode.com/files
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/src/.libs/libprotobuf-c.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libprotobuf-c.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libprotobuf-c.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libprotobuf-c.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
@@ -22,11 +22,11 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(PROTOBUF_C_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libprotobuf-c.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libprotobuf-c.pc
+		$(STAGING_DIR)/usr/lib/libprotobuf-c.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libprotobuf-c.pc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -38,9 +38,9 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(PROTOBUF_C_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/include/google/protobuf-c \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/lib/libprotobuf-c* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/lib/pkgconfig/libprotobuf-c.pc
+		$(STAGING_DIR)/include/google/protobuf-c \
+		$(STAGING_DIR)/lib/libprotobuf-c* \
+		$(STAGING_DIR)/lib/pkgconfig/libprotobuf-c.pc
 
 $(pkg)-uninstall:
 	$(RM) $(PROTOBUF_C_TARGET_DIR)/libprotobuf-c.so*

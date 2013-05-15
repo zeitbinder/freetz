@@ -28,9 +28,9 @@ $(PKG)_REBUILD_SUBOPTS += FREETZ_PACKAGE_VTUN_WITH_SHAPER
 $(PKG)_REBUILD_SUBOPTS += FREETZ_PACKAGE_VTUN_STATIC
 
 $(PKG)_CONFIGURE_OPTIONS += --sysconfdir=/mod/etc/vtun
-$(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_PACKAGE_VTUN_WITH_LZO),--with-lzo-headers=$(TARGET_TOOLCHAIN_STAGING_DIR)/include/lzo/ --with-lzo-lib,--disable-lzo)
+$(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_PACKAGE_VTUN_WITH_LZO),--with-lzo-headers=$(STAGING_DIR)/include/lzo/ --with-lzo-lib,--disable-lzo)
 $(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_PACKAGE_VTUN_WITH_ZLIB),,--disable-zlib)
-$(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_PACKAGE_VTUN_WITH_SSL),--with-ssl-headers=$(TARGET_TOOLCHAIN_STAGING_DIR)/include/openssl/ --with-blowfish-headers=$(TARGET_TOOLCHAIN_STAGING_DIR)/include/openssl/ --with-ssl-lib,--disable-ssl)
+$(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_PACKAGE_VTUN_WITH_SSL),--with-ssl-headers=$(STAGING_DIR)/include/openssl/ --with-blowfish-headers=$(STAGING_DIR)/include/openssl/ --with-ssl-lib,--disable-ssl)
 $(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_PACKAGE_VTUN_WITH_SHAPER),,--disable-shaper)
 $(PKG)_CONFIGURE_OPTIONS += --disable-socks
 

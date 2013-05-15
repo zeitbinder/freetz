@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=d49499368c3cf15f73a05d9bce8824a8
 $(PKG)_SITE:=@SF/linux-atm
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/src/lib/.libs/libatm.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libatm.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libatm.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libatm.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
@@ -20,10 +20,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LINUX_ATM_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libatm.la
+		$(STAGING_DIR)/usr/lib/libatm.la
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -35,8 +35,8 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LINUX_ATM_DIR) clean
 	$(RM) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libatm* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/{atm,atmd,atmsap}.h
+		$(STAGING_DIR)/usr/lib/libatm* \
+		$(STAGING_DIR)/usr/include/{atm,atmd,atmsap}.h
 
 $(pkg)-uninstall:
 	$(RM) $(LINUX_ATM_TARGET_DIR)/libatm*.so*

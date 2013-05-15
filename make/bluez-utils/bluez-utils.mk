@@ -40,7 +40,7 @@ $(PKG)_CONFIGURE_OPTIONS +=--disable-hid2hci
 $(PKG)_CONFIGURE_OPTIONS +=--disable-dfutool
 $(PKG)_CONFIGURE_OPTIONS +=--disable-bcm203x
 $(PKG)_CONFIGURE_OPTIONS +=--disable-bluepin
-$(PKG)_CONFIGURE_OPTIONS +=--with-bluez="$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include"
+$(PKG)_CONFIGURE_OPTIONS +=--with-bluez="$(STAGING_DIR)/usr/include"
 
 $(PKG_SOURCE_DOWNLOAD)
 $(PKG_UNPACKED)

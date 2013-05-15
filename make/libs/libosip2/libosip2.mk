@@ -5,11 +5,11 @@ $(PKG)_SOURCE_MD5:=7691546f6b3349d10007fc1aaff0f4e0
 $(PKG)_SITE:=@GNU/osip
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/src/osip2/.libs/libosip2.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libosip2.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libosip2.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libosip2.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_PARSER_BINARY:=$($(PKG)_DIR)/src/osipparser2/.libs/libosipparser2.so.$($(PKG)_LIB_VERSION)
-$(PKG)_PARSER_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libosipparser2.so.$($(PKG)_LIB_VERSION)
+$(PKG)_PARSER_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libosipparser2.so.$($(PKG)_LIB_VERSION)
 $(PKG)_PARSER_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libosipparser2.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-shared
@@ -29,11 +29,11 @@ $($(PKG)_BINARY) $($(PKG)_PARSER_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY) $($(PKG)_PARSER_STAGING_BINARY): $($(PKG)_BINARY) $($(PKG)_PARSER_BINARY)
 	$(SUBMAKE) -C $(LIBOSIP2_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libosip*.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libosip*.pc
+		$(STAGING_DIR)/usr/lib/libosip*.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libosip*.pc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -48,10 +48,10 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_PARSER_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBOSIP2_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libosip* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libosip*.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/osip* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/man/man?/osip*
+		$(STAGING_DIR)/usr/lib/libosip* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/libosip*.pc \
+		$(STAGING_DIR)/usr/include/osip* \
+		$(STAGING_DIR)/usr/share/man/man?/osip*
 	$(RM) $(LIBOSIP2_DIR)/.configured
 
 $(pkg)-uninstall:

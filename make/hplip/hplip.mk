@@ -4,15 +4,15 @@ $(PKG)_SOURCE_MD5:=5303938e8630775ea6fb383af85775e5
 $(PKG)_SITE:=@SF/hplip
 $(PKG)_LIB_IP_VERSION=0.0.1
 $(PKG)_LIB_IP_BINARY:=$($(PKG)_DIR)/.libs/libhpip.so.$($(PKG)_LIB_IP_VERSION)
-$(PKG)_LIB_IP_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libhpip.so.$($(PKG)_LIB_IP_VERSION)
+$(PKG)_LIB_IP_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libhpip.so.$($(PKG)_LIB_IP_VERSION)
 $(PKG)_LIB_IP_TARGET_BINARY:=$($(PKG)_DEST_LIBDIR)/libhpip.so.$($(PKG)_LIB_IP_VERSION)
 $(PKG)_LIB_MUD_VERSION=0.0.6
 $(PKG)_LIB_MUD_BINARY:=$($(PKG)_DIR)/.libs/libhpmud.so.$($(PKG)_LIB_MUD_VERSION)
-$(PKG)_LIB_MUD_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libhpmud.so.$($(PKG)_LIB_MUD_VERSION)
+$(PKG)_LIB_MUD_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libhpmud.so.$($(PKG)_LIB_MUD_VERSION)
 $(PKG)_LIB_MUD_TARGET_BINARY:=$($(PKG)_DEST_LIBDIR)/libhpmud.so.$($(PKG)_LIB_MUD_VERSION)
 $(PKG)_LIB_HPAIO_VERSION=1.0.0
 $(PKG)_LIB_HPAIO_BINARY:=$($(PKG)_DIR)/.libs/libsane-hpaio.so.$($(PKG)_LIB_HPAIO_VERSION)
-$(PKG)_LIB_HPAIO_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/sane/libsane-hpaio.so.$($(PKG)_LIB_HPAIO_VERSION)
+$(PKG)_LIB_HPAIO_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/sane/libsane-hpaio.so.$($(PKG)_LIB_HPAIO_VERSION)
 $(PKG)_LIB_HPAIO_TARGET_BINARY:=$($(PKG)_DEST_LIBDIR)/sane/libsane-hpaio.so.$($(PKG)_LIB_HPAIO_VERSION)
 
 $(PKG)_DEPENDS_ON := sane-backends
@@ -48,12 +48,12 @@ $($(PKG)_LIB_IP_STAGING_BINARY) \
 						$($(PKG)_LIB_MUD_BINARY) \
 						$($(PKG)_LIB_HPAIO_BINARY)
 	$(SUBMAKE) -C $(HPLIP_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libhpip.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libhpmud.la
-	cp $(HPLIP_DIR)/io/hpmud/hpmud.h $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include
+		$(STAGING_DIR)/usr/lib/libhpip.la \
+		$(STAGING_DIR)/usr/lib/libhpmud.la
+	cp $(HPLIP_DIR)/io/hpmud/hpmud.h $(STAGING_DIR)/usr/include
 
 $($(PKG)_LIB_IP_TARGET_BINARY): $($(PKG)_LIB_IP_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -65,8 +65,8 @@ $($(PKG)_LIB_HPAIO_TARGET_BINARY): $($(PKG)_LIB_HPAIO_STAGING_BINARY)
 	mkdir -p $(HPLIP_DEST_LIBDIR)/sane
 	mkdir -p $(HPLIP_DEST_DIR)/etc
 	mkdir -p $(HPLIP_DEST_DIR)/usr/share/hplip/data/models
-	cp -a $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/sane/libsane-hpaio.so* $(HPLIP_DEST_LIBDIR)/sane
-	cp -R $(TARGET_TOOLCHAIN_STAGING_DIR)/etc/default.hplip $(HPLIP_DEST_DIR)/etc
+	cp -a $(STAGING_DIR)/usr/lib/sane/libsane-hpaio.so* $(HPLIP_DEST_LIBDIR)/sane
+	cp -R $(STAGING_DIR)/etc/default.hplip $(HPLIP_DEST_DIR)/etc
 	$(TARGET_STRIP) $@
 
 $(PKG)_TARGET_CONF:
@@ -92,11 +92,11 @@ $(pkg)-config-update:
 		$(HPLIP_DIR)/data/models/models.dat > $(HPLIP_MAKE_DIR)/Config.in
 
 $(pkg)-uninstall:
-	$(RM) -r $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libhp* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/sane/libsane-hpaio* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/hpmud.h \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/hplip \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/var/log/hp \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/etc/default.hplip
+	$(RM) -r $(STAGING_DIR)/usr/lib/libhp* \
+		$(STAGING_DIR)/usr/lib/sane/libsane-hpaio* \
+		$(STAGING_DIR)/usr/include/hpmud.h \
+		$(STAGING_DIR)/usr/share/hplip \
+		$(STAGING_DIR)/var/log/hp \
+		$(STAGING_DIR)/etc/default.hplip
 
 $(PKG_FINISH)

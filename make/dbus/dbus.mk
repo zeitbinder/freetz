@@ -15,7 +15,7 @@ $(PKG)_TOOLS_TARGET_DIR    := $($(PKG)_TOOLS:%=$($(PKG)_DEST_DIR)/usr/bin/dbus-%
 $(PKG)_NOT_INCLUDED        := $(patsubst %,$($(PKG)_DEST_DIR)/usr/bin/dbus-%,$(filter-out $($(PKG)_TOOLS),$($(PKG)_TOOLS_ALL)))
 
 $(PKG)_LIB_BINARY:=$($(PKG)_DIR)/dbus/.libs/lib$(pkg)-1.so.$($(PKG)_LIB_VERSION)
-$(PKG)_LIB_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/lib$(pkg)-1.so.$($(PKG)_LIB_VERSION)
+$(PKG)_LIB_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/lib$(pkg)-1.so.$($(PKG)_LIB_VERSION)
 $(PKG)_LIB_TARGET_BINARY:=$($(PKG)_TARGET_LIBDIR)/lib$(pkg)-1.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIG_TEMPLATE_FILES := session.conf system.conf
@@ -61,14 +61,14 @@ $($(PKG)_BINARY) $($(PKG)_LIB_BINARY) $($(PKG)_TOOLS_BUILD_DIR): $($(PKG)_DIR)/.
 
 $($(PKG)_LIB_STAGING_BINARY): $($(PKG)_LIB_BINARY)
 	$(SUBMAKE) -C $(DBUS_DIR)/dbus \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(SUBMAKE) -C $(DBUS_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install-pkgconfigDATA
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libdbus-1.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/dbus-1.pc
+		$(STAGING_DIR)/usr/lib/libdbus-1.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/dbus-1.pc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
@@ -92,12 +92,12 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIB_TARGET_BINARY) $($(PKG)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(DBUS_DIR) clean
 	 $(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libdbus-1* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/dbus-1.pc \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/etc/dbus-1* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/dbus-1.0 \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/dbus-1.0 \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/dbus-1*
+		$(STAGING_DIR)/usr/lib/libdbus-1* \
+		$(STAGING_DIR)/usr/lib/pkgconfig/dbus-1.pc \
+		$(STAGING_DIR)/etc/dbus-1* \
+		$(STAGING_DIR)/usr/include/dbus-1.0 \
+		$(STAGING_DIR)/usr/lib/dbus-1.0 \
+		$(STAGING_DIR)/usr/share/dbus-1*
 
 $(pkg)-uninstall:
 	$(RM) \

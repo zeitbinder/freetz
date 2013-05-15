@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=95380bd4081f85ef08c5209f4107e9f8
 $(PKG)_SITE:=http://www.oberhumer.com/opensource/lzo/download
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/src/.libs/liblzo2.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/liblzo2.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/liblzo2.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/liblzo2.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_CONFIGURE_OPTIONS += --enable-static
@@ -21,10 +21,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LZO_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/liblzo2.la
+		$(STAGING_DIR)/usr/lib/liblzo2.la
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -36,9 +36,9 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LZO_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/liblzo2* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/lzo \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/share/doc/lzo
+		$(STAGING_DIR)/usr/lib/liblzo2* \
+		$(STAGING_DIR)/usr/include/lzo \
+		$(STAGING_DIR)/usr/share/doc/lzo
 
 $(pkg)-uninstall:
 	$(RM) $(LZO_TARGET_DIR)/liblzo2*.so*

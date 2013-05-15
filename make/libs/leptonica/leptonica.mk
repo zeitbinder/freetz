@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=3c442f4edaf0be25dc92dc0012f94a37
 $(PKG)_SITE:=http://leptonica.googlecode.com/files
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/src/.libs/liblept.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/liblept.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/liblept.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/liblept.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_DEPENDS_ON := jpeg libpng tiff zlib
@@ -33,9 +33,9 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(LEPTONICA_DIR) \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
-	$(PKG_FIX_LIBTOOL_LA) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/liblept.la
+	$(PKG_FIX_LIBTOOL_LA) $(STAGING_DIR)/usr/lib/liblept.la
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -47,8 +47,8 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LEPTONICA_DIR) clean
 	$(RM) -r \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/liblept* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/leptonica
+		$(STAGING_DIR)/usr/lib/liblept* \
+		$(STAGING_DIR)/usr/include/leptonica
 
 $(pkg)-uninstall:
 	$(RM) $(LEPTONICA_TARGET_DIR)/liblept*.so*

@@ -8,7 +8,7 @@ $(PKG)_SITE:=http://openjpeg.googlecode.com/files
 $(PKG)_DIR:=$($(PKG)_SOURCE_DIR)/$($(PKG)_TARBALL_DIR)
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/libopenjpeg/.libs/libopenjpeg.so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libopenjpeg.so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libopenjpeg.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libopenjpeg.so.$($(PKG)_LIB_VERSION)
 
 $(PKG)_DEPENDS_ON += zlib
@@ -37,10 +37,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE) -C $(OPENJPEG_DIR)/libopenjpeg \
 		includedir=/usr/include \
-		DESTDIR=$(TARGET_TOOLCHAIN_STAGING_DIR) \
+		DESTDIR=$(STAGING_DIR) \
 		install-includeHEADERS install-libLTLIBRARIES
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libopenjpeg.la
+		$(STAGING_DIR)/usr/lib/libopenjpeg.la
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -52,8 +52,8 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(OPENJPEG_DIR) clean
 	rm -f \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/openjpeg.h \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libopenjpeg*
+		$(STAGING_DIR)/usr/include/openjpeg.h \
+		$(STAGING_DIR)/usr/lib/libopenjpeg*
 
 $(pkg)-uninstall:
 	$(RM) $(OPENJPEG_TARGET_DIR)/libopenjpeg*.so*

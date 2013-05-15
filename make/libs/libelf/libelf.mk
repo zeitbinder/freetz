@@ -5,7 +5,7 @@ $(PKG)_SOURCE_MD5:=4136d7b4c04df68b686570afa26988ac
 $(PKG)_SITE:=http://www.mr511.de/software
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
-$(PKG)_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
+$(PKG)_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/$(pkg).so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/$(pkg).so.$($(PKG)_LIB_VERSION)
 
 # recreate configure with a version of autoconf greater than 2.13 (we assume it's installed on build system)
@@ -32,10 +32,10 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	$(SUBMAKE1) -C $(LIBELF_DIR) \
-		instroot="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		instroot="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/libelf.pc
+		$(STAGING_DIR)/usr/lib/pkgconfig/libelf.pc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -46,7 +46,7 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(LIBELF_DIR) clean
-	$(RM) $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libelf*
+	$(RM) $(STAGING_DIR)/usr/lib/libelf*
 
 $(pkg)-uninstall:
 	$(RM) $(LIBELF_TARGET_DIR)/libelf*.so*

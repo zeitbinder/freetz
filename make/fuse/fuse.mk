@@ -9,7 +9,7 @@ $(PKG)_MOD_BINARY:=$($(PKG)_DIR)/kernel/fuse.ko
 $(PKG)_MOD_TARGET_DIR:=$(KERNEL_MODULES_DIR)/fs/fuse
 $(PKG)_MOD_TARGET_BINARY:=$($(PKG)_MOD_TARGET_DIR)/fuse.ko
 $(PKG)_LIB_BINARY:=$($(PKG)_DIR)/lib/.libs/libfuse.so.$($(PKG)_VERSION)
-$(PKG)_LIB_STAGING_BINARY:=$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libfuse.so.$($(PKG)_VERSION)
+$(PKG)_LIB_STAGING_BINARY:=$(STAGING_DIR)/usr/lib/libfuse.so.$($(PKG)_VERSION)
 $(PKG)_LIB_TARGET_BINARY:=$($(PKG)_TARGET_LIBDIR)/libfuse.so.$($(PKG)_VERSION)
 
 $(PKG)_DEPENDS_ON := kernel
@@ -47,20 +47,20 @@ $($(PKG)_BINARY) $($(PKG)_MOD_BINARY) $($(PKG)_LIB_BINARY): $($(PKG)_DIR)/.confi
 		all
 
 $($(PKG)_LIB_STAGING_BINARY): $($(PKG)_LIB_BINARY)
-	cp $(FUSE_DIR)/fuse.pc $(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/fuse.pc
+	cp $(FUSE_DIR)/fuse.pc $(STAGING_DIR)/usr/lib/pkgconfig/fuse.pc
 	$(SUBMAKE) -C $(FUSE_DIR)/lib \
 		ARCH="$(KERNEL_ARCH)" \
 		CROSS_COMPILE="$(KERNEL_CROSS)" \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libfuse.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libulockmgr.la \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/fuse.pc
+		$(STAGING_DIR)/usr/lib/libfuse.la \
+		$(STAGING_DIR)/usr/lib/libulockmgr.la \
+		$(STAGING_DIR)/usr/lib/pkgconfig/fuse.pc
 	$(SUBMAKE) -C $(FUSE_DIR)/include \
 		ARCH="$(KERNEL_ARCH)" \
 		CROSS_COMPILE="$(KERNEL_CROSS)" \
-		DESTDIR="$(TARGET_TOOLCHAIN_STAGING_DIR)" \
+		DESTDIR="$(STAGING_DIR)" \
 		install
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
@@ -80,11 +80,11 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIB_TARGET_BINARY) \
 $(pkg)-clean:
 	-$(SUBMAKE) -C $(FUSE_DIR) clean
 	$(RM) \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/fuse.h \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/include/ulockmgr.h \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/pkgconfig/fuse* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libfuse* \
-		$(TARGET_TOOLCHAIN_STAGING_DIR)/usr/lib/libulockmgr*
+		$(STAGING_DIR)/usr/include/fuse.h \
+		$(STAGING_DIR)/usr/include/ulockmgr.h \
+		$(STAGING_DIR)/usr/lib/pkgconfig/fuse* \
+		$(STAGING_DIR)/usr/lib/libfuse* \
+		$(STAGING_DIR)/usr/lib/libulockmgr*
 
 $(pkg)-uninstall:
 	$(RM) \
