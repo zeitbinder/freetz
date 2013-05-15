@@ -142,17 +142,6 @@ $(CONFIG_IN_CACHE) include/config/cache.conf.cmd: $(CONFIG_IN).custom $(PARSE_CO
 $(CONFIG_IN).custom:
 	@touch $@
 
-# Check if last build was with older svn version
-check-builddir-version: $(CONFIG_IN_CACHE)
-	@if [ -e .config -a \
-		$(CONFIG_IN_CACHE) -nt .config ]; then \
-		echo "ERROR: You have updated to a newer svn version since last modifying your"; \
-		echo "       config. You should either run 'make oldconfig' once before building"; \
-		echo "       again or 'make menuconfig' and change the config (otherwise it will not"; \
-		echo "       be saved and you will see this message again)."; \
-                exit 3; \
-        fi; \
-
 ### Freetz ###
 
 prepare_kernel_conf: .config FORCE
@@ -204,7 +193,7 @@ prereq:: prepare-tmpinfo .config
 	@( \
 		cp .config tmp/.config; \
 		./scripts/config/conf -D tmp/.config -w tmp/.config Config.in > /dev/null 2>&1; \
-		if ./scripts/kconfig.pl '>' .config tmp/.config | grep -q CONFIG; then \
+		if ./scripts/kconfig.pl '>' .config tmp/.config | grep -q FREETZ; then \
 			echo "WARNING: your configuration is out of sync. Please run make menuconfig, oldconfig or defconfig!"; \
 		fi \
 	)
