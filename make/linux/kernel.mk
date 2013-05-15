@@ -23,19 +23,19 @@ KERNEL_COMMON_MAKE_OPTIONS += ARCH="$(KERNEL_ARCH)"
 # the following line is commented out.
 #KERNEL_COMMON_MAKE_OPTIONS += KERNEL_LAYOUT="$(KERNEL_LAYOUT)"
 KERNEL_COMMON_MAKE_OPTIONS += INSTALL_HDR_PATH=$(KERNEL_HEADERS_DEVEL_DIR)
-KERNEL_COMMON_MAKE_OPTIONS += INSTALL_MOD_PATH="$(FREETZ_BASE_DIR)/$(KERNEL_DIR)"
+KERNEL_COMMON_MAKE_OPTIONS += INSTALL_MOD_PATH="$(KERNEL_DIR)/build"
 ifeq ($(strip $(FREETZ_VERBOSITY_LEVEL)),3)
 KERNEL_COMMON_MAKE_OPTIONS += V=1
 else
 KERNEL_COMMON_MAKE_OPTIONS += V=''
 endif
 
-### OpenWRT ###
+### FIXME OpenWRT ###
 SUBMAKE:=$(MAKE) $(PKG_JOBS)
+TAR:=host_tar
 ### OpenWRT ###
 
 $(DL_FW_DIR)/$(AVM_SOURCE): | $(DL_FW_DIR)
-	@$(call _ECHO, downloading...)
 	$(DL_TOOL) $(DL_FW_DIR) $(AVM_SOURCE) $(FREETZ_DL_KERNEL_SITE) $(FREETZ_DL_KERNEL_SOURCE_MD5) $(SILENT)
 
 # Make sure that a perfectly clean build is performed whenever Freetz package
@@ -44,25 +44,23 @@ $(DL_FW_DIR)/$(AVM_SOURCE): | $(DL_FW_DIR)
 $(KERNEL_DIR)/.unpacked: $(DL_FW_DIR)/$(AVM_SOURCE) | $(tools/stamp-install) gcc-kernel
 	$(RM) -r $(KERNEL_DIR)
 	mkdir -p $(KERNEL_BUILD_DIR)
-	@$(call _ECHO,checking structure... )
 	@KERNEL_SOURCE_CONTENT=` \
-		tar -t$(AVM_UNPACK__INT_$(suffix $(strip $(FREETZ_DL_KERNEL_SOURCE)))) \
+		$(TAR) -t$(AVM_UNPACK__INT_$(suffix $(strip $(FREETZ_DL_KERNEL_SOURCE)))) \
 			-f $(DL_FW_DIR)/$(FREETZ_DL_KERNEL_SOURCE)| \
 		grep -e '^.*\(GPL-\(release_\|\)kernel\.tar\.gz\|linux-$(AVM_KERNEL_VERSION)/\)$$'|head -n1`; \
 	if [ -z "$${KERNEL_SOURCE_CONTENT}" ]; then \
-		$(call ERROR,1,KERNEL_SOURCE_CONTENT is empty) \
+		$(call ERROR_MESSAGE,KERNEL_SOURCE_CONTENT is empty); exit 1; \
 	else \
-		$(call _ECHO, unpacking... ) \
 		if [ ! -z $$(echo "$$KERNEL_SOURCE_CONTENT"|grep -e '.*\/GPL-\(release_\|\)kernel\.tar\.gz') ]; then \
-			tar	-O $(VERBOSE) \
+			$(TAR)	-O $(VERBOSE) \
 				-x$(AVM_UNPACK__INT_$(suffix $(strip $(FREETZ_DL_KERNEL_SOURCE)))) \
 				-f $(DL_FW_DIR)/$(FREETZ_DL_KERNEL_SOURCE) \
 				--wildcards "*/$${KERNEL_SOURCE_CONTENT##*/}" | \
-			tar	-C $(KERNEL_BUILD_DIR) $(VERBOSE) \
+			$(TAR)	-C $(KERNEL_BUILD_DIR) $(VERBOSE) \
 				-xz \
 				--transform="s|^.*\(linux-$(AVM_KERNEL_VERSION)/\)|\1|g" --show-transformed; \
 		else \
-			tar	-C $(KERNEL_BUILD_DIR) $(VERBOSE) \
+			$(TAR)	-C $(KERNEL_BUILD_DIR) $(VERBOSE) \
 				-x$(AVM_UNPACK__INT_$(suffix $(strip $(FREETZ_DL_KERNEL_SOURCE)))) \
 				-f $(DL_FW_DIR)/$(FREETZ_DL_KERNEL_SOURCE) \
 				--transform="s|^.*\(linux-$(AVM_KERNEL_VERSION)/\)|\1|g" --show-transformed \
@@ -70,9 +68,8 @@ $(KERNEL_DIR)/.unpacked: $(DL_FW_DIR)/$(AVM_SOURCE) | $(tools/stamp-install) gcc
 		fi \
 	fi
 	@if [ ! -d $(KERNEL_BUILD_ROOT_DIR) ]; then \
-		$(call ERROR,1,KERNEL_BUILD_ROOT_DIR has wrong structure) \
+		$(call ERROR_MESSAGE,KERNEL_BUILD_ROOT_DIR has wrong structure); exit 1; \
 	fi
-	@$(call _ECHO, preparing... )
 	@set -e; shopt -s nullglob; for i in $(KERNEL_MAKE_DIR)/patches/$(KERNEL_VERSION)/*.patch; do \
 		$(PATCH_TOOL) $(KERNEL_BUILD_DIR) $$i; \
 	done
@@ -136,11 +133,9 @@ $(KERNEL_DIR)/.unpacked: $(DL_FW_DIR)/$(AVM_SOURCE) | $(tools/stamp-install) gcc
 			touch $(KERNEL_BUILD_ROOT_DIR)/$$i; \
 		fi \
 	done
-	ln -s linux-$(KERNEL_VERSION) $(KERNEL_DIR)/linux
 	touch $@
 
 $(KERNEL_DIR)/.configured: $(KERNEL_DIR)/.unpacked $(KERNEL_CONFIG_FILE)
-	$(call _ECHO, configuring... )
 	cp $(KERNEL_CONFIG_FILE) $(KERNEL_BUILD_ROOT_DIR)/.config
 	$(SUBMAKE) $(KERNEL_COMMON_MAKE_OPTIONS) oldconfig
 	touch $@
@@ -164,7 +159,6 @@ $(TARGET_TOOLCHAIN_KERNEL_VERSION_HEADER): $(TOPDIR)/.config $(KERNEL_HEADERS_DE
 	@touch $@
 
 $(KERNEL_BUILD_ROOT_DIR)/$(KERNEL_IMAGE): $(KERNEL_DIR)/.prepared
-	$(call _ECHO, kernel image... )
 	$(SUBMAKE) $(KERNEL_COMMON_MAKE_OPTIONS) $(KERNEL_IMAGE)
 	touch -c $@
 
@@ -178,7 +172,6 @@ $(KERNEL_TARGET_DIR)/$(KERNEL_TARGET_BINARY): $(KERNEL_BUILD_ROOT_DIR)/$(KERNEL_
 	touch -c $@
 
 $(KERNEL_DIR)/.modules-$(KERNEL_LAYOUT): $(KERNEL_BUILD_ROOT_DIR)/$(KERNEL_IMAGE)
-	@$(call _ECHO, modules... )
 	+$(SUBMAKE) $(KERNEL_COMMON_MAKE_OPTIONS) modules
 	$(SUBMAKE) $(KERNEL_COMMON_MAKE_OPTIONS) modules_install
 	touch $@
@@ -190,7 +183,7 @@ $(KERNEL_MODULES_DIR)/.modules-$(KERNEL_LAYOUT): $(KERNEL_DIR)/.modules-$(KERNEL
 	tar -cf - -C $$KERNEL_MODULES_SOURCE_DIR . | tar -xf - -C $(KERNEL_MODULES_DIR)
 	touch $@
 
-kernel-precompiled: pkg-echo-start $(KERNEL_TARGET_DIR)/$(KERNEL_TARGET_BINARY) $(KERNEL_MODULES_DIR)/.modules-$(KERNEL_LAYOUT) pkg-echo-done
+kernel-precompiled: $(KERNEL_TARGET_DIR)/$(KERNEL_TARGET_BINARY) $(KERNEL_MODULES_DIR)/.modules-$(KERNEL_LAYOUT)
 
 kernel-configured: $(KERNEL_DIR)/.prepared
 
@@ -232,11 +225,5 @@ kernel-dirclean:
 	$(RM) -r $(KERNEL_TARGET_DIR)/modules-*
 
 kernel-distclean: kernel-dirclean
-
-pkg-echo-start:
-	@$(RM) $(ECHO_ITEM_START) $(ECHO_ITEM_BUILD)
-
-pkg-echo-done:
-	@$(call _ECHO_DONE)
 
 .PHONY: kernel-configured kernel-modules kernel-menuconfig kernel-oldconfig target-toolchain-kernel-headers
