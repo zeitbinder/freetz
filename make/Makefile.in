@@ -1,4 +1,4 @@
-MAKE_ENV=PATH=$(TARGET_PATH) $(FREETZ_LD_RUN_PATH)
+MAKE_ENV=PATH=$(TARGET_PATH)
 
 #BUILD_FAIL_MSG:= Build failed.
 #ifneq ($(strip $(FREETZ_VERBOSITY_LEVEL)),2)
@@ -87,7 +87,6 @@ TARGET_CPPFLAGS:=-I$(STAGING_DIR)/usr/include -I$(STAGING_DIR)/include
 TARGET_LDFLAGS:=-L$(STAGING_DIR)/usr/lib -L$(STAGING_DIR)/lib
 
 TARGET_SPECIFIC_SUBDIR:=target-$(TARGET_ARCH)_uClibc-$(TARGET_TOOLCHAIN_UCLIBC_VERSION)
-SOURCE_DIR:=$(SOURCE_DIR_ROOT)/$(TARGET_SPECIFIC_SUBDIR)
 PACKAGES_DIR:=$(PACKAGES_DIR_ROOT)/$(TARGET_SPECIFIC_SUBDIR)
 TARGET_SPECIFIC_ROOT_DIR:=$(PACKAGES_DIR)/root
 
@@ -108,10 +107,6 @@ TARGET_STRIP:=$(TARGET_CROSS)strip --remove-section={.comment,.note,.pdr}
 
 # Don't use TARGET_TOOLCHAIN_PATH here because it's not set
 #TARGET_PATH="$(TOOLCHAIN_DIR_TARGET)/bin:$(TOOLCHAIN_DIR_KERNEL)/bin:$(PATH)"
-
-# We have some libraries (e.g. libcrypto) that should not be used by AVM binaries
-FREETZ_LIBRARY_PATH:=/usr/lib/freetz
-FREETZ_LD_RUN_PATH:=LD_RUN_PATH="$(FREETZ_LIBRARY_PATH)"
 
 # commands to run before calling configure
 # each command has to be terminated by ';'
@@ -137,8 +132,8 @@ TARGET_CONFIGURE_ENV += PKG_CONFIG_PATH="$(STAGING_DIR)/usr/lib/pkgconfig"
 TARGET_CONFIGURE_ENV += PKG_CONFIG_LIBDIR="$(STAGING_DIR)/usr/lib/pkgconfig"
 
 
-CONFIG_CACHE_PATH := $(FREETZ_BASE_DIR)/$(SOURCE_DIR)/config.cache
-CONFIG_CACHE_BACKUP_DIR := $(FREETZ_BASE_DIR)/$(SOURCE_DIR)/_config.cache-backup
+CONFIG_CACHE_PATH := $(BUILD_DIR)/config.cache
+CONFIG_CACHE_BACKUP_DIR := $(BUILD_DIR)/_config.cache-backup
 # $1 optional suffix
 define BACKUP_CONFIG_CACHE
 if [ -e $(CONFIG_CACHE_PATH) ]; then mkdir -p $(CONFIG_CACHE_BACKUP_DIR); cp -a $(CONFIG_CACHE_PATH) $(CONFIG_CACHE_BACKUP_DIR)/config.cache-`date +%Y%m%d-%H%M%S`$(if $1,-$1,); fi;
@@ -374,50 +369,6 @@ define REMOVE_DOC_NLS_DIRS
 $(if $(strip $(1)),$(RM) -r $(addprefix $(strip $(1)),$(foreach p,/ /usr /share /usr/share,$(foreach d,info man doc locale,$(subst //,/,$(p)/$(d))))))
 endef
 
-# We want build output like:
-# "---> package/lynx: downloading... preparing... configuring... building... done."
-# Actually there are two problems:
-# 1. We can't use _ECHO_START in $(SUBMAKE) context.
-# 2. Dot files are deleted within every package. But once at start would be enough.
-# Usage:
-# $(call _ECHO,text)
-# $(call _ECHO_BUILD)
-ECHO_ITEM_START:=$(SOURCE_DIR_ROOT)/.echo_item_start
-ECHO_ITEM_BUILD:=$(SOURCE_DIR_ROOT)/.echo_item_build
-
-define _ECHO_START
-	echo -n "---> "; \
-	case "$(PKG_TYPE)" in \
-		BIN)	echo -n "package/$(pkg): " ;; \
-		LIB)	echo -n "library/$(pkg): " ;; \
-		TOOL)	echo -n "tool/$(pkg): " ;; \
-		*)	echo -n "kernel: " ;; \
-	esac; \
-	$(RM) $(ECHO_ITEM_BUILD); \
-	touch $(ECHO_ITEM_START);
-endef
-
-define _ECHO
-	if [ ! -e $(ECHO_ITEM_START) ]; then \
-		$(call _ECHO_START) \
-	fi; \
-	echo -n "$(1)";
-endef
-
-define _ECHO_BUILD
-	if [ -e $(ECHO_ITEM_START) -a ! -e $(ECHO_ITEM_BUILD) ]; then \
-		echo -n "building... "; \
-		touch $(ECHO_ITEM_BUILD); \
-	fi;
-endef
-
-define _ECHO_DONE
-	if [ -e $(ECHO_ITEM_START) ]; then \
-		echo "done."; \
-	fi; \
-	$(RM) $(ECHO_ITEM_START) $(ECHO_ITEM_BUILD);
-endef
-
 ### PKG_INIT - initialise package. See also PKG_FINISH.
 
 # Stage 1: initialise package names
@@ -437,7 +388,7 @@ $(PKG)_VERSION:=$(strip $1)
 $(PKG)_BUILD_PREREQ:=
 $(PKG)_BUILD_PREREQ_HINT:=
 $(PKG)_CONFIGURE_DEFOPTS:=y
-$(PKG)_SOURCE_DIR:=$(SOURCE_DIR)
+$(PKG)_SOURCE_DIR:=$(BUILD_DIR)
 $(PKG)_DIR:=$($(PKG)_SOURCE_DIR)/$(pkg)-$($(PKG)_VERSION)
 
 # FIXME: OpenWRT: we need to override MAKEFLAGS
@@ -445,11 +396,15 @@ $(PKG)_DIR:=$($(PKG)_SOURCE_DIR)/$(pkg)-$($(PKG)_VERSION)
 SUBMAKE:=+$(MAKE_ENV) MAKEFLAGS="" $(MAKE) $(PKG_JOBS)
 SUBMAKE1:=$(MAKE_ENV) MAKEFLAGS="" $(MAKE)
 
-# $(pkg)-precompiled--int must be the first target, it will depend on DEPENDS_ON
-$(pkg)-precompiled: $(pkg)-precompiled--int $(pkg)-clean-echo-item $(pkg) $(pkg)-clean-not-included--int
-$(pkg)-clean-echo-item:
-	@$(RM) $(ECHO_ITEM_START) $(ECHO_ITEM_BUILD)
-.PHONY: $(pkg)-clean-echo-item $(pkg)-precompiled $(pkg)-precompiled--int $(pkg) $(pkg)-clean-not-included--int
+STAMP_PREREQ:=$(STAMP_DIR)/.$(pkg)_prereq_check
+STAMP_CONFIGURED:=$($(PKG)_DIR)/.configured
+STAMP_BUILT:=$($(PKG)_DIR)/.built
+STAMP_INSTALLED_DEV:=$($(PKG)_DIR)/.installed_dev
+STAMP_INSTALLED:=$($(PKG)_DIR)/.installed
+
+# $(pkg)-prereq must be the first target, it will depend on DEPENDS_ON
+$(pkg)-precompiled: $(pkg)-prereq $(pkg)-clean-not-included--int
+.PHONY: $(pkg)-precompiled $(pkg) $(pkg)-clean-not-included--int
 endef
 
 # Stage 2a: initialise other package-specific variables for binary packages
@@ -552,12 +507,11 @@ endef
 # Finalise packages (general functionality + call to type specifics)
 define PKG_FINISH__INT
 $(pkg)-dirclean: $(pkg)-dirclean--int
-.PHONY: $(pkg)-dirclean $(pkg)-dirclean--int $(pkg)-build-prereq
-$(pkg)-precompiled--int: $(pkg)-build-prereq $(TOOLCHAIN) $($(PKG)_HOST_DEPENDS_ON) $(patsubst %,%-precompiled,$($(PKG)_DEPENDS_ON))
+.PHONY: $(pkg)-dirclean $(pkg)-dirclean--int
 $(pkg)-precompiled:
-	@$(call _ECHO_DONE)
-$(pkg)-build-prereq: $($(PKG)_DIR)/.build-prereq-checked
-$($(PKG)_DIR)/.build-prereq-checked:
+
+$(pkg)-prereq: $(STAMP_PREREQ)
+$(STAMP_PREREQ): $(TARGET_CROSS_COMPILER) | $($(PKG)_HOST_DEPENDS_ON) $(patsubst %,%-precompiled,$($(PKG)_DEPENDS_ON))
 ifneq ($($(PKG)_BUILD_PREREQ),)
 	@MISSING_PREREQ=""; \
 	for f in $($(PKG)_BUILD_PREREQ); do \
@@ -700,9 +654,8 @@ endef
 
 ## Unpack and patch binary package
 define PKG_UNPACKED_BIN__INT
-$($(PKG)_DIR)/.unpacked: $(DL_DIR)/$($(PKG)_SOURCE) $(if $($(PKG)_CUSTOM_UNPACK),$($(PKG)_DIR)/.build-prereq-checked) | $(PKG)_SOURCE_DIR $(tools/stamp-install)
-	@$(call _ECHO,preparing... )
-	@$(call RMDIR_KEEP_FILES__INT,$($(PKG)_DIR),.build-prereq-checked)
+$($(PKG)_DIR)/.unpacked: $(DL_DIR)/$($(PKG)_SOURCE) $(STAMP_PREREQ) | $(PKG)_SOURCE_DIR $(tools/stamp-install)
+	@$(call RMDIR_KEEP_FILES__INT,$($(PKG)_DIR),.prereq)
 	$(call PKG_UNPACK)
 	$(call PKG_BIN_PATCH)
 	@touch $$@
@@ -724,9 +677,8 @@ endef
 
 ## Unpack and patch library package
 define PKG_UNPACKED_LIB__INT
-$($(PKG)_DIR)/.unpacked: $(DL_DIR)/$($(PKG)_SOURCE) $(if $($(PKG)_CUSTOM_UNPACK),$($(PKG)_DIR)/.build-prereq-checked) | $(PKG)_SOURCE_DIR $(tools/stamp-install)
-	@$(call _ECHO,preparing... )
-	@$(call RMDIR_KEEP_FILES__INT,$($(PKG)_DIR),.build-prereq-checked)
+$($(PKG)_DIR)/.unpacked: $(DL_DIR)/$($(PKG)_SOURCE) $(STAMP_PREREQ) | $(PKG)_SOURCE_DIR $(tools/stamp-install)
+	@$(call RMDIR_KEEP_FILES__INT,$($(PKG)_DIR),.prereq)
 	$(call PKG_UNPACK)
 	$(call PKG_LIB_PATCH)
 	@touch $$@
@@ -739,9 +691,8 @@ define PKG_LOCALSOURCE_PACKAGE__INT
 LOCALSOURCE_PACKAGES+=$(pkg)
 $(PKG)_SOURCE_DIR:
 	@mkdir -p $($(PKG)_SOURCE_DIR)
-$($(PKG)_DIR)/.unpacked: $(wildcard $($(PKG)_MAKE_DIR)/src/*) | $(PKG)_SOURCE_DIR
-	@$(call _ECHO,preparing... )
-	@$(call RMDIR_KEEP_FILES__INT,$($(PKG)_DIR),.build-prereq-checked)
+$($(PKG)_DIR)/.unpacked: $(wildcard $($(PKG)_MAKE_DIR)/src/*) $(STAMP_PREREQ) | $(PKG)_SOURCE_DIR
+	@$(call RMDIR_KEEP_FILES__INT,$($(PKG)_DIR),.prereq)
 	mkdir -p $($(PKG)_DIR)
 	cp -a $$^ $($(PKG)_DIR)
 	@touch $$@
@@ -767,7 +718,7 @@ endef
 ## check for changed suboptions
 # should only be called if $(PKG)_REBUILD_SUBOPTS is defined
 define PKG_UNPACKED_CHECK_SUBOPTS__INT1
-$(PKG)_FREETZ_CONFIG_FILE:=$(FREETZ_BASE_DIR)/$(SOURCE_DIR)/.$(pkg)_config
+$(PKG)_FREETZ_CONFIG_FILE:=$(BUILD_DIR)/.$(pkg)_config
 endef
 define PKG_UNPACKED_CHECK_SUBOPTS__INT2
 $($(PKG)_FREETZ_CONFIG_FILE): $(TOPDIR)/.config
@@ -784,7 +735,7 @@ endef
 
 ## check for changed files in files and patches folder
 define PKG_UNPACKED_CHECK_CHANGES__INT1
-$(PKG)_FREETZ_CHANGES_FILE:=$(FREETZ_BASE_DIR)/$(SOURCE_DIR)/.$(pkg)_changes
+$(PKG)_FREETZ_CHANGES_FILE:=$(BUILD_DIR)/.$(pkg)_changes
 $(PKG)_FREETZ_CHANGES_RECOMPILE_SEARCH:=patches/.*\|src/.*\|$(pkg)\.mk\|$(pkg).*\.mk\.in\|Makefile\.in\|Config\.in\|Config\.in\.libs
 $(PKG)_FREETZ_CHANGES_REPACK_SEARCH:=files/.*
 endef
@@ -811,8 +762,8 @@ $(PKG)_FREETZ_CHANGES_CHECK: $(PKG)_SOURCE_DIR
 		mv $($(PKG)_FREETZ_CHANGES_FILE).temp $($(PKG)_FREETZ_CHANGES_FILE); \
 	fi
 	@$(RM) $($(PKG)_FREETZ_CHANGES_FILE).temp
-$(pkg) $(pkg)-precompiled $(pkg)-build-prereq: #$(PKG)_FREETZ_CHANGES_CHECK
-#.PHONY: $(PKG)_FREETZ_CHANGES_CHECK
+$(pkg) $(pkg)-precompiled: $(PKG)_FREETZ_CHANGES_CHECK
+.PHONY: $(PKG)_FREETZ_CHANGES_CHECK
 endef
 
 PKG_UNPACKED=$(eval $(PKG_UNPACKED_SOURCE__INT))
@@ -834,25 +785,22 @@ endef
 define PKG_CONFIGURED_CONFIGURE__INT
 # Must be first
 $(PKG_CONFIGURED_COMMON__INT)
-$($(PKG)_DIR)/.configured: $($(PKG)_DIR)/.build-prereq-checked $($(PKG)_DIR)/.unpacked
-	@$(call _ECHO,configuring... )
+$($(PKG)_DIR)/.configured: $(STAMP_PREREQ) $($(PKG)_DIR)/.unpacked
 	(cd $($(PKG)_DIR); \
 		$(TARGET_CONFIGURE_PRE_CMDS) \
 		$($(PKG)_CONFIGURE_PRE_CMDS) \
 		$(if $(strip $(FREETZ_BACKUP_CONFIG_CACHE)),$(call BACKUP_CONFIG_CACHE,before-$(pkg)),) \
 		$(if $(strip $($(PKG)_BUILD_SUBDIR)),cd $(strip $($(PKG)_BUILD_SUBDIR));,) \
-			if [ -x $(CONFIGURE_CMD) ]; then \
-				$(TARGET_CONFIGURE_ENV) \
-				$($(PKG)_CONFIGURE_ENV) \
-				FREETZ_TARGET_LFS="$(strip $(FREETZ_TARGET_LFS))" \
-				CONFIG_SITE=$(CONFIG_SITE) \
-				$(CONFIGURE_CMD) \
-				$(if $(findstring y,$($(PKG)_CONFIGURE_DEFOPTS)), $(TARGET_CONFIGURE_OPTIONS)) \
-					$($(PKG)_CONFIGURE_OPTIONS) \
-				$(if $(strip $($(PKG)_BUILD_SUBDIR)),&& { cd $(abspath $($(PKG)_DIR)); },) \
-				$(if $($(PKG)_CONFIGURE_POST_CMDS),&& { $($(PKG)_CONFIGURE_POST_CMDS) },) \
-				$(if $(strip $(FREETZ_BACKUP_CONFIG_CACHE)),&& { $(call BACKUP_CONFIG_CACHE,after-$(pkg)) },); \
-		fi; \
+		$(TARGET_CONFIGURE_ENV) \
+		$($(PKG)_CONFIGURE_ENV) \
+		FREETZ_TARGET_LFS="$(strip $(FREETZ_TARGET_LFS))" \
+		CONFIG_SITE=$(CONFIG_SITE) \
+		$(CONFIGURE_CMD) \
+		$(if $(findstring y,$($(PKG)_CONFIGURE_DEFOPTS)), $(TARGET_CONFIGURE_OPTIONS)) \
+		$($(PKG)_CONFIGURE_OPTIONS) \
+		$(if $(strip $($(PKG)_BUILD_SUBDIR)),&& { cd $(abspath $($(PKG)_DIR)); },) \
+		$(if $($(PKG)_CONFIGURE_POST_CMDS),&& { $($(PKG)_CONFIGURE_POST_CMDS) },) \
+		$(if $(strip $(FREETZ_BACKUP_CONFIG_CACHE)),&& { $(call BACKUP_CONFIG_CACHE,after-$(pkg)) },); \
 	)
 	@touch $$@
 endef
@@ -862,7 +810,7 @@ PKG_CONFIGURED_CONFIGURE=$(eval $(PKG_CONFIGURED_CONFIGURE__INT))
 define PKG_CONFIGURED_NOP__INT
 # Must be first
 $(PKG_CONFIGURED_COMMON__INT)
-$($(PKG)_DIR)/.configured: $($(PKG)_DIR)/.build-prereq-checked $($(PKG)_DIR)/.unpacked
+$($(PKG)_DIR)/.configured: $(STAMP_PREREQ) $($(PKG)_DIR)/.unpacked
 	@touch $$@
 endef
 PKG_CONFIGURED_NOP=$(eval $(PKG_CONFIGURED_NOP__INT))
