@@ -36,8 +36,9 @@ endef
 
 
 define Host/Clean
-	rm -r $(STAGING_DIR_HOST)/conf
-	rm -r $(STAGING_DIR_HOST)/mconf
+# FIXME
+#	rm -r $(STAGING_DIR_HOST)/conf
+#	rm -r $(STAGING_DIR_HOST)/mconf
 endef
 
 $(eval $(call HostBuild))
