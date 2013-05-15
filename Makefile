@@ -44,7 +44,6 @@ else
   include tools/Makefile
 #  include target/Makefile
 #  include package/Makefile
-#  include tools/Makefile
 #  include toolchain/Makefile
 
 ### Freetz ###
@@ -72,16 +71,12 @@ printdb:
 
 DL_TOOL:=$(SCRIPT_DIR)/freetz_download
 PATCH_TOOL:=$(SCRIPT_DIR)/freetz_patch
-CHECK_PREREQ_TOOL:=$(SCRIPT_DIR)/check_prerequisites
-CHECK_BUILD_DIR_VERSION:=
-CHECK_UCLIBC_VERSION:=$(SCRIPT_DIR)/check_uclibc
 
 $(DL_DIR) \
 $(DL_FW_DIR) \
 $(MIRROR_DIR) \
 $(BUILD_DIR) \
 $(PACKAGES_DIR_ROOT) \
-$(SOURCE_DIR_ROOT) \
 $(TOOLCHAIN_BUILD_DIR) \
 $(TOOLS_BUILD_DIR) \
 $(FW_IMAGES_DIR):
@@ -212,7 +207,7 @@ test: $(FIRMWARE_BUILD_DIR)/modified
 toolchain-depend: | $(TOOLCHAIN)
 # Use KTV and TTV variables to provide new toolchain versions, i.e.
 #   make KTV=freetz-0.4 TTV=freetz-0.5 toolchain
-toolchain: $(DL_DIR) $(SOURCE_DIR_ROOT) $(TOOLCHAIN) tools
+toolchain: $(DL_DIR) $(BUILD_DIR) $(TOOLCHAIN) $(stamp/tools-install)
 	@echo
 	@echo "Creating toolchain tarballs ... "
 	@$(call TOOLCHAIN_CREATE_TARBALL,$(KERNEL_TOOLCHAIN_STAGING_DIR),$(KTV))
@@ -220,12 +215,12 @@ toolchain: $(DL_DIR) $(SOURCE_DIR_ROOT) $(TOOLCHAIN) tools
 	@echo
 	@echo "FINISHED: new download toolchains can be found in $(DL_DIR)/"
 
-libs: $(DL_DIR) $(SOURCE_DIR_ROOT) $(LIBS_PRECOMPILED)
+libs: $(DL_DIR) $(BUILD_DIR) $(LIBS_PRECOMPILED)
 
-sources: $(DL_DIR) $(FW_IMAGES_DIR) $(SOURCE_DIR_ROOT) $(PACKAGES_DIR_ROOT) $(DL_IMAGE) \
+sources: $(DL_DIR) $(FW_IMAGES_DIR) $(BUILD_DIR) $(PACKAGES_DIR_ROOT) $(DL_IMAGE) \
 	$(TARGETS_SOURCE) $(PACKAGES_SOURCE) $(LIBS_SOURCE) $(TOOLCHAIN_SOURCE)
 
-precompiled: $(DL_DIR) $(FW_IMAGES_DIR) $(SOURCE_DIR_ROOT) $(PACKAGES_DIR_ROOT) toolchain-depend \
+precompiled: $(DL_DIR) $(FW_IMAGES_DIR) $(BUILD_DIR) $(PACKAGES_DIR_ROOT) toolchain-depend \
 	$(LIBS_PRECOMPILED) $(TARGETS_PRECOMPILED) $(PACKAGES_PRECOMPILED)
 
 check-downloads: $(PACKAGES_CHECK_DOWNLOADS)
@@ -333,16 +328,14 @@ common-clean:
 	$(RM) -r $(FAKEROOT_CACHE_DIR)
 
 common-dirclean: common-clean $(if $(FREETZ_HAVE_DOT_CONFIG),kernel-dirclean)
-	$(RM) -r $(BUILD_DIR) $(PACKAGES_DIR_ROOT) $(SOURCE_DIR_ROOT)
+	$(RM) -r $(BUILD_DIR) $(PACKAGES_DIR_ROOT) $(BUILD_DIR)
 	-cp .defstatic $(ADDON_DIR)/static.pkg
 	-cp .defdynamic $(ADDON_DIR)/dynamic.pkg
 
 common-distclean: common-dirclean $(if $(FREETZ_HAVE_DOT_CONFIG),kernel-distclean)
 	$(RM) -r .config .config_compressed .config.old .config.cmd .tmpconfig.h include/config include/generated
 	$(RM) -r $(FW_IMAGES_DIR)
-	$(RM) -r $(SOURCE_DIR_ROOT)
-	$(RM) -r $(TOOLCHAIN_BUILD_DIR)
-	$(RM) -r $(TOOLS_BUILD_DIR)
+	$(RM) -r $(BUILD_DIR_BASE)
 	@echo "Use 'make download-clean' to remove the download directory"
 
 download-clean:
@@ -397,7 +390,7 @@ prereq: $(target/stamp-prereq) tmp/.prereq_packages
 
 .PHONY: all world step $(KCONFIG_TARGETS) config-cache tools recover prepare \
 	config-clean-deps-modules config-clean-deps-libs config-clean-deps-busybox config-clean-deps-terminfo config-clean-deps config-clean-deps-keep-busybox \
-	clean dirclean distclean common-clean common-dirclean common-distclean dist \
-	$(CHECK_BUILD_DIR_VERSION)
+	clean dirclean distclean common-clean common-dirclean common-distclean dist
+
 
 endif
