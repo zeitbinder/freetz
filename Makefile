@@ -47,23 +47,34 @@ else
 #  include tools/Makefile
 #  include toolchain/Makefile
 
+### Freetz ###
+  # do not use sorted-wildcard here, it's first defined in files included here
+  include $(sort $(wildcard include/make/*.mk))
+
+  include toolchain/Makefile
+  include $(MAKE_DIR)/Makefile.in
+  include $(call sorted-wildcard,$(MAKE_DIR)/libs/*/Makefile.in)
+  include $(call sorted-wildcard,$(MAKE_DIR)/*/Makefile.in)
+
+  ifeq ($(strip $(FREETZ_BUILD_TOOLCHAIN)),y)
+    include toolchain/kernel-toolchain.mk
+    include toolchain/target-toolchain.mk
+  else
+    include toolchain/download-toolchain.mk
+  endif
+
+### Freetz ###
+
 $(toolchain/stamp-install): $(tools/stamp-install)
 
 printdb:
 	@true
-
-prepare: .config $(tools/stamp-install) #$(toolchain/stamp-install)
-
-world: prepare image firmware FORCE
 
 DL_TOOL:=$(SCRIPT_DIR)/freetz_download
 PATCH_TOOL:=$(SCRIPT_DIR)/freetz_patch
 CHECK_PREREQ_TOOL:=$(SCRIPT_DIR)/check_prerequisites
 CHECK_BUILD_DIR_VERSION:=
 CHECK_UCLIBC_VERSION:=$(SCRIPT_DIR)/check_uclibc
-
-# do not use sorted-wildcard here, it's first defined in files included here
-include $(sort $(wildcard include/make/*.mk))
 
 $(DL_DIR) \
 $(DL_FW_DIR) \
@@ -76,12 +87,11 @@ $(TOOLS_BUILD_DIR) \
 $(FW_IMAGES_DIR):
 	@mkdir -p $@
 
--include .config.cmd
+prepare: .config $(tools/stamp-install) #$(toolchain/stamp-install)
 
-include toolchain/Makefile
-include $(MAKE_DIR)/Makefile.in
-include $(call sorted-wildcard,$(MAKE_DIR)/libs/*/Makefile.in)
-include $(call sorted-wildcard,$(MAKE_DIR)/*/Makefile.in)
+world: prepare image firmware FORCE
+
+-include .config.cmd
 
 ALL_PACKAGES:=
 LOCALSOURCE_PACKAGES:=
@@ -113,13 +123,6 @@ TOOLCHAIN_DIRCLEAN:=$(patsubst %,%-dirclean,$(TOOLCHAIN))
 TOOLCHAIN_DISTCLEAN:=$(patsubst %,%-distclean,$(TOOLCHAIN))
 TOOLCHAIN_SOURCE:=$(patsubst %,%-source,$(TOOLCHAIN))
 
-ifeq ($(strip $(FREETZ_BUILD_TOOLCHAIN)),y)
-include $(TOOLCHAIN_DIR)/make/kernel-toolchain.mk
-include $(TOOLCHAIN_DIR)/make/target-toolchain.mk
-else
-include $(TOOLCHAIN_DIR)/make/download-toolchain.mk
-endif
-
 DL_IMAGE:=
 image:
 
@@ -141,7 +144,7 @@ else
 	@if [ -n "$$(DL_SOURCE$(1)_CONTAINER)" ]; then \
 		if [ ! -r $$(DL_FW_DIR)/$$(DL_SOURCE$(1)_CONTAINER) ]; then \
 			if ! $$(DL_TOOL) --no-append-servers $$(DL_FW_DIR) "$$(DL_SOURCE$(1)_CONTAINER)" "$$(DL_SITE$(1))" $$(DL_SOURCE$(1)_CONTAINER_MD5) $$(SILENT); then \
-				$$(call ERROR_MESSAGE,Could not download firmware image. See http://trac.freetz.org/wiki/FAQ#Couldnotdownloadfirmwareimage for details.); exit 3; \
+				$$(call ERROR_MESSAGE,Could not download firmware image. See http://trac.freetz.org/wiki/FAQ#Couldnotdownloadfirmwareimage for details.);exit 3; \
 			fi; \
 		fi; \
 		case "$$(DL_SOURCE$(1)_CONTAINER_SUFFIX)" in \
@@ -151,11 +154,11 @@ else
 				fi \
 				;; \
 			*) \
-				$$(call ERROR_MESSAGE,Could not extract firmware image.); exit 3; \
+				$$(call ERROR_MESSAGE,Could not extract firmware image.);exit 3; \
 				;; \
 		esac \
 	elif ! $$(DL_TOOL) --no-append-servers $$(DL_FW_DIR) "$$(DL_SOURCE$(1))" "$$(DL_SITE$(1))" $$(DL_SOURCE$(1)_MD5) $$(SILENT); then \
-		$$(call ERROR_MESSAGE,Could not download firmware image. See http://trac.freetz.org/wiki/FAQ#Couldnotdownloadfirmwareimage for details.); exit 3; \
+		$$(call ERROR_MESSAGE,Could not download firmware image. See http://trac.freetz.org/wiki/FAQ#Couldnotdownloadfirmwareimage for details.);exit 3; \
 	fi
 endif
 endif
@@ -200,7 +203,8 @@ else
 	@./fwmod -n -d $(BUILD_DIR_FIRMWARE) $(DL_IMAGE)
 endif
 
-firmware: precompiled firmware-nocompile
+firmware: precompiled
+	$(_SINGLE)$(NO_TRACE_MAKE) -r firmware-nocompile
 
 test: $(FIRMWARE_BUILD_DIR)/modified
 	@echo "no tests defined"
@@ -219,7 +223,7 @@ toolchain: $(DL_DIR) $(SOURCE_DIR_ROOT) $(TOOLCHAIN) tools
 libs: $(DL_DIR) $(SOURCE_DIR_ROOT) $(LIBS_PRECOMPILED)
 
 sources: $(DL_DIR) $(FW_IMAGES_DIR) $(SOURCE_DIR_ROOT) $(PACKAGES_DIR_ROOT) $(DL_IMAGE) \
-	$(TARGETS_SOURCE) $(PACKAGES_SOURCE) $(LIBS_SOURCE) $(TOOLCHAIN_SOURCE) 
+	$(TARGETS_SOURCE) $(PACKAGES_SOURCE) $(LIBS_SOURCE) $(TOOLCHAIN_SOURCE)
 
 precompiled: $(DL_DIR) $(FW_IMAGES_DIR) $(SOURCE_DIR_ROOT) $(PACKAGES_DIR_ROOT) toolchain-depend \
 	$(LIBS_PRECOMPILED) $(TARGETS_PRECOMPILED) $(PACKAGES_PRECOMPILED)
