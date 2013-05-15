@@ -11,7 +11,7 @@ curdir:=tools
 
 # subdirectories to descend into
 tools-y :=
-tools-y += m4 libtool autoconf automake sed
+tools-y += m4 libtool autoconf automake sed pkg-config
 tools-y += kconfig busybox fakeroot find-squashfs sstrip lzma
 tools-y += lzma2eva sfk squashfs squashfs3 tichksum
 tools-$(FREETZ_STRIP_LIBRARIES) += mklibs
@@ -21,6 +21,7 @@ tools-$(FREETZ_STRIP_LIBRARIES) += mklibs
 $(curdir)/autoconf/compile := $(curdir)/m4/install $(curdir)/libtool/install
 $(curdir)/automake/compile := $(curdir)/m4/install $(curdir)/autoconf/install #$(curdir)/pkg-config/install $(curdir)/xz/install
 $(curdir)/libtool/compile := $(curdir)/sed/install
+$(curdir)/pkg-config/compile := $(curdir)/sed/install
 $(curdir)/squashfs/compile := $(curdir)/lzma/install
 $(curdir)/squashfs3/compile := $(curdir)/lzma/install
 
@@ -83,10 +84,10 @@ $(eval $(call PrepareCommand,python,python2 python2.7 python))
 $(eval $(call PrepareCommand,awk,gawk awk))
 $(eval $(call PrepareCommand,getopt,gnugetopt /usr/local/bin/getopt getopt))
 $(eval $(call PrepareCommand,grep,ggrep grep))
-#$(eval $(call PrepareCommand,tar,gtar tar))
+$(eval $(call PrepareCommand,host_tar,/bin/tar))
 $(eval $(call PrepareCommand,diff,gdiff diff))
 
-$(curdir)/cmddeps = $(patsubst %,$(STAGING_DIR_HOST)/bin/%,find md5sum cp stat seq python awk getopt grep diff)
+$(curdir)/cmddeps = $(patsubst %,$(STAGING_DIR_HOST)/bin/%,find md5sum cp stat seq python awk getopt grep diff host_tar)
 $(curdir)//prepare = $(STAGING_DIR)/.prepared $(STAGING_DIR_HOST)/.prepared $($(curdir)/cmddeps)
 $(curdir)//compile = $(STAGING_DIR)/.prepared $(STAGING_DIR_HOST)/.prepared $($(curdir)/cmddeps)
 
