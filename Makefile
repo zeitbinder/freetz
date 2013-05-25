@@ -44,45 +44,71 @@ else
   include tools/Makefile
 #  include target/Makefile
 #  include package/Makefile
-#  include toolchain/Makefile
 
 ### Freetz ###
   # do not use sorted-wildcard here, it's first defined in files included here
   include $(sort $(wildcard include/make/*.mk))
 
-  include toolchain/Makefile
+#  include toolchain/Makefile
   include $(MAKE_DIR)/Makefile.in
   include $(call sorted-wildcard,$(MAKE_DIR)/libs/*/Makefile.in)
   include $(call sorted-wildcard,$(MAKE_DIR)/*/Makefile.in)
 
   ifeq ($(strip $(FREETZ_BUILD_TOOLCHAIN)),y)
-    include toolchain/kernel-toolchain.mk
-    include toolchain/target-toolchain.mk
-  else
-    include toolchain/download-toolchain.mk
+    include toolchain/kernel/Makefile
+    include toolchain/target/Makefile
+#  else
+#    include toolchain/download-toolchain/Makefile
   endif
-
-### Freetz ###
-
-$(toolchain/stamp-install): $(tools/stamp-install)
-
-printdb:
-	@true
 
 DL_TOOL:=$(SCRIPT_DIR)/freetz_download
 PATCH_TOOL:=$(SCRIPT_DIR)/freetz_patch
 
-$(DL_DIR) \
-$(DL_FW_DIR) \
-$(MIRROR_DIR) \
-$(BUILD_DIR) \
-$(PACKAGES_DIR_ROOT) \
-$(TOOLCHAIN_BUILD_DIR) \
-$(TOOLS_BUILD_DIR) \
-$(FW_IMAGES_DIR):
-	@mkdir -p $@
+### Freetz ###
 
-prepare: .config $(tools/stamp-install) #$(toolchain/stamp-install)
+toolchain/install: $(toolchain/kernel/stamp-install) $(toolchain/target/stamp-install)  $(tools/stamp-install)
+
+printdb:
+	@true
+
+prepare-fix: $(target/stamp-compile)
+
+clean: FORCE
+	rm -rf $(BUILD_DIR) $(BIN_DIR) $(BUILD_LOG_DIR)
+
+dirclean: clean
+	rm -rf $(STAGING_DIR) $(STAGING_DIR_HOST) $(STAGING_DIR_TOOLCHAIN) $(TOOLCHAIN_DIR) $(BUILD_DIR_HOST) $(BUILD_DIR_TOOLCHAIN)
+	rm -rf $(TMP_DIR)
+
+ifndef DUMP_TARGET_DB
+$(BUILD_DIR)/.prepared: Makefile
+	@mkdir -p $$(dirname $@)
+	@touch $@
+
+tmp/.prereq_packages: .config
+	unset ERROR; \
+	for package in $(sort $(prereq-y) $(prereq-m)); do \
+		$(_SINGLE)$(NO_TRACE_MAKE) -s -r -C package/$$package prereq || ERROR=1; \
+	done; \
+	if [ -n "$$ERROR" ]; then \
+	echo "Package prerequisite check failed."; \
+		false; \
+	fi
+	touch $@
+endif
+
+# check prerequisites before starting to build
+prereq: $(target/stamp-prereq) tmp/.prereq_packages
+	@if [ ! -f "$(INCLUDE_DIR)/site/$(REAL_GNU_TARGET_NAME)" ]; then \
+	echo 'ERROR: Missing site config for target "$(REAL_GNU_TARGET_NAME)" !'; \
+		echo '       The missing file will cause configure scripts to fail during compilation.'; \
+		echo '       Please provide a "$(INCLUDE_DIR)/site/$(REAL_GNU_TARGET_NAME)" file and restart the build.'; \
+	exit 1; \
+	fi
+
+prepare: .config $(tools/stamp-install) $(toolchain/stamp-install)
+#world: prepare $(target/stamp-compile) $(package/stamp-compile) $(package/stamp-install) $(target/stamp-install) FORCE
+#        $(_SINGLE)$(SUBMAKE) -r package/index
 
 world: prepare image firmware FORCE
 
@@ -112,11 +138,6 @@ LIBS_CLEAN:=$(patsubst %,%-clean,$(LIBS))
 LIBS_DIRCLEAN:=$(patsubst %,%-dirclean,$(LIBS))
 LIBS_SOURCE:=$(patsubst %,%-source,$(LIBS))
 LIBS_PRECOMPILED:=$(patsubst %,%-precompiled,$(LIBS))
-
-TOOLCHAIN_CLEAN:=$(patsubst %,%-clean,$(TOOLCHAIN))
-TOOLCHAIN_DIRCLEAN:=$(patsubst %,%-dirclean,$(TOOLCHAIN))
-TOOLCHAIN_DISTCLEAN:=$(patsubst %,%-distclean,$(TOOLCHAIN))
-TOOLCHAIN_SOURCE:=$(patsubst %,%-source,$(TOOLCHAIN))
 
 DL_IMAGE:=
 image:
@@ -204,38 +225,26 @@ firmware: precompiled
 test: $(FIRMWARE_BUILD_DIR)/modified
 	@echo "no tests defined"
 
-toolchain-depend: | $(TOOLCHAIN)
-# Use KTV and TTV variables to provide new toolchain versions, i.e.
-#   make KTV=freetz-0.4 TTV=freetz-0.5 toolchain
-toolchain: $(DL_DIR) $(BUILD_DIR) $(TOOLCHAIN) $(stamp/tools-install)
-	@echo
-	@echo "Creating toolchain tarballs ... "
-	@$(call TOOLCHAIN_CREATE_TARBALL,$(KERNEL_TOOLCHAIN_STAGING_DIR),$(KTV))
-	@$(call TOOLCHAIN_CREATE_TARBALL,$(TARGET_TOOLCHAIN_STAGING_DIR),$(TTV))
-	@echo
-	@echo "FINISHED: new download toolchains can be found in $(DL_DIR)/"
-
 libs: $(DL_DIR) $(BUILD_DIR) $(LIBS_PRECOMPILED)
 
 sources: $(DL_DIR) $(FW_IMAGES_DIR) $(BUILD_DIR) $(PACKAGES_DIR_ROOT) $(DL_IMAGE) \
-	$(TARGETS_SOURCE) $(PACKAGES_SOURCE) $(LIBS_SOURCE) $(TOOLCHAIN_SOURCE)
+	$(TARGETS_SOURCE) $(PACKAGES_SOURCE) $(LIBS_SOURCE)
 
-precompiled: $(DL_DIR) $(FW_IMAGES_DIR) $(BUILD_DIR) $(PACKAGES_DIR_ROOT) toolchain-depend \
-	$(LIBS_PRECOMPILED) $(TARGETS_PRECOMPILED) $(PACKAGES_PRECOMPILED)
+precompiled: prepare $(LIBS_PRECOMPILED) $(TARGETS_PRECOMPILED) $(PACKAGES_PRECOMPILED)
 
 check-downloads: $(PACKAGES_CHECK_DOWNLOADS)
 
 mirror: $(MIRROR_DIR) $(PACKAGES_MIRROR)
 
 clean: $(TARGETS_CLEAN) $(PACKAGES_CLEAN) $(LIBS_CLEAN) $(TOOLCHAIN_CLEAN) common-clean
-dirclean: $(TOOLCHAIN_DIRCLEAN) common-dirclean
-distclean: $(TOOLCHAIN_DISTCLEAN) common-distclean
+dirclean: common-dirclean
+distclean: common-distclean
 
 .PHONY: firmware package-list package-list-clean sources precompiled toolchain toolchain-depend libs mirror check-downloads \
 	$(TARGETS) $(TARGETS_CLEAN) $(TARGETS_DIRCLEAN) $(TARGETS_SOURCE) $(TARGETS_PRECOMPILED) \
 	$(PACKAGES) $(PACKAGES_BUILD) $(PACKAGES_CLEAN) $(PACKAGES_DIRCLEAN) $(PACKAGES_LIST) $(PACKAGES_SOURCE) $(PACKAGES_PRECOMPILED) \
 	$(LIBS) $(LIBS_CLEAN) $(LIBS_DIRCLEAN) $(LIBS_SOURCE) $(LIBS_PRECOMPILED) \
-	$(TOOLCHAIN) $(TOOLCHAIN_CLEAN) $(TOOLCHAIN_DIRCLEAN) $(TOOLCHAIN_DISTCLEAN) $(TOOLCHAIN_SOURCE)
+	$(TOOLCHAIN)
 
 push-firmware:
 	@if [ ! -f "build/modified/firmware/var/tmp/kernel.image" ]; then \
@@ -359,34 +368,6 @@ dist: distclean download-clean
 		cd "$$curdir"; \
 	)
 	$(RM) .exclude-dist-tmp
-
-### OpenWRT ###
-ifndef DUMP_TARGET_DB
-$(BUILD_DIR)/.prepared: Makefile
-	@mkdir -p $$(dirname $@)
-	@touch $@
-
-tmp/.prereq_packages: .config
-	unset ERROR; \
-	for package in $(sort $(prereq-y) $(prereq-m)); do \
-		$(_SINGLE)$(NO_TRACE_MAKE) -s -r -C package/$$package prereq || ERROR=1; \
-	done; \
-	if [ -n "$$ERROR" ]; then \
-		$(call ERROR_MESSAGE,Package prerequisite check failed.); \
-		false; \
-	fi
-	touch $@
-endif
-
-# check prerequisites before starting to build
-prereq: $(target/stamp-prereq) tmp/.prereq_packages
-	@if [ ! -f "$(INCLUDE_DIR)/site/$(REAL_GNU_TARGET_NAME)" ]; then \
-		echo 'ERROR: Missing site config for target "$(REAL_GNU_TARGET_NAME)" !'; \
-		echo '       The missing file will cause configure scripts to fail during compilation.'; \
-		echo '       Please provide a "$(INCLUDE_DIR)/site/$(REAL_GNU_TARGET_NAME)" file and restart the build.'; \
-		exit 1; \
-	fi
-### OpenWRT ###
 
 .PHONY: all world step $(KCONFIG_TARGETS) config-cache tools recover prepare \
 	config-clean-deps-modules config-clean-deps-libs config-clean-deps-busybox config-clean-deps-terminfo config-clean-deps config-clean-deps-keep-busybox \
