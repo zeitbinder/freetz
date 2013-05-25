@@ -15,7 +15,7 @@
 # FreeBSD
 
 check_lxdialog = $(shell $(SHELL) $(CURDIR)/lxdialog/check-lxdialog.sh -$(1))
-export CFLAGS += -DKBUILD_NO_NLS -I. $(call check_lxdialog,ccflags)
+export CFLAGS += -DKBUILD_NO_NLS -DCONFIG_=\"\" -I. $(call check_lxdialog,ccflags)
 
 conf-objs	:= conf.o zconf.tab.o
 mconf-objs	:= mconf.o zconf.tab.o
