@@ -1,31 +1,4 @@
-MAKE_ENV=PATH=$(TARGET_PATH)
-
-#BUILD_FAIL_MSG:= Build failed.
-#ifneq ($(strip $(FREETZ_VERBOSITY_LEVEL)),2)
-#BUILD_FAIL_MSG += Please re-run make with verbose level set to 2 to see what's going on.
-#endif
-
-#SUBMAKE1=cmd() { $(MAKE_ENV) $(MAKE1) $(QUIET) "$$@" $(SILENT) || { $(call ERROR,1,$(BUILD_FAIL_MSG)) } }; $(call _ECHO_BUILD) cmd
-#SUBMAKE=cmd() { $(MAKE_ENV) $(MAKE) $(QUIET) "$$@" $(SILENT) || { $(call ERROR,1,$(BUILD_FAIL_MSG)) } }; $(call _ECHO_BUILD) cmd
-#CONFIGURE=conf_cmd() { ./configure $(QUIET) "$$$$@" $(SILENT) || { $(call ERROR,1,$(BUILD_FAIL_MSG)) } };
 CONFIGURE_CMD = ./configure
-
-#HOSTCC:=gcc
-#HOST_STRIP:=strip --strip-all -R .note -R .comment
-
-#HOST_ARCH:=$(shell $(HOSTCC) -dumpmachine | sed -e s'/-.*//' \
-#	-e 's/sparc.*/sparc/' \
-#	-e 's/arm.*/arm/g' \
-#	-e 's/m68k.*/m68k/' \
-#	-e 's/ppc/powerpc/g' \
-#	-e 's/v850.*/v850/g' \
-#	-e 's/sh[234]/sh/' \
-#	-e 's/mips-.*/mips/' \
-#	-e 's/mipsel-.*/mipsel/' \
-#	-e 's/cris.*/cris/' \
-#	-e 's/i[3-9]86/i386/' \
-#	)
-#GNU_HOST_NAME:=$(HOST_ARCH)-pc-linux-gnu
 
 ### OpenWRT ###
 #PKG_BUILD_PARALLEL ?=
@@ -48,31 +21,8 @@ endif
 ### OpenWRT ###
 
 
-ifeq ($(strip $(FREETZ_TARGET_NLS)),y)
-DISABLE_NLS:=
-else
-DISABLE_NLS:=--disable-nls
-endif
-
-CFLAGS_LFS_ENABLED:=-D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
-CFLAGS_LFS_DISABLED:=-D_FILE_OFFSET_BITS=32
-ifeq ($(strip $(FREETZ_TARGET_LFS)),y)
-DISABLE_LARGEFILE:=
-CFLAGS_LARGEFILE=$(CFLAGS_LFS_ENABLED)
-else
-DISABLE_LARGEFILE:=--disable-largefile
-CFLAGS_LARGEFILE=$(CFLAGS_LFS_DISABLED)
-endif
-
-ifeq ($(strip $(FREETZ_TARGET_ARCH_BE)),y)
-CFLAGS_MARCH:=-march=24kc
-else
-CFLAGS_MARCH:=-march=4kc
-endif
-
 FPIC:=-fPIC
 
-TARGET_CROSS:=$(call qstrip,$(FREETZ_TARGET_CROSS))
 KERNEL_ARCH:=mips
 KERNEL_CROSS:=$(call qstrip,$(FREETZ_KERNEL_CROSS))
 
@@ -81,10 +31,6 @@ $(error Please remove any CPU and architecture related flags (-march/-mcpu/-mtun
 	from target compiler flags (FREETZ_TARGET_CFLAGS variable in your .config). \
 	These flags are automatically set by freetz build environment now)
 endif
-TARGET_CFLAGS:=$(CFLAGS_MARCH) $(call qstrip,$(FREETZ_TARGET_CFLAGS)) $(CFLAGS_LARGEFILE) 
-TARGET_CXXFLAGS = $(TARGET_CFLAGS)
-TARGET_CPPFLAGS:=-I$(STAGING_DIR)/usr/include -I$(STAGING_DIR)/include
-TARGET_LDFLAGS:=-L$(STAGING_DIR)/usr/lib -L$(STAGING_DIR)/lib
 
 TARGET_SPECIFIC_SUBDIR:=target-$(TARGET_ARCH)_uClibc-$(TARGET_TOOLCHAIN_UCLIBC_VERSION)
 PACKAGES_DIR:=$(PACKAGES_DIR_ROOT)/$(TARGET_SPECIFIC_SUBDIR)
@@ -93,20 +39,6 @@ TARGET_SPECIFIC_ROOT_DIR:=$(PACKAGES_DIR)/root
 # If CONFIG_SITE is exported, it can cause errors in the host builds
 unexport CONFIG_SITE
 CONFIG_SITE:=$(INCLUDE_DIR)/site/$(TARGET_ARCH)-linux-uclibc
-
-TARGET_AR:=$(TARGET_CROSS)ar
-TARGET_AS:=$(TARGET_CROSS)as
-TARGET_CC:=$(TARGET_CROSS)gcc
-TARGET_CXX:$(TARGET_CROSS)g++-wrapper
-TARGET_LD:=$(TARGET_CROSS)ld
-TARGET_LDCONFIG:=$(TARGET_CROSS)ldconfig
-TARGET_NM:=$(TARGET_CROSS)nm
-TARGET_RANLIB:=$(TARGET_CROSS)ranlib
-TARGET_READELF:=$(TARGET_CROSS)readelf
-TARGET_STRIP:=$(TARGET_CROSS)strip --remove-section={.comment,.note,.pdr}
-
-# Don't use TARGET_TOOLCHAIN_PATH here because it's not set
-#TARGET_PATH="$(TOOLCHAIN_DIR_TARGET)/bin:$(TOOLCHAIN_DIR_KERNEL)/bin:$(PATH)"
 
 # commands to run before calling configure
 # each command has to be terminated by ';'
@@ -393,8 +325,8 @@ $(PKG)_DIR:=$($(PKG)_SOURCE_DIR)/$(pkg)-$($(PKG)_VERSION)
 
 # FIXME: OpenWRT: we need to override MAKEFLAGS
 # add + to make jobserver happy
-SUBMAKE:=+$(MAKE_ENV) MAKEFLAGS="" $(MAKE) $(PKG_JOBS)
-SUBMAKE1:=$(MAKE_ENV) MAKEFLAGS="" $(MAKE)
+SUBMAKE:=+$(TARGET_PATH) MAKEFLAGS="" $(MAKE) $(PKG_JOBS)
+SUBMAKE1:=$(TARGET_PATH) MAKEFLAGS="" $(MAKE)
 
 STAMP_PREREQ:=$(STAMP_DIR)/.$(pkg)_prereq_check
 STAMP_CONFIGURED:=$($(PKG)_DIR)/.configured
