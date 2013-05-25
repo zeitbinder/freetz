@@ -1,0 +1,15 @@
+--- linux-2.6.32/arch/mips/include/asm/mach-infineon/switch_api/ifx_ethsw_api.h.orig	2012-10-05 11:59:23.000000000 +0200
++++ linux-2.6.32/arch/mips/include/asm/mach-infineon/switch_api/ifx_ethsw_api.h	2013-04-08 07:35:36.955791564 +0200
+@@ -53,11 +53,11 @@
+ 
+ #define PARAM_BUFFER_SIZE               2048
+ #define SET_BITS(x, msb, lsb, value)    (((x) & ~(((1 << ((msb) + 1)) - 1) ^ ((1 << (lsb)) - 1))) | (((value) & ((1 << (1 + (msb) - (lsb))) - 1)) << (lsb)))
++#define GET_BITS(x, msb, lsb)           (((x) & ((1 << ((msb) + 1)) - 1)) >> (lsb))
+ #ifdef CONFIG_VR9
+ #define IFX_ETHSW_DEV_MAX               4
+ #endif /*--- #ifdef CONFIG_VR9 ---*/
+ #ifdef CONFIG_AR9
+-#define GET_BITS(x, msb, lsb)           (((x) & ((1 << ((msb) + 1)) - 1)) >> (lsb))
+ #define IFX_ETHSW_DEV_MAX               2
+ #endif /*--- #ifdef CONFIG_AR9 ---*/
+ #ifdef CONFIG_AR10

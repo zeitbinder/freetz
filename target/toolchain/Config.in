@@ -1,0 +1,6 @@
+config FREETZ_MAKE_TOOLCHAIN
+	bool "Build the Freetz based Toolchain"
+	depends !FREETZ_EXTERNAL_TOOLCHAIN
+	help
+	  This is essentially the toolchain created by Freetz.
+
