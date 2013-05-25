@@ -145,23 +145,25 @@ UNPACKED_FILE="$DIR/.unpacked"
 # Path to bash (shell required by fwmod)
 SHELL=$BASH
 
-# Tools and scripts used by fwmod
+# Scripts and tools used by fwmod
+DEPMOD="${SCRIPT_DIR}/depmod.pl"
 EXTERNAL="${SCRIPT_DIR}/external"
+FREETZ_PATCH="${SCRIPT_DIR}/freetz_patch"
+REMOVE_JUNK="${SCRIPT_DIR}/remove-junk-bytes"
+RMTICHKSUM="${SCRIPT_DIR}/rmtichksum"
+SCRIPTPATCHER="${SCRIPT_DIR}/scriptpatcher.sh"
+
 UNSQUASHFS="${TOOLS_DIR}/unsquashfs3"
 UNSQUASHFS_LZMA="${TOOLS_DIR}/unsquashfs3-lzma"
 FINDSQUASHFS="${TOOLS_DIR}/find-squashfs"
 TICHKSUM="${TOOLS_DIR}/tichksum"
-RMTICHKSUM="${TOOLS_DIR}/rmtichksum"
 MAKEDEVS="${TOOLS_DIR}/makedevs"
 MAKEDEVS_FILE="${SCRIPT_DIR}/device_table.txt"
 TAR="${TOOLS_DIR}/tar"
 MD5SUM="${TOOLS_DIR}/md5sum"
 FAKEROOT="$TOOLS_DIR/fakeroot"
 BUSYBOX="${TOOLS_DIR}/busybox"
-REMOVE_JUNK="${SCRIPT_DIR}/remove-junk-bytes"
-FREETZ_PATCH="${SCRIPT_DIR}/freetz_patch"
-DEPMOD="${SCRIPT_DIR}/depmod.pl"
-SCRIPTPATCHER="${SCRIPT_DIR}/scriptpatcher.sh"
+
 FWMOD_CUSTOM="${ABS_BASE_DIR}/fwmod_custom"
 
 # Temporarily use system's tar to unpack AVM firmware-images (see #1535)
