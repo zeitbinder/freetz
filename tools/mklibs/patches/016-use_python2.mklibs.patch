@@ -1,0 +1,16 @@
+--- a/src/mklibs
++++ b/src/mklibs
+@@ -1,4 +1,4 @@
+-#! /usr/bin/env python
++#! /usr/bin/env python2
+ 
+ # mklibs.py: An automated way to create a minimal /lib/ directory.
+ #
+--- a/src/mklibs-copy
++++ b/src/mklibs-copy
+@@ -1,4 +1,4 @@
+-#!/usr/bin/python
++#!/usr/bin/python2
+ 
+ # mklibs.py: An automated way to create a minimal /lib/ directory.
+ #
