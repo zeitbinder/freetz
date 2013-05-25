@@ -11,6 +11,9 @@ curdir:=tools
 
 # subdirectories to descend into
 tools-y :=
+ifeq ($(FREETZ_EXTERNAL_TOOLCHAIN),)
+tools-y += gmp mpfr mpc libelf
+endif
 tools-y += m4 libtool autoconf automake sed pkg-config
 tools-y += kconfig busybox fakeroot find-squashfs sstrip lzma
 tools-y += lzma2eva sfk squashfs squashfs3 tichksum
@@ -21,9 +24,13 @@ tools-$(FREETZ_STRIP_LIBRARIES) += mklibs
 $(curdir)/autoconf/compile := $(curdir)/m4/install $(curdir)/libtool/install
 $(curdir)/automake/compile := $(curdir)/m4/install $(curdir)/autoconf/install #$(curdir)/pkg-config/install $(curdir)/xz/install
 $(curdir)/libtool/compile := $(curdir)/sed/install
+$(curdir)/gmp/compile := $(curdir)/automake/install
+$(curdir)/mpc/compile := $(curdir)/mpfr/install $(curdir)/gmp/install
+$(curdir)/mpfr/compile := $(curdir)/gmp/install
 $(curdir)/pkg-config/compile := $(curdir)/sed/install
 $(curdir)/squashfs/compile := $(curdir)/lzma/install
 $(curdir)/squashfs3/compile := $(curdir)/lzma/install
+$(curdir)/libelf/compile := $(curdir)/automake/install
 
 $(curdir)/builddirs := $(tools-y) $(tools-dep) $(tools-)
 $(curdir)/builddirs-default := $(tools-y)
