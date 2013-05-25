@@ -209,22 +209,3 @@ endef
 $(eval $(call Require,check-susegcc, \
 	gcc (SUSE Linux) 4.5.0 has known bugs. Please install and use a different version \
 ))
-
-# FIXME: Do we need this?
-
-# Run svn version update if building in working copy
-# TODO: Please check this, BUILD_DIR_VERSION is always empty
-#ifneq ($(BUILD_DIR_VERSION),)
-#CHECK_BUILD_DIR_VERSION:=check-builddir-version
-#endif
-
-# Simple checking of build prerequisites
-#ifneq ($(NO_PREREQ_CHECK),y)
-#ifneq ($(shell $(CHECK_PREREQ_TOOL) \
-#        $$(cat .build-prerequisites) \
-#        >&2 \
-#        && echo OK\
-#),OK)
-#$(error Some build prerequisites are missing! Please install the missing packages before trying again)
-#endif
-#endif

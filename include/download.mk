@@ -1,6 +1,6 @@
 #
-# Copyright (C) 2006-2010 OpenWrt.org
-# Copyright (C) 2013 Freetz.org
+# Copyright (C) 2006-2012 OpenWrt.org
+# Copyright (C) 2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -30,8 +30,8 @@ $(strip \
 endef
 
 # code for creating tarballs from cvs/svn/git/bzr/hg/darcs checkouts - useful for mirror support
-dl_pack/bz2=$(TAR) cfj $(1) $(2)
-dl_pack/gz=$(TAR) cfz $(1) $(2)
+dl_pack/bz2=$(TAR) cjf $(1) $(2)
+dl_pack/gz=$(TAR) czf $(1) $(2)
 dl_pack/unknown=echo "ERROR: Unknown pack format for file $(1)"; false
 define dl_pack
 	$(if $(dl_pack/$(call ext,$(1))),$(dl_pack/$(call ext,$(1))),$(dl_pack/unknown))
@@ -42,11 +42,12 @@ define DownloadMethod/unknown
 endef
 
 define DownloadMethod/default
-	@$(SCRIPT_DIR)/freetz_download "$(DL_DIR)" "$(FILE)" $(URL) "$(MD5SUM)"
+#	$(SCRIPT_DIR)/download.pl "$(DL_DIR)" "$(FILE)" "$(MD5SUM)" $(foreach url,$(URL),"$(url)")
+	$(SCRIPT_DIR)/freetz_download "$(DL_DIR)" "$(FILE)" "$(URL)" "$(MD5SUM)"
 endef
 
 define wrap_mirror
-	$(if $(MIRROR),@$(SCRIPT_DIR)/download.pl "$(DL_DIR)" "$(FILE)" "$(MIRROR_MD5SUM)" || ( $(1) ),$(1))
+	$(if $(if $(MIRROR),$(filter-out x,$(MIRROR_MD5SUM))),@$(SCRIPT_DIR)/download.pl "$(DL_DIR)" "$(FILE)" "$(MIRROR_MD5SUM)" || ( $(1) ),$(1))
 endef
 
 define DownloadMethod/cvs
@@ -88,7 +89,7 @@ define DownloadMethod/git
 		cd $(TMP_DIR)/dl && \
 		rm -rf $(SUBDIR) && \
 		[ \! -d $(SUBDIR) ] && \
-		git clone $(URL) $(SUBDIR) && \
+		git clone $(URL) $(SUBDIR) --recursive && \
 		(cd $(SUBDIR) && git checkout $(VERSION)) && \
 		echo "Packing checkout..." && \
 		rm -rf $(SUBDIR)/.git && \
