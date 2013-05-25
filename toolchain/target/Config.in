@@ -19,7 +19,7 @@ config FREETZ_LIBC
 
 config FREETZ_LIBC_VERSION
 	string
-	default FREETZ_TARGET_UCLIBC_VERSION  if FREETZ_USE_UCLIBC
+	default FREETZ_TARGET_UCLIBC  if FREETZ_USE_UCLIBC
 
 config FREETZ_TARGET_SUFFIX
 	string
@@ -36,7 +36,7 @@ config FREETZ_TARGET_CFLAGS
 
 config FREETZ_TARGET_TOOLCHAIN_AVM_COMPATIBLE
 	bool "Create toolchain compatible with original firmware"
-	depends on FREETZ_BUILD_TOOLCHAIN && (FREETZ_UCLIBC_0_9_28_BASED_BOX || FREETZ_UCLIBC_0_9_29_BASED_BOX)
+	depends on FREETZ_BUILD_TOOLCHAIN && (FREETZ_AVM_UCLIBC_0_9_28 || FREETZ_AVM_UCLIBC_0_9_29)
 	default n
 	help
 		In order to produce smaller binaries freetz toolchain is compiled

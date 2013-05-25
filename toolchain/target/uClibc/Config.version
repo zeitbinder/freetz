@@ -1,6 +1,6 @@
-config FREETZ_TARGET_UCLIBC_VERSION
+config FREETZ_TARGET_UCLIBC
         string
-        default "0.9.28"        if FREETZ_TARGET_UCLIBC_VERSION_0_9_28
-        default "0.9.29"        if FREETZ_TARGET_UCLIBC_VERSION_0_9_29
-        default "0.9.32.1"      if FREETZ_TARGET_UCLIBC_VERSION_0_9_32
-        default "0.9.33.2"      if FREETZ_TARGET_UCLIBC_VERSION_0_9_33
+        default "0.9.28"        if FREETZ_TARGET_UCLIBC_0_9_28
+        default "0.9.29"        if FREETZ_TARGET_UCLIBC_0_9_29
+        default "0.9.32.1"      if FREETZ_TARGET_UCLIBC_0_9_32
+        default "0.9.33.2"      if FREETZ_TARGET_UCLIBC_0_9_33

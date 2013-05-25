@@ -20,7 +20,7 @@ define Host/Install
 		CPU_CFLAGS="$(TARGET_CFLAGS)" \
 		ARCH="$(FREETZ_TARGET_ARCH)" \
 		headers \
-		$(if $(FREETZ_TARGET_UCLIBC_VERSION_0_9_28),install_dev,install_headers)
+		$(if $(FREETZ_TARGET_UCLIBC_0_9_28),install_dev,install_headers)
 endef
 
 $(eval $(call HostBuild))

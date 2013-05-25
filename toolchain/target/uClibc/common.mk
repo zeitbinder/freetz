@@ -9,7 +9,7 @@ include $(INCLUDE_DIR)/target.mk
 
 PKG_NAME:=uClibc
 PKG_VERSION:=$(call qstrip,$(FREETZ_TARGET_UCLIBC_VERSION))
-PKG_SOURCE_URL:=http://www.uclibc.org/downloads$(if $(or $(FREETZ_TARGET_UCLIBC_VERSION_0_9_28),$(FREETZ_TARGET_UCLIBC_VERSION_0_9_29)),/old-releases)
+PKG_SOURCE_URL:=http://www.uclibc.org/downloads$(if $(or $(FREETZ_TARGET_UCLIBC_0_9_28),$(FREETZ_TARGET_UCLIBC_0_9_29)),/old-releases)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 LIBC_SO_VERSION:=$(PKG_VERSION)
 PATCH_DIR:=$(PATH_PREFIX)/patches-$(PKG_VERSION)
@@ -108,9 +108,9 @@ endef
 
 define Host/Configure
 #	$(GEN_CONFIG) > $(HOST_BUILD_DIR)/.config.new
-	$(CP) $(CONFIG_DIR)/Config.mod.$(PKG_VERSION) $(HOST_BUILD_DIR)/.config.new 
+	$(CP) $(CONFIG_DIR)/Config.$(PKG_VERSION) $(HOST_BUILD_DIR)/.config.new 
 	$(call PKG_EDIT_CONFIG, \
-		$(if $(FREETZ_TARGET_UCLIBC_VERSION_0_9_28), \
+		$(if $(FREETZ_TARGET_UCLIBC_0_9_28), \
 			KERNEL_SOURCE=\"$(UCLIBC_KERNEL_HEADERS_DIR)\" \
 		, \
 			KERNEL_HEADERS=\"$(UCLIBC_KERNEL_HEADERS_DIR)/include\" \
@@ -123,6 +123,11 @@ define Host/Configure
 		UCLIBC_HAS_LFS=$(FREETZ_TARGET_LFS) \
 		UCLIBC_HAS_FOPEN_LARGEFILE_MODE=n \
 		UCLIBC_HAS_WCHAR=y \
+		\
+		$(if $(or $(FREETZ_TARGET_UCLIBC_0_9_32),$(FREETZ_TARGET_UCLIBC_0_9_33)), \ 
+			LINUXTHREADS_OLD=$(if $(FREETZ_AVM_UCLIBC_NPTL_ENABLED),n,y) \
+			UCLIBC_HAS_THREADS_NATIVE=$(if $(FREETZ_AVM_UCLIBC_NPTL_ENABLED),y,n) \
+		) \
 	) $(HOST_BUILD_DIR)/.config.new
 	cmp -s $(HOST_BUILD_DIR)/.config.new $(HOST_BUILD_DIR)/.config.last || { \
 		cp $(HOST_BUILD_DIR)/.config.new $(HOST_BUILD_DIR)/.config && \

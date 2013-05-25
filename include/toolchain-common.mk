@@ -14,7 +14,7 @@ ifeq ($(strip $(FREETZ_TOOLCHAIN_32BIT)),y)
 TOOLCHAIN_HOST_CFLAGS+=-m32
 endif
 
-ifeq ($(strip $(FREETZ_KERNEL_COMPILER_GCC_3_4)),y)
+ifeq ($(strip $(FREETZ_KERNEL_GCC_3_4)),y)
 KERNEL_TOOLCHAIN_NO_MPFR:=y
 endif
 
