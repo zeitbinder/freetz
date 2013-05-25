@@ -69,8 +69,8 @@ $(curdir)//compile = $(1)/prepare
 $(curdir)//install = $(1)/compile
 
 ifndef DUMP_TARGET_DB
-$(TARGET_TOOLCHAIN_DIR)/stamp/.gcc-initial_installed:
+$(TARGET_TOOLCHAIN_DIR)/stamp/.gcc-target-initial_installed:
 endif
 
-$(eval $(call stampfile,$(curdir),toolchain,install,$(TARGET_TOOLCHAIN_DIR)/stamp/.gcc_target_initial_installed,,$(TARGET_TOOLCHAIN_DIR)))
+$(eval $(call stampfile,$(curdir),toolchain,install,$(TARGET_TOOLCHAIN_DIR)/stamp/.gcc-target-initial_installed,,$(TARGET_TOOLCHAIN_DIR)))
 $(eval $(call subdir,$(curdir)))

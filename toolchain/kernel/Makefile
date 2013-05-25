@@ -58,8 +58,8 @@ $(curdir)//compile = $(1)/prepare
 $(curdir)//install = $(1)/compile
 
 ifndef DUMP_TARGET_DB
-$(KERNEL_TOOLCHAIN_DIR)/stamp/.gcc_installed:
+$(KERNEL_TOOLCHAIN_DIR)/stamp/.gcc-kernel_installed:
 endif
 
-$(eval $(call stampfile,$(curdir),toolchain/kernel,install,$(KERNEL_TOOLCHAIN_DIR)/stamp/.gcc_kernel_installed,,$(KERNEL_TOOLCHAIN_DIR)))
+$(eval $(call stampfile,$(curdir),toolchain,install,$(KERNEL_TOOLCHAIN_DIR)/stamp/.gcc-kernel_installed,,$(KERNEL_TOOLCHAIN_DIR)))
 $(eval $(call subdir,$(curdir)))

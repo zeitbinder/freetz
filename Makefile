@@ -64,9 +64,17 @@ else
 DL_TOOL:=$(SCRIPT_DIR)/freetz_download
 PATCH_TOOL:=$(SCRIPT_DIR)/freetz_patch
 
+toolchain/install: $(toolchain/kernel/stamp-install) $(toolchain/target/stamp-install)
+$(toolchain/kernel/stamp-install) $(toolchain/target/stamp-install): $(tools/stamp-install)
 ### Freetz ###
 
-toolchain/install: $(toolchain/kernel/stamp-install) $(toolchain/target/stamp-install)  $(tools/stamp-install)
+#$(toolchain/stamp-install): $(tools/stamp-install)
+$(target/stamp-compile): $(toolchain/kernel/stamp-install) $(tools/stamp-install) $(BUILD_DIR)/.prepared
+$(package/stamp-compile): $(toolchain/target/stamp-install) $(target/stamp-compile) $(package/stamp-cleanup)
+$(package/stamp-install): $(package/stamp-compile)
+$(target/stamp-install): $(package/stamp-compile) $(package/stamp-install)
+
+
 
 printdb:
 	@true

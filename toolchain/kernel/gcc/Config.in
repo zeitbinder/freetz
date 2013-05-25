@@ -1,7 +1,7 @@
 # Choose gcc version
 
 choice
-	prompt "Kernel Compiler Version"
+	prompt "Kernel compiler"
 	default FREETZ_KERNEL_GCC_3_4 if FREETZ_AVM_GCC_3_4
 	default FREETZ_KERNEL_GCC_4_6 if FREETZ_AVM_GCC_4_6
 	default FREETZ_KERNEL_GCC_4_7 if FREETZ_AVM_GCC_4_7

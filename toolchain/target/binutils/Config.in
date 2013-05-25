@@ -1,7 +1,7 @@
 # Choose binutils version.
 
 choice
-	prompt "Target Binutils Version"
+	prompt "Target binutils"
 	default FREETZ_TARGET_BINUTILS_2_22
 	help
 	  Select the version of binutils you wish to use.

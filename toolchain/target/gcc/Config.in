@@ -1,15 +1,18 @@
 # Choose gcc version.
 
 choice
-	prompt "Target Compiler Version"
-	default FREETZ_TARGET_GCC_4_6
+	prompt "Target compiler"
+	default FREETZ_TARGET_GCC_4_6 if !FREETZ_AVM_GCC_4_7
+	default FREETZ_TARGET_GCC_4_7 if  FREETZ_AVM_GCC_4_7
 
 	config FREETZ_TARGET_GCC_4_6
 		bool "gcc-4.6.4"
+		depends on !FREETZ_AVM_GCC_4_7
 
 	config FREETZ_TARGET_GCC_4_7
 		bool "gcc-4.7.3"
-		depends on FREETZ_BUILD_TOOLCHAIN || FREETZ_DL_TOOLCHAIN_OVERRIDE
+		depends on FREETZ_AVM_GCC_4_7 \
+			|| FREETZ_BUILD_TOOLCHAIN || FREETZ_DL_TOOLCHAIN_OVERRIDE
 
 	config FREETZ_TARGET_GCC_4_8
 		bool "gcc-4.8.0 - HIGHLY EXPERIMENTAL"
@@ -17,7 +20,7 @@ choice
 endchoice
 
 choice
-	prompt "Standard C++ Library"
+	prompt "Standard C++ library"
 	default FREETZ_STDCXXLIB_USE_UCLIBCXX
 	help
 		Library to be used as the implementation of the Standard C++ Library.
