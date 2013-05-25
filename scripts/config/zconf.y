@@ -66,6 +66,7 @@ static struct menu *current_menu, *current_entry;
 %token <id>T_VISIBLE
 %token <id>T_OPTION
 %token <id>T_ON
+%token <id>T_RESET
 %token <string> T_WORD
 %token <string> T_WORD_QUOTE
 %token T_UNEQUAL
@@ -119,7 +120,7 @@ stmt_list:
 ;
 
 option_name:
-	T_DEPENDS | T_PROMPT | T_TYPE | T_SELECT | T_OPTIONAL | T_RANGE | T_DEFAULT | T_VISIBLE
+	T_DEPENDS | T_PROMPT | T_TYPE | T_SELECT | T_OPTIONAL | T_RANGE | T_DEFAULT | T_VISIBLE | T_RESET
 ;
 
 common_stmt:
@@ -296,6 +297,11 @@ choice_option: T_OPTIONAL T_EOL
 	printd(DEBUG_PARSE, "%s:%d:optional\n", zconf_curname(), zconf_lineno());
 };
 
+choice_option: T_RESET if_expr T_EOL
+{
+	menu_add_prop(P_RESET, NULL, NULL, $2);
+};
+
 choice_option: T_DEFAULT T_WORD if_expr T_EOL
 {
 	if ($1->stype == S_UNKNOWN) {
@@ -424,6 +430,10 @@ depends: T_DEPENDS T_ON expr T_EOL
 {
 	menu_add_dep($3);
 	printd(DEBUG_PARSE, "%s:%d:depends on\n", zconf_curname(), zconf_lineno());
+} | T_DEPENDS expr T_EOL
+{
+	menu_add_dep($2);
+	zconfprint("warning: deprecated 'depends' syntax, use 'depends on' instead.");
 };
 
 /* visibility option */
@@ -498,8 +508,10 @@ void conf_parse(const char *name)
 	modules_sym->flags |= SYMBOL_AUTO;
 	rootmenu.prompt = menu_add_prompt(P_MENU, "Linux Kernel Configuration", NULL);
 
+#if YYDEBUG
 	if (getenv("ZCONF_DEBUG"))
 		zconfdebug = 1;
+#endif
 	zconfparse();
 	if (zconfnerrs)
 		exit(1);

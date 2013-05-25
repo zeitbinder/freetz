@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <glob.h>
 
 #include "lkc.h"
 
@@ -40,7 +41,7 @@ static void zconf_endfile(void);
 
 static void new_string(void)
 {
-	text = malloc(START_STRSIZE);
+	text = xmalloc(START_STRSIZE);
 	text_asize = START_STRSIZE;
 	text_size = 0;
 	*text = 0;
@@ -62,7 +63,7 @@ static void append_string(const char *str, int size)
 
 static void alloc_string(const char *str, int size)
 {
-	text = malloc(size + 1);
+	text = xmalloc(size + 1);
 	memcpy(text, str, size);
 	text[size] = 0;
 }
@@ -288,18 +289,18 @@ void zconf_initscan(const char *name)
 		exit(1);
 	}
 
-	current_buf = malloc(sizeof(*current_buf));
+	current_buf = xmalloc(sizeof(*current_buf));
 	memset(current_buf, 0, sizeof(*current_buf));
 
 	current_file = file_lookup(name);
 	current_file->lineno = 1;
 }
 
-void zconf_nextfile(const char *name)
+static void __zconf_nextfile(const char *name)
 {
 	struct file *iter;
 	struct file *file = file_lookup(name);
-	struct buffer *buf = malloc(sizeof(*buf));
+	struct buffer *buf = xmalloc(sizeof(*buf));
 	memset(buf, 0, sizeof(*buf));
 
 	current_buf->state = YY_CURRENT_BUFFER;
@@ -335,6 +336,40 @@ void zconf_nextfile(const char *name)
 	file->lineno = 1;
 	file->parent = current_file;
 	current_file = file;
+}
+
+void zconf_nextfile(const char *name)
+{
+	glob_t gl;
+	int err;
+	int i;
+
+	err = glob(name, GLOB_ERR | GLOB_MARK, NULL, &gl);
+	if (err) {
+		const char *reason = "unknown error";
+
+		switch (err) {
+		case GLOB_NOSPACE:
+			reason = "out of memory";
+			break;
+		case GLOB_ABORTED:
+			reason = "read error";
+			break;
+		case GLOB_NOMATCH:
+			reason = "No files found";
+			break;
+		default:
+			break;
+		}
+
+		printf("%s:%d: glob failed: %s \"%s\"\n", zconf_curname(), zconf_lineno(),
+			reason, name);
+
+		exit(1);
+	}
+
+	for (i = 0; i < gl.gl_pathc; i++)
+		__zconf_nextfile(gl.gl_pathv[i]);
 }
 
 static void zconf_endfile(void)
