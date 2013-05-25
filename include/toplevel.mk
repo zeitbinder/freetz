@@ -45,9 +45,6 @@ export CFLAGS=
 
 
 ### Freetz
-CONFIG_IN=Config.in
-CONFIG_IN_CACHE=$(CONFIG_IN).cache
-CONFIG=scripts/config
 PARSE_CONFIG_TOOL:=scripts/parse-config
 
 ### Freetz ###
@@ -82,12 +79,12 @@ prepare-tmpinfo: FORCE
 	fi
 
 scripts/config/mconf:
-	@$(_SINGLE)$(SUBMAKE) -s -C scripts/config menuconfig obj=./
+	$(_SINGLE)$(SUBMAKE) -s -C scripts/config all CC="$(HOSTCC)"
 
 $(eval $(call rdep,scripts/config,scripts/config/mconf))
 
 scripts/config/conf:
-	@$(_SINGLE)$(SUBMAKE) -s -C scripts/config conf obj=./
+	@$(_SINGLE)$(SUBMAKE) -s -C scripts/config conf CC="$(HOSTCC)"
 
 #config: scripts/config/conf prepare-tmpinfo FORCE
 #	$< Config.in
@@ -110,36 +107,33 @@ scripts/config/conf:
 
 
 ### Freetz ###
-#menuconfig: config-cache $(CONFIG)/mconf
-menuconfig: $(CONFIG)/mconf
-	@$< $(CONFIG_IN_CACHE)
+menuconfig: scripts/config/mconf Config.in.cache prepare-tmpinfo FORCE
+	@$< Config.in.cache
 
-menuconfig-single: config-cache $(CONFIG)/mconf
-	@MENUCONFIG_MODE="single_menu" $(CONFIG)/mconf $(CONFIG_IN_CACHE)
+menuconfig-single: scripts/config/mconf Config.in.cache prepare-tmpinfo FORCE
+	@MENUCONFIG_MODE="single_menu" scripts/config/mconf Config.in.cache
 
-menuconfig-nocache: $(CONFIG_IN).custom $(CONFIG)/mconf
-	@$(CONFIG)/mconf $(CONFIG_IN)
+menuconfig-nocache: scripts/config/mconf Config.in.custom prepare-tmpinfo FORCE
+	@$< Config.in
 
-config: config-cache $(CONFIG)/conf
-	@$(CONFIG)/conf $(CONFIG_IN_CACHE)
+config: scripts/config/conf Config.in.cache prepare-tmpinfo FORCE
+	@$< Config.in.cache
 
-config-compress: config-cache $(CONFIG)/conf
-	@$(CONFIG)/conf --savedefconfig .config_compressed $(CONFIG_IN_CACHE)
+config-compress: scripts/config/conf Config.in.cache prepare-tmpinfo FORCE
+	@scripts/config/conf --savedefconfig .config_compressed Config.in.cache
 	@echo "Compressed configuration written to .config_compressed."; \
 	echo  "It is equivalent to .config, but contains only non-default user selections."
 
-oldconfig oldnoconfig allnoconfig allyesconfig randconfig listnewconfig: config-cache $(CONFIG)/conf
-	@$(CONFIG)/conf --$@ $(CONFIG_IN_CACHE)
-
-config-cache: $(CONFIG_IN_CACHE)
+oldconfig oldnoconfig allnoconfig allyesconfig randconfig listnewconfig: scripts/config/conf Config.in.cache
+	scripts/config/conf --$@ Config.in.cache
 
 -include include/config/cache.conf.cmd
 
-$(CONFIG_IN_CACHE) include/config/cache.conf.cmd: $(CONFIG_IN).custom $(PARSE_CONFIG_TOOL) $(deps_config_cache)
-	mkdir -p include/config include/generated
-	$(PARSE_CONFIG_TOOL) $(CONFIG_IN) > $(CONFIG_IN_CACHE)
+Config.in.cache include/config/cache.conf.cmd: Config.in.custom $(PARSE_CONFIG_TOOL) $(deps_config_cache)
+	@mkdir -p include/config include/generated
+	@$(PARSE_CONFIG_TOOL) Config.in > Config.in.cache
 
-$(CONFIG_IN).custom:
+Config.in.custom:
 	@touch $@
 
 ### Freetz ###
@@ -157,8 +151,7 @@ kernel_oldconfig: prepare_kernel_conf
 	$(_SINGLE)$(NO_TRACE_MAKE) -C target/linux oldconfig
 
 kernel_menuconfig: prepare_kernel_conf
-	#$(_SINGLE)$(NO_TRACE_MAKE) -C target/linux menuconfig
-	$(_SINGLE)$(NO_TRACE_MAKE) kernel-menuconfig
+	$(_SINGLE)$(NO_TRACE_MAKE) -C target/linux menuconfig
 
 kernel_nconfig: prepare_kernel_conf
 	$(_SINGLE)$(NO_TRACE_MAKE) -C target/linux nconfig
