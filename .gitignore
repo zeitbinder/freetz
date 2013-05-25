@@ -9,12 +9,12 @@
 #
 # Normal rules
 #
-.*
-*.gz
-*.bz2
-*.lzma
-*.xz
-*.patch
+/.*
+/*.gz
+/*.bz2
+/*.lzma
+/*.xz
+/*.patch
 
 #
 # Top-level directories
