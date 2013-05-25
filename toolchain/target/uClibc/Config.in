@@ -1,0 +1,53 @@
+# Choose uclibc version
+
+choice
+        prompt "Target uClibc version"
+        default FREETZ_TARGET_UCLIBC_VERSION_0_9_28 if FREETZ_UCLIBC_0_9_28_BASED_BOX
+        default FREETZ_TARGET_UCLIBC_VERSION_0_9_29 if FREETZ_UCLIBC_0_9_29_BASED_BOX
+        default FREETZ_TARGET_UCLIBC_VERSION_0_9_32 if FREETZ_UCLIBC_0_9_32_BASED_BOX
+        default FREETZ_TARGET_UCLIBC_VERSION_0_9_33 if FREETZ_UCLIBC_0_9_33_BASED_BOX
+
+        config FREETZ_TARGET_UCLIBC_VERSION_0_9_28
+        bool "0.9.28"
+        depends on FREETZ_UCLIBC_0_9_28_BASED_BOX
+
+        config FREETZ_TARGET_UCLIBC_VERSION_0_9_29
+        bool "0.9.29"
+        depends on FREETZ_UCLIBC_0_9_29_BASED_BOX
+
+        config FREETZ_TARGET_UCLIBC_VERSION_0_9_32
+        bool "0.9.32.1"
+        depends on FREETZ_UCLIBC_0_9_32_BASED_BOX \
+                || ((FREETZ_BUILD_TOOLCHAIN || FREETZ_DL_TOOLCHAIN_OVERRIDE) && FREETZ_UCLIBC_0_9_29_BASED_BOX)
+
+        config FREETZ_TARGET_UCLIBC_VERSION_0_9_33
+        bool "0.9.33.2"
+        depends on FREETZ_UCLIBC_0_9_33_BASED_BOX \
+		|| (FREETZ_BUILD_TOOLCHAIN || FREETZ_DL_TOOLCHAIN_OVERRIDE) \
+		&& (FREETZ_UCLIBC_0_9_29_BASED_BOX || FREETZ_UCLIBC_0_9_32_BASED_BOX)
+endchoice
+
+config FREETZ_TARGET_UCLIBC_REF
+	string
+	default "mod"
+
+config FREETZ_TARGET_UCLIBC_REDUCED_LOCALE_SET
+	bool "Use reduced set of locales" if FREETZ_BUILD_TOOLCHAIN && \
+						( \
+						FREETZ_TARGET_UCLIBC_VERSION_0_9_29 || \
+						FREETZ_TARGET_UCLIBC_VERSION_0_9_32 || \
+						FREETZ_TARGET_UCLIBC_VERSION_0_9_33    \
+						)
+	default y
+	help
+		This option causes only the following locales to be included into uClibc:
+		 - en_US
+		 - en_US.UTF-8
+		 - de_DE
+		 - de_DE.UTF-8
+
+		This saves about 235KB in the image and at run-time.
+
+comment "CAUTION: Usage of an uClibc version higher than that used by AVM may lead to an unstable box"
+        depends on (FREETZ_UCLIBC_0_9_29_BASED_BOX && !FREETZ_TARGET_UCLIBC_VERSION_0_9_29) \
+                || (FREETZ_UCLIBC_0_9_32_BASED_BOX && !FREETZ_TARGET_UCLIBC_VERSION_0_9_32)

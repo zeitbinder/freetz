@@ -1,0 +1,90 @@
+#
+source toolchain/target/binutils/Config.in
+
+source toolchain/target/gcc/Config.in
+
+source toolchain/target/uClibc/Config.in
+
+config FREETZ_USE_UCLIBC
+	bool
+	default y
+
+source toolchain/target/gcc/Config.version
+
+source toolchain/target/uClibc/Config.version
+
+config FREETZ_LIBC
+	string
+	default "uClibc"  if FREETZ_USE_UCLIBC
+
+config FREETZ_LIBC_VERSION
+	string
+	default FREETZ_TARGET_UCLIBC_VERSION  if FREETZ_USE_UCLIBC
+
+config FREETZ_TARGET_SUFFIX
+	string
+	default "uclibc"          if FREETZ_USE_UCLIBC
+
+config FREETZ_STDCXXLIB
+	string
+	default "uclibcxx"if FREETZ_STDCXXLIB_USE_UCLIBCXX
+	default "libstdcxx"if FREETZ_STDCXXLIB_USE_GNULIBSTDCXX
+
+config FREETZ_TARGET_CFLAGS
+	string "Target compiler flags"
+	default "-Os -pipe -Wa,--trap"
+
+config FREETZ_TARGET_TOOLCHAIN_AVM_COMPATIBLE
+	bool "Create toolchain compatible with original firmware"
+	depends on FREETZ_BUILD_TOOLCHAIN && (FREETZ_UCLIBC_0_9_28_BASED_BOX || FREETZ_UCLIBC_0_9_29_BASED_BOX)
+	default n
+	help
+		In order to produce smaller binaries freetz toolchain is compiled
+		with mips-plt optimizations enabled. Because of the missing support
+		for the required relocation types in uClibc versions prior to 0.9.30
+		the binaries produced with a toolchain optimized this way could not
+		be run on boxes with original firmware.
+
+		This option causes mips-plt optimizations to be disabled.
+		The binaries compiled with such toolchain could be run on boxes
+		with unmodified firmware.
+
+		Note: mips-plt optimizations affect only dynamically linked binaries.
+		In case all binaries you want to run on an unmodified box will be
+		linked statically it is safe to say 'no' here.
+
+
+
+config FREETZ_TARGET_NLS
+#	bool "Native language support (NLS) for target toolchain" if FREETZ_BUILD_TOOLCHAIN
+	bool
+	default n
+	help
+		Support NLS-enabled programs and Linux tools on target system.
+
+		Example:
+			$ ls /foo/bar
+			ls: /foo/bar: No such file or directory
+			$ export LANG=de_DE.8859-1
+			$ ls /foo/bar
+			ls: /foo/bar: Datei oder Verzeichnis nicht gefunden
+
+config FREETZ_TARGET_LFS
+	bool "Large file support (LFS) for target toolchain" if FREETZ_BUILD_TOOLCHAIN
+	default y
+	select FREETZ_BUSYBOX_LFS
+	help
+		Support files > 2 GB on target system. This is desirable for Torrent
+		clients, for example. This option is enabled by default and should not
+		be changed unless you know what you are doing, as it can easily cause
+		problems.
+
+config FREETZ_TARGET_TOOLCHAIN
+#	select FREETZ_LIB_libgmp
+#	select FREETZ_LIB_libmpfr
+#	select FREETZ_LIB_libmpc
+	bool "Build binutils and gcc for target" if FREETZ_BUILD_TOOLCHAIN
+	default n
+	help
+		Build the binutils and gcc to run on the target.
+		Files are installed into toolchain/target/target-utils.

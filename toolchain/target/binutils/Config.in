@@ -1,0 +1,27 @@
+# Choose binutils version.
+
+choice
+	prompt "Target Binutils Version"
+	default FREETZ_TARGET_BINUTILS_2_22
+	help
+	  Select the version of binutils you wish to use.
+
+	config FREETZ_TARGET_BINUTILS_2_22
+		bool "binutils-2.22"
+
+	config FREETZ_TARGET_BINUTILS_2_23
+		bool "binutils-2.23.2"
+		depends on FREETZ_BUILD_TOOLCHAIN || FREETZ_DL_TOOLCHAIN_OVERRIDE
+endchoice
+
+#config FREETZ_EXTRA_BINUTILS_CONFIG_OPTIONS
+#	string
+#	prompt "Additional binutils configure options"
+#	default ""
+#	help
+#	    Any additional binutils options you may want to include....
+
+config FREETZ_TARGET_BINUTILS_VERSION
+	string
+	default "2.22"		if FREETZ_TARGET_BINUTILS_2_22
+	default "2.23.2"	if FREETZ_TARGET_BINUTILS_2_23
