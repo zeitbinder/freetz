@@ -12,7 +12,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(HTTPRY_DIR) \
+	$(PKG_MAKE) -C $(HTTPRY_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
 		LDOPTS="-lpcap"
@@ -36,7 +36,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(HTTPRY_DIR) clean
+	-$(PKG_MAKE) -C $(HTTPRY_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(HTTPRY_TARGET_BINARY)

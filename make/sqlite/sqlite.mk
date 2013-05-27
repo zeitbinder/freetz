@@ -25,10 +25,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(SQLITE_DIR)
+	$(PKG_MAKE) -C $(SQLITE_DIR)
 
 $($(PKG)_LIB_STAGING_BINARY): $($(PKG)_LIB_BINARY)
-	$(SUBMAKE) -C $(SQLITE_DIR) \
+	$(PKG_MAKE) -C $(SQLITE_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		all install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -46,7 +46,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIB_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(SQLITE_DIR) clean
+	-$(PKG_MAKE) -C $(SQLITE_DIR) clean
 	$(RM) -r $(STAGING_DIR)/usr/lib/libsqlite3* \
 		$(STAGING_DIR)/lib/pkgconfig/sqlite3.pc \
 		$(STAGING_DIR)/usr/include/sqlite \

@@ -10,7 +10,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(IPUTILS_DIR) traceroute6 tracepath6 tracepath ping ping6 \
+	$(PKG_MAKE) -C $(IPUTILS_DIR) traceroute6 tracepath6 tracepath ping ping6 \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS) -D_GNU_SOURCE -Wstrict-prototypes" \
 		LDLIBS=""
@@ -23,7 +23,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(IPUTILS_DIR) clean
+	-$(PKG_MAKE) -C $(IPUTILS_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(IPUTILS_TARGET_BINARY)

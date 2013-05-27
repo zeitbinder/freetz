@@ -40,7 +40,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) $(VIM_MAKE_OPTIONS) -C $(VIM_DIR)
+	$(PKG_MAKE) $(VIM_MAKE_OPTIONS) -C $(VIM_DIR)
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
@@ -50,7 +50,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(VIM_DIR) clean
+	-$(PKG_MAKE) -C $(VIM_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(VIM_TARGET_BINARY)

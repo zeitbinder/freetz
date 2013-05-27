@@ -47,16 +47,16 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARIES_BUILD_DIR) $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(TIFF_DIR)
+	$(PKG_MAKE) -C $(TIFF_DIR)
 
 $($(PKG)_BINARIES_TARGET_DIR): $($(PKG)_DEST_DIR)/usr/bin/%: $($(PKG)_DIR)/tools/.libs/%
 	$(INSTALL_BINARY_STRIP)
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
-	$(SUBMAKE) -C $(TIFF_DIR)/libtiff \
+	$(PKG_MAKE) -C $(TIFF_DIR)/libtiff \
 		DESTDIR="$(STAGING_DIR)" \
 		install
-	$(SUBMAKE) -C $(TIFF_DIR) \
+	$(PKG_MAKE) -C $(TIFF_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install-pkgconfigDATA
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -71,7 +71,7 @@ $(pkg): $($(PKG)_LIBS_STAGING_DIR)
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR) $($(PKG)_LIBS_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(TIFF_DIR) clean
+	-$(PKG_MAKE) -C $(TIFF_DIR) clean
 	$(RM) \
 		$(STAGING_DIR)/usr/lib/libtiff* \
 		$(STAGING_DIR)/usr/lib/pkgconfig/libtiff*.pc \

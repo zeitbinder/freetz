@@ -20,7 +20,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY) $($(PKG)_STATS_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(NAGIOS_DIR) all
+	$(PKG_MAKE) -C $(NAGIOS_DIR) all
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
@@ -33,7 +33,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_STATS_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(NAGIOS_DIR) clean
+	-$(PKG_MAKE) -C $(NAGIOS_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(NAGIOS_TARGET_BINARY)

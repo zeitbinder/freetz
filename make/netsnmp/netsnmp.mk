@@ -136,7 +136,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY) $($(PKG)_LIBS_BUILD_DIR) $($(PKG)_APPS_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE1) -C $(NETSNMP_DIR) \
+	$(PKG_MAKE1) -C $(NETSNMP_DIR) \
 		LDFLAGS="$(TARGET_LDFLAGS) -ldl"
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
@@ -150,7 +150,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIBS_TARGET_DIR) $($(PKG)_APPS_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(NETSNMP_DIR) clean
+	-$(PKG_MAKE) -C $(NETSNMP_DIR) clean
 	$(RM) $(NETSNMP_FREETZ_CONFIG_FILE)
 
 $(pkg)-uninstall:

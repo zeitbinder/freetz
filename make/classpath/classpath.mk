@@ -48,7 +48,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_CLASSES_FILE) $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(CLASSPATH_DIR)
+	$(PKG_MAKE) -C $(CLASSPATH_DIR)
 	cp $(CLASSPATH_MAKE_DIR)/mini.classlist $(CLASSPATH_DIR)/lib;
 	( cd $(CLASSPATH_DIR)/lib; fastjar -Mcf $(CLASSPATH_CLASSES_FILE_MINI) -@ < mini.classlist );
 
@@ -59,7 +59,7 @@ ifeq ($(strip $(FREETZ_PACKAGE_CLASSPATH_MINI)),y)
 endif
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
-	$(SUBMAKE) -C $(CLASSPATH_DIR)/native/jni \
+	$(PKG_MAKE) -C $(CLASSPATH_DIR)/native/jni \
 		DESTDIR="$(STAGING_DIR)" install
 	$(PKG_FIX_LIBTOOL_LA) \
 		$(CLASSPATH_LIBNAMES_SHORT:%=$(STAGING_DIR)$(CLASSPATH_LIBRARY_DIR)/libjava%.la)
@@ -72,7 +72,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_CLASSES_FILE) $($(PKG)_LIBS_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(CLASSPATH_DIR) clean
+	-$(PKG_MAKE) -C $(CLASSPATH_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) \

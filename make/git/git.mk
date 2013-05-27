@@ -47,11 +47,11 @@ $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY_BUILD_DIR): $($(PKG)_DIR)/.configured
 	for target in all strip; do \
-		$(SUBMAKE) -C $(GIT_DIR) $(GIT_MAKE_PARAMS) $$target; \
+		$(PKG_MAKE) -C $(GIT_DIR) $(GIT_MAKE_PARAMS) $$target; \
 	done
 
 $($(PKG)_BINARY_TARGET_DIR): $($(PKG)_BINARY_BUILD_DIR)
-	$(SUBMAKE) -C $(GIT_DIR) $(GIT_MAKE_PARAMS) \
+	$(PKG_MAKE) -C $(GIT_DIR) $(GIT_MAKE_PARAMS) \
 		DESTDIR=$(abspath $(GIT_DEST_DIR)) \
 		install \
 	&& \
@@ -79,7 +79,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARY_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(GIT_DIR) clean
+	-$(PKG_MAKE) -C $(GIT_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) -r $(GIT_DEST_DIR)/usr/{bin,lib}/git*

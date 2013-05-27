@@ -26,11 +26,11 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBPCAP_DIR) all \
+	$(PKG_MAKE) -C $(LIBPCAP_DIR) all \
 		CCOPT="$(TARGET_CFLAGS)"
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(LIBPCAP_DIR) \
+	$(PKG_MAKE) -C $(LIBPCAP_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -44,7 +44,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBPCAP_DIR) clean
+	-$(PKG_MAKE) -C $(LIBPCAP_DIR) clean
 	$(RM) -r $(STAGING_DIR)/usr/lib/libpcap* \
 		$(STAGING_DIR)/usr/bin/pcap-config \
 		$(STAGING_DIR)/usr/include/pcap*

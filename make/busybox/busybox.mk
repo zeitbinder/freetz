@@ -33,11 +33,11 @@ $($(PKG)_DIR)/.configured: $($(PKG)_DIR)/.unpacked
 	touch $@
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(BUSYBOX_DIR) \
+	$(PKG_MAKE) -C $(BUSYBOX_DIR) \
 		$(BUSYBOX_MAKE_FLAGS)
 
 $($(PKG)_BINARY).links: $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(BUSYBOX_DIR) \
+	$(PKG_MAKE) -C $(BUSYBOX_DIR) \
 		$(BUSYBOX_MAKE_FLAGS) \
 		busybox.links
 	touch -c $@
@@ -51,7 +51,7 @@ $($(PKG)_TARGET_BINARY).links: $($(PKG)_BINARY).links
 $(pkg)-precompiled: uclibc $($(PKG)_TARGET_BINARY) $($(PKG)_TARGET_BINARY).links
 
 $(pkg)-clean: $(pkg)-uninstall
-	-$(SUBMAKE) -C $(BUSYBOX_DIR) $(BUSYBOX_MAKE_FLAGS) clean
+	-$(PKG_MAKE) -C $(BUSYBOX_DIR) $(BUSYBOX_MAKE_FLAGS) clean
 
 $(pkg)-uninstall:
 	$(RM) $(BUSYBOX_TARGET_BINARY) $(BUSYBOX_TARGET_BINARY).links

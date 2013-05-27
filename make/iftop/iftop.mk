@@ -18,7 +18,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-		$(SUBMAKE1) -C $(IFTOP_DIR) \
+		$(PKG_MAKE1) -C $(IFTOP_DIR) \
 		LIBS="$(IFTOP_LIBS)"
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
@@ -29,7 +29,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(IFTOP_DIR) clean
+	-$(PKG_MAKE) -C $(IFTOP_DIR) clean
 	$(RM) $(IFTOP_DIR)/.configured
 
 $(pkg)-uninstall:

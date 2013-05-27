@@ -40,7 +40,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LFTP_DIR) \
+	$(PKG_MAKE) -C $(LFTP_DIR) \
 		LDFLAGS="$(LFTP_LDFLAGS)"
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
@@ -51,7 +51,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LFTP_DIR) clean
+	-$(PKG_MAKE) -C $(LFTP_DIR) clean
 	$(RM) $(LFTP_DIR)/.configured
 
 $(pkg)-uninstall:

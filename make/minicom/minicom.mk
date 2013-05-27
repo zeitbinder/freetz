@@ -23,7 +23,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(MINICOM_DIR) \
+	$(PKG_MAKE) -C $(MINICOM_DIR) \
 		ICONVLIB="$(if $(FREETZ_TARGET_UCLIBC_0_9_28),-liconv)" \
 		AM_CFLAGS=""
 
@@ -35,7 +35,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(MINICOM_DIR) clean
+	-$(PKG_MAKE) -C $(MINICOM_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(MINICOM_TARGET_BINARY)

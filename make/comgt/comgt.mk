@@ -11,7 +11,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(COMGT_DIR) \
+	$(PKG_MAKE) -C $(COMGT_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
 		LDFLAGS="$(TARGET_LDFLAGS)" \
@@ -25,7 +25,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(COMGT_DIR) clean
+	-$(PKG_MAKE) -C $(COMGT_DIR) clean
 	 $(RM) $(COMGT_DIR)/.configured
 
 $(pkg)-uninstall:

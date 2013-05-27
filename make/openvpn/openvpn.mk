@@ -75,7 +75,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(OPENVPN_DIR) \
+	$(PKG_MAKE) -C $(OPENVPN_DIR) \
 		EXTRA_CFLAGS="$(OPENVPN_EXTRA_CFLAGS)" \
 		EXTRA_LDFLAGS="$(OPENVPN_EXTRA_LDFLAGS)" \
 		EXTRA_LIBS="$(OPENVPN_EXTRA_LIBS)" \
@@ -89,7 +89,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(OPENVPN_DIR) clean
+	-$(PKG_MAKE) -C $(OPENVPN_DIR) clean
 	$(RM) $(OPENVPN_FREETZ_CONFIG_FILE)
 
 $(pkg)-uninstall:

@@ -23,7 +23,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(USBUTILS_DIR)
+	$(PKG_MAKE) -C $(USBUTILS_DIR)
 
 $($(PKG)_IDS): $($(PKG)_DIR)/.configured
 ifeq ($(strip $(FREETZ_PACKAGE_USBUTILS_IDS_UPDATE)),y)
@@ -43,7 +43,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $(if $(FREETZ_PACKAGE_USBUTILS_IDS),$($(PKG)_TARGET_IDS))
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(USBUTILS_DIR) clean
+	-$(PKG_MAKE) -C $(USBUTILS_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(USBUTILS_TARGET_BINARY) $(USBUTILS_TARGET_IDS)

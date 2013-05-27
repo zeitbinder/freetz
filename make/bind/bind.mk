@@ -44,8 +44,8 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARIES_BUILD_DIR_sbin) $($(PKG)_BINARIES_BUILD_DIR_bin): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(BIND_DIR)/lib/dns $(BIND_MAKE_FLAGS) gen
-	$(SUBMAKE) -C $(BIND_DIR) $(BIND_MAKE_FLAGS)
+	$(PKG_MAKE) -C $(BIND_DIR)/lib/dns $(BIND_MAKE_FLAGS) gen
+	$(PKG_MAKE) -C $(BIND_DIR) $(BIND_MAKE_FLAGS)
 
 $(foreach binary,$($(PKG)_BINARIES_BUILD_DIR_sbin),$(eval $(call INSTALL_BINARY_STRIP_RULE,$(binary),/usr/sbin)))
 $(foreach binary,$($(PKG)_BINARIES_BUILD_DIR_bin),$(eval $(call INSTALL_BINARY_STRIP_RULE,$(binary),/usr/bin)))
@@ -64,7 +64,7 @@ $($(PKG)_TARGET_DIR)/.exclude: $(TOPDIR)/.config
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR_sbin) $($(PKG)_BINARIES_TARGET_DIR_bin)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(BIND_DIR) clean
+	-$(PKG_MAKE) -C $(BIND_DIR) clean
 	$(RM) $(BIND_DIR)/.configured
 
 $(pkg)-uninstall:

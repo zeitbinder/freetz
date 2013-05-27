@@ -74,7 +74,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE1) -C $(NMAP_DIR) $(if $(FREETZ_PACKAGE_NMAP_STATIC),STATIC="-static")
+	$(PKG_MAKE1) -C $(NMAP_DIR) $(if $(FREETZ_PACKAGE_NMAP_STATIC),STATIC="-static")
 
 $(foreach binary,$($(PKG)_BINARIES_BUILD_DIR),$(eval $(call INSTALL_BINARY_STRIP_RULE,$(binary),/usr/bin)))
 
@@ -89,7 +89,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR) $($(PKG)_DBS_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(NMAP_DIR) clean
+	-$(PKG_MAKE) -C $(NMAP_DIR) clean
 	$(RM) $(NMAP_DIR)/.configured
 
 $(pkg)-uninstall:

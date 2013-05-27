@@ -23,10 +23,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(TAGLIB_DIR)
+	$(PKG_MAKE) -C $(TAGLIB_DIR)
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(TAGLIB_DIR) \
+	$(PKG_MAKE) -C $(TAGLIB_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -42,7 +42,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(TAGLIB_DIR) clean
+	-$(PKG_MAKE) -C $(TAGLIB_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/include/taglib \
 		$(STAGING_DIR)/usr/lib/libtag* \

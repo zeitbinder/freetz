@@ -24,10 +24,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_READLINE_BINARY) $($(PKG)_HISTORY_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(READLINE_DIR)
+	$(PKG_MAKE) -C $(READLINE_DIR)
 
 $($(PKG)_STAGING_READLINE_BINARY) $($(PKG)_STAGING_HISTORY_BINARY): $($(PKG)_READLINE_BINARY) $($(PKG)_HISTORY_BINARY)
-	$(SUBMAKE) -C $(READLINE_DIR) \
+	$(PKG_MAKE) -C $(READLINE_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 
@@ -46,7 +46,7 @@ $(pkg)-clean:
 		$(STAGING_DIR)/usr/lib/libreadline* \
 		$(STAGING_DIR)/usr/lib/libhistory* \
 		$(STAGING_DIR)/usr/include/readline
-	-$(SUBMAKE) -C $(READLINE_DIR) clean
+	-$(PKG_MAKE) -C $(READLINE_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(READLINE_TARGET_DIR)/libreadline*.so*

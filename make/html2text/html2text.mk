@@ -15,7 +15,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(HTML2TEXT_DIR)
+	$(PKG_MAKE) -C $(HTML2TEXT_DIR)
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
@@ -25,7 +25,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(HTML2TEXT_DIR) clean
+	-$(PKG_MAKE) -C $(HTML2TEXT_DIR) clean
 	$(RM) $(HTML2TEXT_DIR)/.configured
 
 $(pkg)-uninstall:

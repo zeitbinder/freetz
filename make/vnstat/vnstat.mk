@@ -19,7 +19,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) $(VNSTAT_MAKE_TARGET) -C $(VNSTAT_DIR) \
+	$(PKG_MAKE) $(VNSTAT_MAKE_TARGET) -C $(VNSTAT_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)"
 
@@ -31,7 +31,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(VNSTAT_DIR) clean
+	-$(PKG_MAKE) -C $(VNSTAT_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(VNSTAT_BINARIES_ALL:%=$(VNSTAT_DEST_DIR)/usr/bin/%)

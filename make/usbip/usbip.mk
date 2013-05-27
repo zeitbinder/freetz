@@ -24,11 +24,11 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(USBIP_DIR)/src \
+	$(PKG_MAKE) -C $(USBIP_DIR)/src \
 		CPPFLAGS="-std=gnu99 -fgnu89-inline"
 
 $($(PKG)_MOD_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(USBIP_DIR)/drivers/2.6.21 \
+	$(PKG_MAKE) -C $(USBIP_DIR)/drivers/2.6.21 \
 		KSOURCE="$(FREETZ_BASE_DIR)/$(KERNEL_SOURCE_DIR)" \
 		ARCH="$(KERNEL_ARCH)" \
 		CROSS_COMPILE="$(KERNEL_CROSS)"
@@ -53,7 +53,7 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) \
 	$(if $(or $(FREETZ_KERNEL_VERSION_2_6_28),$(FREETZ_KERNEL_VERSION_2_6_32)),,$($(PKG)_MOD_TARGET_BINARY))
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(USBIP_DIR)/src clean
+	-$(PKG_MAKE) -C $(USBIP_DIR)/src clean
 
 $(pkg)-uninstall:
 	$(RM) $(USBIP_DEST_DIR)/usr/bin/usbipd

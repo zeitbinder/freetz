@@ -12,7 +12,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(IODINE_DIR) \
+	$(PKG_MAKE) -C $(IODINE_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS) -c -DLINUX" \
 		LDFLAGS="$(TARGET_LDFLAGS) -lz"
@@ -25,7 +25,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(IODINE_DIR) clean
+	-$(PKG_MAKE) -C $(IODINE_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(IODINE_TARGET_BINARY)

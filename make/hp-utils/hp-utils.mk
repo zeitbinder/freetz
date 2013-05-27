@@ -12,7 +12,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(HP_UTILS_DIR) \
+	$(PKG_MAKE) -C $(HP_UTILS_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
 		CPPFLAGS="" \
@@ -43,7 +43,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(HP_UTILS_DIR) clean
+	-$(PKG_MAKE) -C $(HP_UTILS_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(HP_UTILS_DEST_DIR)/usr/bin/hp-clean \

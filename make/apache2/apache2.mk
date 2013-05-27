@@ -70,14 +70,14 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(APACHE2_DIR) \
+	$(PKG_MAKE) -C $(APACHE2_DIR) \
 		$(if $(FREETZ_PACKAGE_APACHE2_STATIC),LDFLAGS="-all-static")
 
 $($(PKG)_APXS_SCRIPT): $($(PKG)_DIR)/.configured
 	touch $@
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE1) -C $(APACHE2_DIR) install \
+	$(PKG_MAKE1) -C $(APACHE2_DIR) install \
 		DESTDIR="$(FREETZ_BASE_DIR)/$(APACHE2_DEST_DIR)"
 # remove unneeded files
 	$(RM) -r \
@@ -91,7 +91,7 @@ $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	mv $(APACHE2_DEST_DIR)/usr/sbin/suexec $(APACHE2_DEST_DIR)/usr/sbin/suexec2
 
 $($(PKG)_APXS_SCRIPT_STAGING_DIR): $($(PKG)_APXS_SCRIPT)
-	$(SUBMAKE1) -C $(APACHE2_DIR) \
+	$(PKG_MAKE1) -C $(APACHE2_DIR) \
 		install-include install-build \
 		DESTDIR="$(STAGING_DIR)"
 	$(SED) -i -r -e 's,^(includedir[ \t]*=[ \t]*)(.*),\1$(STAGING_DIR)\2,' \
@@ -105,7 +105,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_APXS_SCRIPT_STAGING_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(APACHE2_DIR) clean
+	-$(PKG_MAKE) -C $(APACHE2_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/bin/apxs \
 		$(STAGING_DIR)/usr/include/apache2 \

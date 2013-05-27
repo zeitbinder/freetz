@@ -24,7 +24,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARIES_BUILD_DIR) $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE1) -C $(TRICKLE_DIR)
+	$(PKG_MAKE1) -C $(TRICKLE_DIR)
 
 $($(PKG)_BINARIES_TARGET_DIR): $($(PKG)_DEST_DIR)/usr/bin/%: $($(PKG)_DIR)/%
 	$(INSTALL_BINARY_STRIP)
@@ -37,7 +37,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR) $($(PKG)_LIBS_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(TRICKLE_DIR) clean
+	-$(PKG_MAKE) -C $(TRICKLE_DIR) clean
 	$(RM) $(TRICKLE_DIR)/.configured
 
 $(pkg)-uninstall:

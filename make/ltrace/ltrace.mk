@@ -27,7 +27,7 @@ $($(PKG)_TARGET_CONF): $($(PKG)_CONF)
 	cp $< $@
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LTRACE_DIR) \
+	$(PKG_MAKE) -C $(LTRACE_DIR) \
 		ARCH=mips \
 		CFLAGS="$(TARGET_CFLAGS)"
 
@@ -39,7 +39,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_TARGET_CONF)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LTRACE_DIR) clean ARCH=mips
+	-$(PKG_MAKE) -C $(LTRACE_DIR) clean ARCH=mips
 
 $(pkg)-uninstall:
 	$(RM) $(LTRACE_TARGET_BINARY)

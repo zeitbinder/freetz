@@ -17,7 +17,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(MICROPERL_DIR) -f Makefile.micro \
+	$(PKG_MAKE) -C $(MICROPERL_DIR) -f Makefile.micro \
 		CC="$(TARGET_CC)" OPTIMIZE="$(TARGET_CFLAGS) -ffunction-sections -fdata-sections" LDFLAGS="-Wl,--gc-sections"
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
@@ -41,7 +41,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_TARGET_MODULES)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(MICROPERL_DIR) -f Makefile.micro clean
+	-$(PKG_MAKE) -C $(MICROPERL_DIR) -f Makefile.micro clean
 	-$(RM) $(MICROPERL_TARGET_SYMLINK)
 	-$(RM) -r $(MICROPERL_TARGET_MODULES_DIR)
 	-$(RM) $(MICROPERL_TARGET_MODULES)

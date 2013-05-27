@@ -36,7 +36,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY) $($(PKG)_BINARY_MENU_SO): $($(PKG)_DIR)/.configured
-	$(SUBMAKE1) -C $(DTMFBOX_DIR) \
+	$(PKG_MAKE1) -C $(DTMFBOX_DIR) \
 		EXTRA_CFLAGS="-ffunction-sections -fdata-sections" \
 		EXTRA_LDFLAGS="-Wl,--gc-sections"
 
@@ -52,7 +52,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_TARGET_BINARY_MENU_SO)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(DTMFBOX_DIR) clean
+	-$(PKG_MAKE) -C $(DTMFBOX_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(DTMFBOX_TARGET_BINARY)

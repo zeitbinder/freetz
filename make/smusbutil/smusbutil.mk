@@ -13,7 +13,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(SMUSBUTIL_DIR)  \
+	$(PKG_MAKE) -C $(SMUSBUTIL_DIR)  \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)"
 
@@ -25,7 +25,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(SMUSBUTIL_DIR) clean
+	-$(PKG_MAKE) -C $(SMUSBUTIL_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(SMUSBUTIL_TARGET_BINARY)

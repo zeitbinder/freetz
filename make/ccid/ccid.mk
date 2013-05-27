@@ -27,7 +27,7 @@ $(PKG_CONFIGURED_CONFIGURE)
 $($(PKG)_UDEV_TARGET_RULESFILE):
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(CCID_DIR) \
+	$(PKG_MAKE) -C $(CCID_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)"
 
@@ -37,7 +37,7 @@ $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 		$(STAGING_DIR)/usr/lib/libccid.la
  
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(CCID_DIR)/src \
+	$(PKG_MAKE) -C $(CCID_DIR)/src \
 		DESTDIR="$(abspath $(CCID_DEST_DIR))" \
 		install_ccid 
 
@@ -50,7 +50,7 @@ $(pkg):
 $(pkg)-precompiled: $(CCID_STAGING_BINARY) $(CCID_TARGET_BINARY) $(CCID_UDEV_RULESFILE)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(CCID_DIR) clean
+	-$(PKG_MAKE) -C $(CCID_DIR) clean
 	$(RM) $(CCID_DIR)/.configured
 
 $(pkg)-uninstall:

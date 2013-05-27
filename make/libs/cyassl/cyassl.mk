@@ -31,14 +31,14 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(CYASSL_DIR) V=1
+	$(PKG_MAKE) -C $(CYASSL_DIR) V=1
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 	for d in cyassl cyassl/ctaocrypt cyassl/openssl; do \
 		mkdir -p $(STAGING_DIR)/usr/include/$$d; \
 		cp -a $(CYASSL_DIR)/$$d/*.h $(STAGING_DIR)/usr/include/$$d/; \
 	done;
-	$(SUBMAKE) -C $(CYASSL_DIR) \
+	$(PKG_MAKE) -C $(CYASSL_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install-libLTLIBRARIES
 	$(PKG_FIX_LIBTOOL_LA) $(STAGING_DIR)/usr/lib/libcyassl.la
@@ -51,7 +51,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(CYASSL_DIR) clean
+	-$(PKG_MAKE) -C $(CYASSL_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libcyassl* \
 		$(STAGING_DIR)/usr/include/cyassl*

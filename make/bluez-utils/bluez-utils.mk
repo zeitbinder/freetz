@@ -47,7 +47,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BIN_BINARIES_BUILD_DIR) $($(PKG)_SBIN_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(BLUEZ_UTILS_DIR)
+	$(PKG_MAKE) -C $(BLUEZ_UTILS_DIR)
 
 $(foreach binary,$($(PKG)_BIN_BINARIES_BUILD_DIR),$(eval $(call INSTALL_BINARY_STRIP_RULE,$(binary),/usr/bin)))
 $(foreach binary,$($(PKG)_SBIN_BINARIES_BUILD_DIR),$(eval $(call INSTALL_BINARY_STRIP_RULE,$(binary),/usr/sbin)))
@@ -57,7 +57,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(BLUEZ_UTILS_DIR) clean
+	-$(PKG_MAKE) -C $(BLUEZ_UTILS_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(BLUEZ_UTILS_BINARIES_TARGET_DIR)

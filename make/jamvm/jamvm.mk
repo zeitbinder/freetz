@@ -25,7 +25,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY) $($(PKG)_LIB_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(JAMVM_DIR)/src
+	$(PKG_MAKE) -C $(JAMVM_DIR)/src
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
@@ -41,7 +41,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_TARGET_LIB_BINARY) $($(PKG)_TARGET_CLASSES_ZIP)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(JAMVM_DIR) clean
+	-$(PKG_MAKE) -C $(JAMVM_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(JAMVM_TARGET_BINARY) $(JAMVM_DEST_LIBDIR)/libjvm*.so* $(JAMVM_TARGET_CLASSES_ZIP)

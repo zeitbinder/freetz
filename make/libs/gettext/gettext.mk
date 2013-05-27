@@ -41,11 +41,11 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(GETTEXT_DIR)/$(GETTEXT_BUILD_SUBDIR)/intl \
+	$(PKG_MAKE) -C $(GETTEXT_DIR)/$(GETTEXT_BUILD_SUBDIR)/intl \
 		all
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(GETTEXT_DIR)/$(GETTEXT_BUILD_SUBDIR)/intl \
+	$(PKG_MAKE) -C $(GETTEXT_DIR)/$(GETTEXT_BUILD_SUBDIR)/intl \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -59,7 +59,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(GETTEXT_DIR)/$(GETTEXT_BUILD_SUBDIR) clean
+	-$(PKG_MAKE) -C $(GETTEXT_DIR)/$(GETTEXT_BUILD_SUBDIR) clean
 	$(RM) \
 		$(STAGING_DIR)/usr/lib/libgettext* \
 		$(STAGING_DIR)/usr/lib/libintl* \

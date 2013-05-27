@@ -11,7 +11,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE1) -C $(RUSH_DIR) all
+	$(PKG_MAKE1) -C $(RUSH_DIR) all
 
 $($(PKG)_BINARIES_TARGET_DIR): $($(PKG)_DEST_DIR)/usr/bin/%: $($(PKG)_DIR)/src/%
 	$(INSTALL_BINARY_STRIP)
@@ -21,7 +21,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(RUSH_DIR) clean
+	-$(PKG_MAKE) -C $(RUSH_DIR) clean
 	$(RM) $(RUSH_DIR)/.configured
 
 $(pkg)-uninstall:

@@ -29,7 +29,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_MOUNT_BINARY) $($(PKG)_UMOUNT_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(DAVFS2_DIR) \
+	$(PKG_MAKE) -C $(DAVFS2_DIR) \
 		LIBS="$(DAVFS2_LIBS)"
 
 $($(PKG)_MOUNT_TARGET_BINARY): $($(PKG)_MOUNT_BINARY)
@@ -51,7 +51,7 @@ $($(PKG)_TARGET_DIR)/.exclude: $(TOPDIR)/.config
 $(pkg)-precompiled: $($(PKG)_MOUNT_TARGET_BINARY) $($(PKG)_UMOUNT_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(DAVFS2_DIR) clean
+	-$(PKG_MAKE) -C $(DAVFS2_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(DAVFS2_MOUNT_TARGET_BINARY) $(DAVFS2_UMOUNT_TARGET_BINARY)

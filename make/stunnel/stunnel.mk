@@ -41,7 +41,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(STUNNEL_DIR) \
+	$(PKG_MAKE) -C $(STUNNEL_DIR) \
 		LDFLAGS="$(STUNNEL_LDFLAGS)" \
 		LIBS="$(STUNNEL_LIBS)"
 
@@ -53,7 +53,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(STUNNEL_DIR) clean
+	-$(PKG_MAKE) -C $(STUNNEL_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(STUNNEL_TARGET_BINARY)

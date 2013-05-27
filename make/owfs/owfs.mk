@@ -62,7 +62,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_LIBS_BUILD_DIR) $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(OWFS_DIR)
+	$(PKG_MAKE) -C $(OWFS_DIR)
 
 $($(PKG)_LIBS_TARGET_DIR): $($(PKG)_DEST_LIBDIR)/%: $($(PKG)_DIR)/module/owlib/$(OWFS_LIB_BUILD_SUBDIR)/%
 	$(INSTALL_LIBRARY_STRIP)
@@ -74,7 +74,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_LIBS_TARGET_DIR) $($(PKG)_BINARIES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(OWFS_DIR) clean
+	-$(PKG_MAKE) -C $(OWFS_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(OWFS_LIBS_TARGET_DIR) $(OWFS_BINARIES_TARGET_DIR)

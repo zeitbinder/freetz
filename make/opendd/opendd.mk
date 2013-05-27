@@ -22,7 +22,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(OPENDD_DIR) \
+	$(PKG_MAKE) -C $(OPENDD_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
 		OPTS="$(OPENDD_OPTS)" \
@@ -39,7 +39,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_TARGET_PEM)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(OPENDD_DIR) clean
+	-$(PKG_MAKE) -C $(OPENDD_DIR) clean
 	 $(RM) $(OPENDD_DIR)/.configured
 
 $(pkg)-uninstall:

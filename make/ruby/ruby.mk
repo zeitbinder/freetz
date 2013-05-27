@@ -21,11 +21,11 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(RUBY_DIR) all
+	$(PKG_MAKE) -C $(RUBY_DIR) all
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	mkdir -p $(dir $@)
-	$(SUBMAKE) DESTDIR=$(abspath $(RUBY_DEST_DIR)) -C $(RUBY_DIR) install
+	$(PKG_MAKE) DESTDIR=$(abspath $(RUBY_DEST_DIR)) -C $(RUBY_DIR) install
 	rm -rf $(RUBY_DEST_DIR)/usr/{share,lib/*.a,lib/ruby/site_ruby,lib/ruby/1.8/$(GNU_TARGET_NAME)/*.{h,rb}}
 	$(TARGET_STRIP) $@ $(RUBY_DEST_DIR)/usr/lib/ruby/1.8/$(GNU_TARGET_NAME)/{,*/}*.so
 
@@ -34,7 +34,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(RUBY_DIR) clean
+	-$(PKG_MAKE) -C $(RUBY_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(RUBY_TARGET_BINARY)

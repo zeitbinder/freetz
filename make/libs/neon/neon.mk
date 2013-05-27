@@ -36,10 +36,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(NEON_DIR)
+	$(PKG_MAKE) -C $(NEON_DIR)
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(NEON_DIR) \
+	$(PKG_MAKE) -C $(NEON_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -55,7 +55,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(NEON_DIR) clean
+	-$(PKG_MAKE) -C $(NEON_DIR) clean
 	$(RM) $(NEON_FREETZ_CONFIG_FILE)
 	$(RM) -r $(STAGING_DIR)/usr/lib/libneon.* \
 		$(STAGING_DIR)/include/neon \

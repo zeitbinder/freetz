@@ -25,7 +25,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(VSFTPD_DIR) \
+	$(PKG_MAKE) -C $(VSFTPD_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS) $(VSFTPD_CFLAGS)" \
 		LDFLAGS="$(TARGET_LDFLAGS) $(VSFTPD_LDFLAGS)"
@@ -38,7 +38,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(VSFTPD_DIR) clean
+	-$(PKG_MAKE) -C $(VSFTPD_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(VSFTPD_TARGET_BINARY)

@@ -15,7 +15,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(SMARTMONTOOLS_DIR)
+	$(PKG_MAKE) -C $(SMARTMONTOOLS_DIR)
 
 $($(PKG)_BINARIES_TARGET_DIR): $($(PKG)_DEST_DIR)/usr/sbin/%: $($(PKG)_DIR)/%
 	$(INSTALL_BINARY_STRIP)
@@ -25,7 +25,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(SMARTMONTOOLS_DIR) clean
+	-$(PKG_MAKE) -C $(SMARTMONTOOLS_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(SMARTMONTOOLS_BINARIES_TARGET_DIR)

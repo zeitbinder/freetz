@@ -11,7 +11,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE1) -C $(HTPDATE_DIR) \
+	$(PKG_MAKE1) -C $(HTPDATE_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)"
 
@@ -23,7 +23,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE1) -C $(HTPDATE_DIR) clean
+	-$(PKG_MAKE1) -C $(HTPDATE_DIR) clean
 	$(RM) $(HTPDATE_DIR)/.configured
 
 $(pkg)-uninstall:

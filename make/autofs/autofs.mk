@@ -32,7 +32,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_LIBS_BUILD_DIR) $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE1) daemon -C $(AUTOFS_DIR) \
+	$(PKG_MAKE1) daemon -C $(AUTOFS_DIR) \
 		FREETZ=1 \
 		CC="$(TARGET_CC)" \
 		AUTOFS_CFLAGS="$(TARGET_CFLAGS)"
@@ -49,7 +49,7 @@ $(pkg)-precompiled: $($(PKG)_LIBS_TARGET_DIR) $($(PKG)_TARGET_BINARY)
 
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(AUTOFS_DIR) clean
+	-$(PKG_MAKE) -C $(AUTOFS_DIR) clean
 	$(RM) $(AUTOFS_DIR)/.configured
 
 $(pkg)-uninstall:

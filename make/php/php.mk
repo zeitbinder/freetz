@@ -186,7 +186,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(PHP_DIR) \
+	$(PKG_MAKE) -C $(PHP_DIR) \
 		EXTRA_CFLAGS="$(PHP_EXTRA_CFLAGS)" \
 		LDFLAGS="$(PHP_EXTRA_LDFLAGS)" \
 		ZEND_EXTRA_LIBS="$(PHP_LIBS)"
@@ -199,7 +199,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(PHP_DIR) clean
+	-$(PKG_MAKE) -C $(PHP_DIR) clean
 	$(RM) $(PHP_FREETZ_CONFIG_FILE)
 
 $(pkg)-uninstall:

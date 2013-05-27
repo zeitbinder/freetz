@@ -17,7 +17,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(INADYN_MT_DIR) \
+	$(PKG_MAKE) -C $(INADYN_MT_DIR) \
 		inadyn_mt_CFLAGS="" \
 		inadyn_mt_LDFLAGS=""
 
@@ -29,7 +29,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(INADYN_MT_DIR) clean
+	-$(PKG_MAKE) -C $(INADYN_MT_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(INADYN_MT_TARGET_BINARY)

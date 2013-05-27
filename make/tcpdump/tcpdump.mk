@@ -26,7 +26,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(TCPDUMP_DIR) all \
+	$(PKG_MAKE) -C $(TCPDUMP_DIR) all \
 		CCOPT="$(TARGET_CFLAGS) $(TCPDUMP_CFLAGS)" \
 		INCLS="-I." \
 		$(if $(FREETZ_PACKAGE_TCPDUMP_MINI),TCPDUMP_MINI=1,)
@@ -39,7 +39,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(TCPDUMP_DIR) clean
+	-$(PKG_MAKE) -C $(TCPDUMP_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(TCPDUMP_TARGET_BINARY)

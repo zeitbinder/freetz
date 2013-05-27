@@ -10,7 +10,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(DTACH_DIR)
+	$(PKG_MAKE) -C $(DTACH_DIR)
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
@@ -20,7 +20,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(DTACH_DIR) clean
+	-$(PKG_MAKE) -C $(DTACH_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(DTACH_TARGET_BINARY)

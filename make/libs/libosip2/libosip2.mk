@@ -24,11 +24,11 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY) $($(PKG)_PARSER_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBOSIP2_DIR) \
+	$(PKG_MAKE) -C $(LIBOSIP2_DIR) \
 	all
 
 $($(PKG)_STAGING_BINARY) $($(PKG)_PARSER_STAGING_BINARY): $($(PKG)_BINARY) $($(PKG)_PARSER_BINARY)
-	$(SUBMAKE) -C $(LIBOSIP2_DIR) \
+	$(PKG_MAKE) -C $(LIBOSIP2_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -46,7 +46,7 @@ $(pkg): $($(PKG)_STAGING_BINARY) $($(PKG)_PARSER_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_PARSER_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBOSIP2_DIR) clean
+	-$(PKG_MAKE) -C $(LIBOSIP2_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libosip* \
 		$(STAGING_DIR)/usr/lib/pkgconfig/libosip*.pc \

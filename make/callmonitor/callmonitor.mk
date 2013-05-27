@@ -15,18 +15,18 @@ $(PKG_UNPACKED)
 
 $($(PKG)_DIR)/.configured: $($(PKG)_DIR)/.unpacked
 	@echo $(CALLMONITOR_FEATURES) > $(CALLMONITOR_DIR)/.features
-	$(SUBMAKE) -C $(CALLMONITOR_DIR) configure
+	$(PKG_MAKE) -C $(CALLMONITOR_DIR) configure
 	@touch $@
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) $(TARGET_CONFIGURE_ENV) -C $(CALLMONITOR_DIR) build
+	$(PKG_MAKE) $(TARGET_CONFIGURE_ENV) -C $(CALLMONITOR_DIR) build
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
 	chmod 755 $@
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(CALLMONITOR_DIR) clean
+	-$(PKG_MAKE) -C $(CALLMONITOR_DIR) clean
 
 $(pkg):
 

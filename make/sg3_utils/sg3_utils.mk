@@ -13,8 +13,8 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(SG3UTILS_DIR)/lib
-	$(SUBMAKE) sg_start -C $(SG3UTILS_DIR)/src
+	$(PKG_MAKE) -C $(SG3UTILS_DIR)/lib
+	$(PKG_MAKE) sg_start -C $(SG3UTILS_DIR)/src
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
@@ -24,7 +24,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(SG3UTILS_DIR) clean
+	-$(PKG_MAKE) -C $(SG3UTILS_DIR) clean
 	$(RM) $(SG3UTILS_DIR)/.configured
 
 $(pkg)-uninstall:

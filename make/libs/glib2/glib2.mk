@@ -71,11 +71,11 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(GLIB2_DIR) \
+	$(PKG_MAKE) -C $(GLIB2_DIR) \
 		all
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
-	$(SUBMAKE) -C $(GLIB2_DIR) \
+	$(PKG_MAKE) -C $(GLIB2_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -90,7 +90,7 @@ $(pkg): $($(PKG)_LIBS_STAGING_DIR)
 $(pkg)-precompiled: $($(PKG)_LIBS_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(GLIB2_DIR) clean
+	-$(PKG_MAKE) -C $(GLIB2_DIR) clean
 	$(RM) -r \
 		$(GLIB2_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/lib%-$(GLIB2_MAJOR_VERSION)*) \
 		$(STAGING_DIR)/usr/lib/glib-$(GLIB2_MAJOR_VERSION) \

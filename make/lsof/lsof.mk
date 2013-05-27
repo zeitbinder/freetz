@@ -35,7 +35,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LSOF_DIR) \
+	$(PKG_MAKE) -C $(LSOF_DIR) \
 		DEBUG="$(TARGET_CFLAGS)" \
 		LSOF_HOST="none" \
 		LSOF_LOGNAME="none" \
@@ -50,7 +50,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LSOF_DIR) clean
+	-$(PKG_MAKE) -C $(LSOF_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(LSOF_TARGET_BINARY)

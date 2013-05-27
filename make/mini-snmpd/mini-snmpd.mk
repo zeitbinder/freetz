@@ -19,7 +19,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(MINI_SNMPD_DIR) \
+	$(PKG_MAKE) -C $(MINI_SNMPD_DIR) \
 		CC="$(TARGET_CC)" \
 		STRIP="$(TARGET_STRIP)" \
 		OFLAGS="$(TARGET_CFLAGS) $(MINI_SNMPD_CFLAGS)"
@@ -32,7 +32,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(MINI_SNMPD_DIR) clean
+	-$(PKG_MAKE) -C $(MINI_SNMPD_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(MINI_SNMPD_TARGET_BINARY)

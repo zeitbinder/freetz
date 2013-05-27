@@ -14,7 +14,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(BITTWIST_DIR) \
+	$(PKG_MAKE) -C $(BITTWIST_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)"
 
@@ -26,7 +26,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(BITTWIST_DIR) clean
+	-$(PKG_MAKE) -C $(BITTWIST_DIR) clean
 	$(RM) $(BITTWIST_DIR)/.configured
 
 $(pkg)-uninstall:

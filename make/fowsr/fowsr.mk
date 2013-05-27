@@ -20,7 +20,7 @@ $(PKG_CONFIGURED_NOP)
 $(PKG)_DEPENDS_ON += libusb
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(FOWSR_DIR) \
+	$(PKG_MAKE) -C $(FOWSR_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)"
 
@@ -38,7 +38,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_SCRIPTS_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(FOWSR_DIR) clean
+	-$(PKG_MAKE) -C $(FOWSR_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(FOWSR_TARGET_BINARY) $(FOWSR_SCRIPTS)

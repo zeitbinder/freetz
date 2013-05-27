@@ -59,7 +59,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE1) -C $(UTIL_LINUX_NG_DIR) V=1
+	$(PKG_MAKE1) -C $(UTIL_LINUX_NG_DIR) V=1
 
 $($(PKG)_BINARIES_TARGET_DIR): $($(PKG)_DEST_DIR)/usr/sbin/%$($(PKG)_BINARIES_SUFFIX): $($(PKG)_DIR)/$($(PKG)_BINARIES_SUBDIR)/%
 	$(INSTALL_BINARY_STRIP)
@@ -69,7 +69,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE1) -C $(UTIL_LINUX_NG_DIR) clean
+	-$(PKG_MAKE1) -C $(UTIL_LINUX_NG_DIR) clean
 	$(RM) $(UTIL_LINUX_NG_DIR)/.configured
 
 $(pkg)-uninstall:

@@ -10,7 +10,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(NOIP_DIR) \
+	$(PKG_MAKE) -C $(NOIP_DIR) \
 	ARCH="$(TARGET_ARCH)" \
 	CC="$(TARGET_CC)" \
 	CFLAGS="$(TARGET_CFLAGS)"
@@ -23,7 +23,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(NOIP_DIR) clean
+	-$(PKG_MAKE) -C $(NOIP_DIR) clean
 	$(RM) $(NOIP_DIR)/.configured
 
 $(pkg)-uninstall:

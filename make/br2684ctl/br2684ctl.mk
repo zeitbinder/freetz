@@ -23,7 +23,7 @@ BR2684CTL_OPTS := -DCONFIG_MACH_IKAN_MIPS -DCONFIG_MACH_FUSIV
 endif
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(BR2684CTL_DIR) \
+	$(PKG_MAKE) -C $(BR2684CTL_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
 		OPTS="$(BR2684CTL_OPTS)"
@@ -36,7 +36,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(BR2684CTL_DIR) clean
+	-$(PKG_MAKE) -C $(BR2684CTL_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(BR2684CTL_TARGET_BINARY)

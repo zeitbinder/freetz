@@ -35,7 +35,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(SHELLINABOX_DIR) \
+	$(PKG_MAKE) -C $(SHELLINABOX_DIR) \
 		shellinaboxd_ADD="$(SHELLINABOX_ADD_FLAGS)" \
 		LDFLAGS="$(SHELLINABOX_LDFLAGS)"
 
@@ -47,7 +47,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(SHELLINABOX_DIR) clean
+	-$(PKG_MAKE) -C $(SHELLINABOX_DIR) clean
 	$(RM) $(SHELLINABOX_DIR)/.configured
 
 $(pkg)-uninstall:

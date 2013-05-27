@@ -35,7 +35,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE1) -C $(BIRD_DIR) \
+	$(PKG_MAKE1) -C $(BIRD_DIR) \
 		LD="$(TARGET_LD)"
 
 $($(PKG)_BINARIES_TARGET_DIR): $($(PKG)_DEST_DIR)/usr/sbin/%: $($(PKG)_DIR)/%
@@ -46,7 +46,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(BIRD_DIR) clean
+	-$(PKG_MAKE) -C $(BIRD_DIR) clean
 	$(RM) $(BIRD_FREETZ_CONFIG_FILE)
 
 $(pkg)-uninstall:

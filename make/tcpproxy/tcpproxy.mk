@@ -10,7 +10,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(TCPPROXY_DIR) -f makefile \
+	$(PKG_MAKE) -C $(TCPPROXY_DIR) -f makefile \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS) -DVERSION='\"$(TCPPROXY_VERSION)\"'"
 
@@ -22,7 +22,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(TCPPROXY_DIR) clean
+	-$(PKG_MAKE) -C $(TCPPROXY_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(TCPPROXY_TARGET_BINARY)

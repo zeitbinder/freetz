@@ -24,10 +24,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBTOOL_DIR)/libltdl
+	$(PKG_MAKE) -C $(LIBTOOL_DIR)/libltdl
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(LIBTOOL_DIR)/libltdl \
+	$(PKG_MAKE) -C $(LIBTOOL_DIR)/libltdl \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -41,7 +41,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBTOOL_DIR) clean
+	-$(PKG_MAKE) -C $(LIBTOOL_DIR) clean
 	$(RM) $(STAGING_DIR)/usr/lib/libltdl.* $(STAGING_DIR)/usr/include/ltdl.h
 
 $(pkg)-uninstall:

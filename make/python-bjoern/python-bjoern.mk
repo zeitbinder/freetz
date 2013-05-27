@@ -22,7 +22,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(PYTHON_BJOERN_DIR) clean
+	-$(PKG_MAKE) -C $(PYTHON_BJOERN_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) -r \

@@ -30,12 +30,12 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(OPENJPEG_DIR)/libopenjpeg \
+	$(PKG_MAKE) -C $(OPENJPEG_DIR)/libopenjpeg \
 		FREETZ_CFLAGS="$(TARGET_CFLAGS)" \
 		libopenjpeg.la
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(OPENJPEG_DIR)/libopenjpeg \
+	$(PKG_MAKE) -C $(OPENJPEG_DIR)/libopenjpeg \
 		includedir=/usr/include \
 		DESTDIR=$(STAGING_DIR) \
 		install-includeHEADERS install-libLTLIBRARIES
@@ -50,7 +50,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(OPENJPEG_DIR) clean
+	-$(PKG_MAKE) -C $(OPENJPEG_DIR) clean
 	rm -f \
 		$(STAGING_DIR)/usr/include/openjpeg.h \
 		$(STAGING_DIR)/usr/lib/libopenjpeg*

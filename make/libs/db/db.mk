@@ -25,10 +25,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(DB_DIR)/$(DB_BUILD_SUBDIR)
+	$(PKG_MAKE) -C $(DB_DIR)/$(DB_BUILD_SUBDIR)
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(DB_DIR)/$(DB_BUILD_SUBDIR) \
+	$(PKG_MAKE) -C $(DB_DIR)/$(DB_BUILD_SUBDIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		library_install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -42,7 +42,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(DB_DIR)/$(DB_BUILD_SUBDIR) clean
+	-$(PKG_MAKE) -C $(DB_DIR)/$(DB_BUILD_SUBDIR) clean
 	$(RM) \
 		$(STAGING_DIR)/usr/lib/libdb*.so* \
 		$(STAGING_DIR)/usr/lib/libdb-$(DB_LIB_VERSION).a \

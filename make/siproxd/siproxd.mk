@@ -34,7 +34,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(SIPROXD_DIR) \
+	$(PKG_MAKE) -C $(SIPROXD_DIR) \
 		all
 
 $($(PKG)_BINARY_TARGET_DIR): $($(PKG)_BINARY_BUILD_DIR)
@@ -57,7 +57,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARY_TARGET_DIR)  $($(PKG)_MODULES_SO_TARGET_DIR) $($(PKG)_MODULES_LA_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(SIPROXD_DIR) clean
+	-$(PKG_MAKE) -C $(SIPROXD_DIR) clean
 	$(RM) $(SIPROXD_DIR)/.configured
 
 $(pkg)-uninstall:

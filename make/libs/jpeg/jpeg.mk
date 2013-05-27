@@ -16,10 +16,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(JPEG_DIR)  all
+	$(PKG_MAKE) -C $(JPEG_DIR)  all
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(JPEG_DIR) \
+	$(PKG_MAKE) -C $(JPEG_DIR) \
 		libdir="$(STAGING_DIR)/usr/lib" \
 		includedir="$(STAGING_DIR)/usr/include" \
 		install-headers install-lib
@@ -34,7 +34,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(JPEG_DIR) clean
+	-$(PKG_MAKE) -C $(JPEG_DIR) clean
 	rm -f $(STAGING_DIR)/usr/lib/libjpeg*
 
 $(pkg)-uninstall:

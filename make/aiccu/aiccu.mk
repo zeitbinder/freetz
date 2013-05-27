@@ -14,7 +14,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(AICCU_DIR) aiccu \
+	$(PKG_MAKE) -C $(AICCU_DIR) aiccu \
 		CC="$(TARGET_CC)" \
 		RPM_OPT_FLAGS="$(TARGET_CFLAGS)"
 
@@ -26,7 +26,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(AICCU_DIR) clean
+	-$(PKG_MAKE) -C $(AICCU_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(AICCU_TARGET_BINARY)

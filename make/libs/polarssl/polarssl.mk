@@ -25,7 +25,7 @@ $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
 			$(SED) -ri -e "s|^([ \t]*#define[ \t]+$$d[ \t]*)$$|/* \1 */|" $(POLARSSL_DIR)/include/polarssl/config.h; \
 		done \
 	)
-	$(SUBMAKE) -C $(POLARSSL_DIR)/library \
+	$(PKG_MAKE) -C $(POLARSSL_DIR)/library \
 		VERSION="$(POLARSSL_VERSION)" \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS) $(FPIC) -I../include" \
@@ -47,7 +47,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(POLARSSL_DIR)/library clean
+	-$(PKG_MAKE) -C $(POLARSSL_DIR)/library clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libpolarssl* \
 		$(STAGING_DIR)/usr/include/polarssl/

@@ -97,13 +97,13 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_DIR)/.compiled: $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(PYTHON_DIR) \
+	$(PKG_MAKE) -C $(PYTHON_DIR) \
 		$(PYTHON_MAKE_OPTIONS) \
 		all
 	touch $@
 
 $($(PKG)_DIR)/.installed: $($(PKG)_DIR)/.compiled
-	$(SUBMAKE) -C $(PYTHON_DIR) \
+	$(PKG_MAKE) -C $(PYTHON_DIR) \
 		$(PYTHON_MAKE_OPTIONS) \
 		DESTDIR="$(FREETZ_BASE_DIR)/$(PYTHON_LOCAL_INSTALL_DIR)" \
 		install
@@ -179,7 +179,7 @@ $($(PKG)_TARGET_DIR)/.exclude: $(TOPDIR)/.config $($(PKG)_TARGET_DIR)/py.lst $($
 $(pkg)-precompiled: $($(PKG)_STAGING_BINARY) $($(PKG)_TARGET_BINARY) $(if $(FREETZ_PACKAGE_PYTHON_STATIC),,$($(PKG)_LIB_PYTHON_TARGET_DIR)) $($(PKG)_ZIPPED_PYC_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(PYTHON_DIR) clean
+	-$(PKG_MAKE) -C $(PYTHON_DIR) clean
 	$(RM) $(PYTHON_FREETZ_CONFIG_FILE)
 	$(RM) $(PYTHON_DIR)/.configured $(PYTHON_DIR)/.compiled $(PYTHON_DIR)/.installed
 	$(RM) $(PYTHON_TARGET_DIR)/py.lst $(PYTHON_TARGET_DIR)/pyc.lst

@@ -13,7 +13,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(MATRIXSSL_DIR)/src \
+	$(PKG_MAKE) -C $(MATRIXSSL_DIR)/src \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS) $(FPIC) -DLINUX" \
 		LDFLAGS="-pthread" \
@@ -37,7 +37,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(MATRIXSSL_DIR)/src clean
+	-$(PKG_MAKE) -C $(MATRIXSSL_DIR)/src clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libmatrixssl* \
 		$(STAGING_DIR)/usr/include/matrixSsl*

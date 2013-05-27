@@ -14,7 +14,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(MODULE_INIT_TOOLS_DIR)
+	$(PKG_MAKE) -C $(MODULE_INIT_TOOLS_DIR)
 
 $($(PKG)_BINARIES_TARGET_DIR): $($(PKG)_DEST_DIR)/usr/sbin/%: $($(PKG)_DIR)/build/%
 	$(INSTALL_BINARY_STRIP)
@@ -25,7 +25,7 @@ $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR)
 
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(MODULE_INIT_TOOLS_DIR) clean
+	-$(PKG_MAKE) -C $(MODULE_INIT_TOOLS_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(MODULE_INIT_TOOLS_BINARIES_ALL:%=$(MODULE_INIT_TOOLS_DEST_DIR)/usr/sbin/%)

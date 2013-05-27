@@ -58,11 +58,11 @@ $($(PKG)_BINARY_BUILD_DIR) $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
 #	that it doesn't contain files from previous builds (0.9.8 to/from 1.0.x switch).
 	$(MAKE) openssl-clean-staging openssl-uninstall
 	for target in depend all; do \
-		$(SUBMAKE1) $(OPENSSL_MAKE_FLAGS) $$target; \
+		$(PKG_MAKE1) $(OPENSSL_MAKE_FLAGS) $$target; \
 	done
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
-	$(SUBMAKE) $(OPENSSL_MAKE_FLAGS) install
+	$(PKG_MAKE) $(OPENSSL_MAKE_FLAGS) install
 	$(call PKG_FIX_LIBTOOL_LA,prefix) \
 		$(STAGING_DIR)/usr/lib/pkgconfig/{libcrypto,libssl,openssl}.pc
 
@@ -77,7 +77,7 @@ $(pkg): $($(PKG)_LIBS_STAGING_DIR)
 $(pkg)-precompiled: $($(PKG)_BINARY_TARGET_DIR) $($(PKG)_LIBS_TARGET_DIR)
 
 $(pkg)-clean: $(pkg)-clean-staging
-	-$(SUBMAKE) $(OPENSSL_MAKE_FLAGS) clean
+	-$(PKG_MAKE) $(OPENSSL_MAKE_FLAGS) clean
 
 $(pkg)-clean-staging:
 	$(RM) -r \

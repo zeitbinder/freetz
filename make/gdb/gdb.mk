@@ -50,7 +50,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(GDB_DIR) \
+	$(PKG_MAKE) -C $(GDB_DIR) \
 		MT_CFLAGS="$(TARGET_CFLAGS)"
 
 $(foreach binary,$($(PKG)_BINARIES_BUILD_DIR),$(eval $(call INSTALL_BINARY_STRIP_RULE,$(binary),/usr/bin)))
@@ -60,7 +60,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(GDB_DIR) clean
+	-$(PKG_MAKE) -C $(GDB_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(GDB_BINARIES_ALL:%=$(GDB_DEST_DIR)/usr/bin/%)

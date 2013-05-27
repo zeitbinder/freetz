@@ -16,13 +16,13 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(ATTR_DIR) \
+	$(PKG_MAKE) -C $(ATTR_DIR) \
 		OPTIMIZER="" DEBUG="" \
 		PCFLAGS="-D_GNU_SOURCE" \
 		LCFLAGS="$(TARGET_CFLAGS)"
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(ATTR_DIR) \
+	$(PKG_MAKE) -C $(ATTR_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		include-install-dev libattr-install-dev libattr-install-lib
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -36,7 +36,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(ATTR_DIR) clean
+	-$(PKG_MAKE) -C $(ATTR_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/include/attr \
 		$(STAGING_DIR)/usr/lib/libattr.*

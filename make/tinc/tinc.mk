@@ -21,7 +21,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(TINC_DIR) \
+	$(PKG_MAKE) -C $(TINC_DIR) \
 		LDFLAGS="$(TINC_LDFLAGS)" \
 		LIBS="$(TINC_LIBS)"
 
@@ -31,7 +31,7 @@ $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(TINC_DIR) clean
+	-$(PKG_MAKE) -C $(TINC_DIR) clean
 	$(RM) $(TINC_FREETZ_CONFIG_FILE)
 
 $(pkg)-uninstall:

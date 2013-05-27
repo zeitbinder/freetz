@@ -23,7 +23,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(SOCAT_DIR) \
+	$(PKG_MAKE) -C $(SOCAT_DIR) \
 		LDFLAGS="$(TARGET_LDFLAGS) -lssl"
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
@@ -34,7 +34,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(SOCAT_DIR) clean
+	-$(PKG_MAKE) -C $(SOCAT_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(SOCAT_TARGET_BINARY)

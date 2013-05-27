@@ -42,7 +42,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(IRSSI_DIR) \
+	$(PKG_MAKE) -C $(IRSSI_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
 		LD="$(TARGET_CC)" \
@@ -66,7 +66,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_BOT_TARGET_BINARY) $($(PKG)_LIBPROXY_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(IRSSI_DIR) clean
+	-$(PKG_MAKE) -C $(IRSSI_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(IRSSI_TARGET_BINARY)

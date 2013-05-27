@@ -10,7 +10,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(DVBTUNE_DIR) \
+	$(PKG_MAKE) -C $(DVBTUNE_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS) -DNEWSTRUCT" \
 
@@ -22,7 +22,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(DVBTUNE_DIR) clean
+	-$(PKG_MAKE) -C $(DVBTUNE_DIR) clean
 	$(RM) $(DVBTUNE_DIR)/.configured
 
 $(pkg)-uninstall:

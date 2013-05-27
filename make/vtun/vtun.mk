@@ -39,7 +39,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(VTUN_DIR) \
+	$(PKG_MAKE) -C $(VTUN_DIR) \
 		EXTRA_LDFLAGS="$(VTUN_LDFLAGS)"
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
@@ -50,7 +50,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(VTUN_DIR) clean
+	-$(PKG_MAKE) -C $(VTUN_DIR) clean
 	$(RM) $(VTUN_FREETZ_CONFIG_FILE)
 
 $(pkg)-uninstall:

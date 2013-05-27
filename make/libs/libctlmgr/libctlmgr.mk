@@ -7,7 +7,7 @@ $(PKG_LOCALSOURCE_PACKAGE)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBCTLMGR_DIR) \
+	$(PKG_MAKE) -C $(LIBCTLMGR_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
 		LIB_VERSION="$(LIBCTLMGR_VERSION)" \
@@ -21,7 +21,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBCTLMGR_DIR) clean
+	-$(PKG_MAKE) -C $(LIBCTLMGR_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(LIBCTLMGR_DEST_LIB)/libctlmgr*.so*

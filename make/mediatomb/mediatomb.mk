@@ -53,7 +53,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(MEDIATOMB_DIR) \
+	$(PKG_MAKE) -C $(MEDIATOMB_DIR) \
 	$(if $(FREETZ_PACKAGE_MEDIATOMB_STATIC),\
 		CURL_LIBS="$$($(STAGING_DIR)/usr/bin/curl-config --static-libs)" \
 		LDFLAGS="-static" \
@@ -64,7 +64,7 @@ $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
 
 $($(PKG)_TARGET_WEBIF): $($(PKG)_BINARY)
-	$(foreach d,$(MEDIATOMB_INSTALL_SUBDIRS),$(SUBMAKE) -C $(MEDIATOMB_DIR)/$(d) DESTDIR="$(abspath $(MEDIATOMB_DEST_DIR))" install;)
+	$(foreach d,$(MEDIATOMB_INSTALL_SUBDIRS),$(PKG_MAKE) -C $(MEDIATOMB_DIR)/$(d) DESTDIR="$(abspath $(MEDIATOMB_DEST_DIR))" install;)
 	$(RM) $(MEDIATOMB_DEST_DIR)$(MEDIATOMB_SHARE_DIR)/mysql.sql
 	touch -c $@
 
@@ -73,7 +73,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_TARGET_WEBIF)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(MEDIATOMB_DIR) clean
+	-$(PKG_MAKE) -C $(MEDIATOMB_DIR) clean
 	$(RM) $(MEDIATOMB_DIR)/.configured
 	$(RM) $(MEDIATOMB_FREETZ_CONFIG_FILE)
 

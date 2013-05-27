@@ -43,10 +43,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(APR_DIR) $(if $(FREETZ_PACKAGE_E2FSPROGS_STATIC),UUID_PIC_LIB="-luuid_pic")
+	$(PKG_MAKE) -C $(APR_DIR) $(if $(FREETZ_PACKAGE_E2FSPROGS_STATIC),UUID_PIC_LIB="-luuid_pic")
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(APR_DIR)\
+	$(PKG_MAKE) -C $(APR_DIR)\
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -69,7 +69,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(APR_DIR) clean
+	-$(PKG_MAKE) -C $(APR_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/$(APR_MAJOR_LIBNAME)* \
 		$(STAGING_DIR)/usr/lib/pkgconfig/apr-$(APR_MAJOR_VERSION).pc \

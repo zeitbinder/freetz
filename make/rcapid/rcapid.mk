@@ -13,7 +13,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(RCAPID_DIR) \
+	$(PKG_MAKE) -C $(RCAPID_DIR) \
 		CFLAGS="$(TARGET_CFLAGS)"
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
@@ -24,7 +24,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(RCAPID_DIR) clean
+	-$(PKG_MAKE) -C $(RCAPID_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(RCAPID_TARGET_BINARY)

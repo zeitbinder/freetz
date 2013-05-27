@@ -64,7 +64,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_LIBS_BUILD_DIR) $($(PKG)_BINARY): $($(PKG)_DIR)/.configured | kernel-source
-	$(SUBMAKE) -C $(IPTABLES_DIR) LDFLAGS="$(TARGET_LDFLAGS) $(IPTABLES_LDFLAGS)"
+	$(PKG_MAKE) -C $(IPTABLES_DIR) LDFLAGS="$(TARGET_LDFLAGS) $(IPTABLES_LDFLAGS)"
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
@@ -93,7 +93,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_LIBS_TARGET_DIR) $($(PKG)_BINARY) $($(PKG)_SYMLINKS_TARGET_DIR) $($(PKG)_TARGET_EXTENSIONS)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(IPTABLES_DIR) clean
+	-$(PKG_MAKE) -C $(IPTABLES_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) -r \

@@ -35,11 +35,11 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY) $($(PKG)_POSIX_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(PCRE_DIR) \
+	$(PKG_MAKE) -C $(PCRE_DIR) \
 		all
 
 $($(PKG)_STAGING_BINARY) $($(PKG)_POSIX_STAGING_BINARY): $($(PKG)_BINARY) $($(PKG)_POSIX_BINARY)
-	$(SUBMAKE) -C $(PCRE_DIR) \
+	$(PKG_MAKE) -C $(PCRE_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -58,7 +58,7 @@ $(pkg): $($(PKG)_STAGING_BINARY) $($(PKG)_POSIX_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_POSIX_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(PCRE_DIR) clean
+	-$(PKG_MAKE) -C $(PCRE_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libpcre*.* \
 		$(STAGING_DIR)/usr/include/pcre*.h \

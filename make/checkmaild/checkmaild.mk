@@ -12,7 +12,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(CHECKMAILD_DIR) \
+	$(PKG_MAKE) -C $(CHECKMAILD_DIR) \
 		CROSS="$(TARGET_CROSS)" \
 		CFLAGS="$(TARGET_CFLAGS)"
 
@@ -24,7 +24,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(CHECKMAILD_DIR) clean
+	-$(PKG_MAKE) -C $(CHECKMAILD_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(CHECKMAILD_TARGET_BINARY)

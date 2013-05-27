@@ -13,7 +13,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-		$(SUBMAKE) -C $(INADYN_OPENDNS_DIR) \
+		$(PKG_MAKE) -C $(INADYN_OPENDNS_DIR) \
 		CC="$(TARGET_CC)" \
 		STRIP="$(TARGET_STRIP)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
@@ -27,7 +27,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(INADYN_OPENDNS_DIR) clean
+	-$(PKG_MAKE) -C $(INADYN_OPENDNS_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(INADYN_OPENDNS_TARGET_BINARY)

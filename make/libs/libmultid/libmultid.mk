@@ -19,7 +19,7 @@ $(PKG_LOCALSOURCE_PACKAGE)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBMULTID_DIR) \
+	$(PKG_MAKE) -C $(LIBMULTID_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
 		CPPFLAGS="$(strip $(LIBMULTID_CPPFLAGS))" \
@@ -34,7 +34,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBMULTID_DIR) clean
+	-$(PKG_MAKE) -C $(LIBMULTID_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(LIBMULTID_DEST_LIB)/libmultid*.so*

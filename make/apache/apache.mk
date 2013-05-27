@@ -37,11 +37,11 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(APACHE_DIR) \
+	$(PKG_MAKE) -C $(APACHE_DIR) \
 		$(APACHE_MAKE_FLAGS)
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE1) -C $(APACHE_DIR) install \
+	$(PKG_MAKE1) -C $(APACHE_DIR) install \
 		root="$(FREETZ_BASE_DIR)/$(APACHE_DEST_DIR)"
 	$(RM) -r \
 		$(APACHE_DEST_DIR)/{etc/apache/*.default,usr/include,usr/man,usr/sbin,var} \
@@ -54,7 +54,7 @@ $(pkg):
 $(pkg)-precompiled: $(APACHE_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(APACHE_DIR) clean
+	-$(PKG_MAKE) -C $(APACHE_DIR) clean
 	$(RM) $(APACHE_FREETZ_CONFIG_FILE)
 
 $(pkg)-uninstall:

@@ -111,7 +111,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_LIBS_BUILD_DIR) $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE1) -C $(E2FSPROGS_DIR) \
+	$(PKG_MAKE1) -C $(E2FSPROGS_DIR) \
 		EXTRA_CFLAGS="-ffunction-sections -fdata-sections" \
 		EXTRA_LDFLAGS="-Wl,--gc-sections" \
 		INFO=true \
@@ -128,7 +128,7 @@ else
 endif
 	LIBSUBDIR=`echo $(notdir $@) | $(SED) -r -e 's|^lib||g' -e 's|[.]so[.].*$$||g' -e 's|[.]a$$||g'` \
 	&& \
-	$(SUBMAKE) -C $(E2FSPROGS_DIR)/lib/$${LIBSUBDIR} \
+	$(PKG_MAKE) -C $(E2FSPROGS_DIR)/lib/$${LIBSUBDIR} \
 		DESTDIR="$(STAGING_DIR)" \
 		STRIP=true \
 		LDCONFIG=true \
@@ -162,7 +162,7 @@ $(pkg)-precompiled: $($(PKG)_LIBS_TARGET_DIR) $($(PKG)_BINARIES_TARGET_DIR)
 endif
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(E2FSPROGS_DIR) clean
+	-$(PKG_MAKE) -C $(E2FSPROGS_DIR) clean
 	$(RM) \
 		$(E2FSPROGS_DIR)/lib/com_err $(E2FSPROGS_DIR)/misc/e2fsck \
 		$(E2FSPROGS_DIR)/misc/debugfs $(E2FSPROGS_DIR)/misc/resize2fs

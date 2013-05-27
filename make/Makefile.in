@@ -3,7 +3,7 @@ CONFIGURE_CMD = ./configure
 ### OpenWRT ###
 #PKG_BUILD_PARALLEL ?=
 
-#Fixme: Fix when $(SUBMAKE) calls are replaced
+#Fixme: Fix when $(PKG_MAKE) calls are replaced
 PKG_BUILD_PARALLEL:=1
 
 ifneq ($(FREETZ_PKG_BUILD_USE_JOBSERVER),)
@@ -325,8 +325,8 @@ $(PKG)_DIR:=$($(PKG)_SOURCE_DIR)/$(pkg)-$($(PKG)_VERSION)
 
 # FIXME: OpenWRT: we need to override MAKEFLAGS
 # add + to make jobserver happy
-SUBMAKE:=+$(TARGET_PATH) MAKEFLAGS="" $(MAKE) $(PKG_JOBS)
-SUBMAKE1:=$(TARGET_PATH) MAKEFLAGS="" $(MAKE)
+PKG_MAKE:=+$(TARGET_PATH) MAKEFLAGS="" $(MAKE) $(PKG_JOBS)
+PKG_MAKE1:=$(TARGET_PATH) MAKEFLAGS="" $(MAKE)
 
 STAMP_PREREQ:=$(STAMP_DIR)/.$(pkg)_prereq_check
 STAMP_CONFIGURED:=$($(PKG)_DIR)/.configured

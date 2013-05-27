@@ -18,10 +18,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBEXIF_DIR)
+	$(PKG_MAKE) -C $(LIBEXIF_DIR)
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) \
+	$(PKG_MAKE) \
 		DESTDIR="$(STAGING_DIR)" \
 		-C $(LIBEXIF_DIR) install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -36,7 +36,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBEXIF_DIR) clean
+	-$(PKG_MAKE) -C $(LIBEXIF_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/include/libexif \
 		$(STAGING_DIR)/usr/lib/libexif* \

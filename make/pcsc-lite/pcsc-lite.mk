@@ -28,13 +28,13 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY) $($(PKG)_LIB): $($(PKG)_DIR)/.configured
-		$(SUBMAKE) -C $(PCSC_LITE_DIR)
+		$(PKG_MAKE) -C $(PCSC_LITE_DIR)
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)ls 
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_LIB)
-	$(SUBMAKE) -C $(PCSC_LITE_DIR) \
+	$(PKG_MAKE) -C $(PCSC_LITE_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -50,7 +50,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_TARGET_LIB)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(PCSC_LITE_DIR) clean
+	-$(PKG_MAKE) -C $(PCSC_LITE_DIR) clean
 	$(RM) $(PCSC_LITE_DIR)/.configured
 
 $(pkg)-uninstall:

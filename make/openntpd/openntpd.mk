@@ -22,7 +22,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(OPENNTPD_DIR)
+	$(PKG_MAKE) -C $(OPENNTPD_DIR)
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
@@ -32,7 +32,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(OPENNTPD_DIR) clean
+	-$(PKG_MAKE) -C $(OPENNTPD_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(OPENNTPD_TARGET_BINARY)

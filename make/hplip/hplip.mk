@@ -40,14 +40,14 @@ $(PKG_CONFIGURED_CONFIGURE)
 $($(PKG)_LIB_IP_BINARY) \
 	$($(PKG)_LIB_MUD_BINARY) \
 	$($(PKG)_LIB_HPAIO_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(HPLIP_DIR)
+	$(PKG_MAKE) -C $(HPLIP_DIR)
 
 $($(PKG)_LIB_IP_STAGING_BINARY) \
 	$($(PKG)_LIB_MUD_STAGING_BINARY) \
 	$($(PKG)_LIB_HPAIO_STAGING_BINARY): $($(PKG)_LIB_IP_BINARY) \
 						$($(PKG)_LIB_MUD_BINARY) \
 						$($(PKG)_LIB_HPAIO_BINARY)
-	$(SUBMAKE) -C $(HPLIP_DIR) \
+	$(PKG_MAKE) -C $(HPLIP_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -85,7 +85,7 @@ $(pkg)-precompiled: $($(PKG)_LIB_IP_TARGET_BINARY) \
 			$(PKG)_TARGET_CONF
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(HPLIP_DIR) clean
+	-$(PKG_MAKE) -C $(HPLIP_DIR) clean
 
 $(pkg)-config-update:
 	$(HPLIP_MAKE_DIR)/hplip-config-update.py $(HPLIP_VERSION) \

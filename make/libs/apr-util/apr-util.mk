@@ -43,10 +43,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(APR_UTIL_DIR)
+	$(PKG_MAKE) -C $(APR_UTIL_DIR)
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(APR_UTIL_DIR)\
+	$(PKG_MAKE) -C $(APR_UTIL_DIR)\
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -67,7 +67,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(APR_UTIL_DIR) clean
+	-$(PKG_MAKE) -C $(APR_UTIL_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/$(APR_UTIL_MAJOR_LIBNAME)* \
 		$(STAGING_DIR)/usr/lib/apr-util-$(APR_UTIL_MAJOR_VERSION) \

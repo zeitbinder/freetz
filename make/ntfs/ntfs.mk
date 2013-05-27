@@ -47,19 +47,19 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_LIB_BINARY) $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(NTFS_DIR) \
+	$(PKG_MAKE) -C $(NTFS_DIR) \
 		$(NTFS_MAKE_FLAGS) \
 		all
 
 $($(PKG)_LIB_STAGING_BINARY): $($(PKG)_LIB_BINARY)
-	$(SUBMAKE) -C $(NTFS_DIR)/libntfs-3g \
+	$(PKG_MAKE) -C $(NTFS_DIR)/libntfs-3g \
 		$(NTFS_MAKE_FLAGS) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
 		$(STAGING_DIR)/usr/lib/libntfs-3g.la \
 		$(STAGING_DIR)/usr/lib/pkgconfig/libntfs-3g.pc
-	$(SUBMAKE) -C $(NTFS_DIR)/include/ntfs-3g \
+	$(PKG_MAKE) -C $(NTFS_DIR)/include/ntfs-3g \
 		$(NTFS_MAKE_FLAGS) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
@@ -74,7 +74,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_LIB_TARGET_BINARY) $($(PKG)_BINARIES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(NTFS_DIR) $(NTFS_MAKE_FLAGS) clean
+	-$(PKG_MAKE) -C $(NTFS_DIR) $(NTFS_MAKE_FLAGS) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libntfs-3g* \
 		$(STAGING_DIR)/usr/lib/pkgconfig/libntfs-3g.pc \

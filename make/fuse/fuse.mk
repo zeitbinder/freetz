@@ -41,14 +41,14 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY) $($(PKG)_MOD_BINARY) $($(PKG)_LIB_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(FUSE_DIR) \
+	$(PKG_MAKE) -C $(FUSE_DIR) \
 		ARCH="$(KERNEL_ARCH)" \
 		CROSS_COMPILE="$(KERNEL_CROSS)" \
 		all
 
 $($(PKG)_LIB_STAGING_BINARY): $($(PKG)_LIB_BINARY)
 	cp $(FUSE_DIR)/fuse.pc $(STAGING_DIR)/usr/lib/pkgconfig/fuse.pc
-	$(SUBMAKE) -C $(FUSE_DIR)/lib \
+	$(PKG_MAKE) -C $(FUSE_DIR)/lib \
 		ARCH="$(KERNEL_ARCH)" \
 		CROSS_COMPILE="$(KERNEL_CROSS)" \
 		DESTDIR="$(STAGING_DIR)" \
@@ -57,7 +57,7 @@ $($(PKG)_LIB_STAGING_BINARY): $($(PKG)_LIB_BINARY)
 		$(STAGING_DIR)/usr/lib/libfuse.la \
 		$(STAGING_DIR)/usr/lib/libulockmgr.la \
 		$(STAGING_DIR)/usr/lib/pkgconfig/fuse.pc
-	$(SUBMAKE) -C $(FUSE_DIR)/include \
+	$(PKG_MAKE) -C $(FUSE_DIR)/include \
 		ARCH="$(KERNEL_ARCH)" \
 		CROSS_COMPILE="$(KERNEL_CROSS)" \
 		DESTDIR="$(STAGING_DIR)" \
@@ -78,7 +78,7 @@ $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIB_TARGET_BINARY) \
 		$(if $(FREETZ_KERNEL_VERSION_2_6_13),$($(PKG)_MOD_TARGET_BINARY))
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(FUSE_DIR) clean
+	-$(PKG_MAKE) -C $(FUSE_DIR) clean
 	$(RM) \
 		$(STAGING_DIR)/usr/include/fuse.h \
 		$(STAGING_DIR)/usr/include/ulockmgr.h \

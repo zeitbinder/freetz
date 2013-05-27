@@ -16,7 +16,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(OPENCONNECT_DIR) openconnect \
+	$(PKG_MAKE) -C $(OPENCONNECT_DIR) openconnect \
 		CC="$(TARGET_CC)" \
 		EXTRA_CFLAGS="$(TARGET_CFLAGS)" \
 		EXTRA_LDFLAGS="$(OPENCONNECT_LIBS)"
@@ -29,7 +29,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(OPENCONNECT_DIR) clean
+	-$(PKG_MAKE) -C $(OPENCONNECT_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(OPENCONNECT_TARGET_BINARY)

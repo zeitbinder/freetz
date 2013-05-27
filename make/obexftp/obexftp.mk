@@ -21,7 +21,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(OBEXFTP_DIR)
+	$(PKG_MAKE) -C $(OBEXFTP_DIR)
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
@@ -31,7 +31,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(OBEXFTP_DIR) clean
+	-$(PKG_MAKE) -C $(OBEXFTP_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(OBEXFTP_TARGET_BINARY)

@@ -27,13 +27,13 @@ $($(PKG)_DIR)/.configured: $($(PKG)_DIR)/.unpacked
 	touch $@
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(UCLIBCXX_DIR) \
+	$(PKG_MAKE) -C $(UCLIBCXX_DIR) \
 		CPU_CFLAGS="$(TARGET_CFLAGS)" \
 		CROSS="$(TARGET_CROSS)" \
 		all
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(UCLIBCXX_DIR) \
+	$(PKG_MAKE) -C $(UCLIBCXX_DIR) \
 		CPU_CFLAGS="$(TARGET_CFLAGS)" \
 		CROSS="$(TARGET_CROSS)" \
 		DESTDIR="$(STAGING_DIR)/usr" \
@@ -52,7 +52,7 @@ uclibcxx: $($(PKG)_STAGING_BINARY)
 uclibcxx-precompiled: $($(PKG)_TARGET_BINARY)
 
 uclibcxx-clean:
-	-$(SUBMAKE) -C $(UCLIBCXX_DIR) clean
+	-$(PKG_MAKE) -C $(UCLIBCXX_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/bin/$(GNU_TARGET_NAME)-g++-uc \
 		$(STAGING_DIR)/usr/bin/$(REAL_GNU_TARGET_NAME)-g++-uc \

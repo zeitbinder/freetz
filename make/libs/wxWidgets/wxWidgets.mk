@@ -60,11 +60,11 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(WXWIDGETS_DIR) \
+	$(PKG_MAKE) -C $(WXWIDGETS_DIR) \
 		HOST_SUFFIX=""
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(WXWIDGETS_DIR) \
+	$(PKG_MAKE) -C $(WXWIDGETS_DIR) \
 		HOST_SUFFIX="" \
 		DESTDIR="$(STAGING_DIR)" \
 		install_monolib_static \
@@ -82,7 +82,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(WXWIDGETS_DIR) clean
+	-$(PKG_MAKE) -C $(WXWIDGETS_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libwx_* \
 		$(STAGING_DIR)/usr/lib/wx/ \

@@ -16,10 +16,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LINUX_ATM_DIR)
+	$(PKG_MAKE) -C $(LINUX_ATM_DIR)
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(LINUX_ATM_DIR) \
+	$(PKG_MAKE) -C $(LINUX_ATM_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -33,7 +33,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LINUX_ATM_DIR) clean
+	-$(PKG_MAKE) -C $(LINUX_ATM_DIR) clean
 	$(RM) \
 		$(STAGING_DIR)/usr/lib/libatm* \
 		$(STAGING_DIR)/usr/include/{atm,atmd,atmsap}.h

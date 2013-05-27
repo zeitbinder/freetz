@@ -29,7 +29,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(BIP_DIR) \
+	$(PKG_MAKE) -C $(BIP_DIR) \
 		CFLAGS="$(TARGET_CFLAGS)" \
 		LDFLAGS="$(BIP_LDFLAGS)" \
 		LIBS="$(BIP_LIBS)"
@@ -42,7 +42,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(BIP_DIR) clean
+	-$(PKG_MAKE) -C $(BIP_DIR) clean
 	$(RM) $(BIP_FREETZ_CONFIG_FILE)
 
 $(pkg)-uninstall:

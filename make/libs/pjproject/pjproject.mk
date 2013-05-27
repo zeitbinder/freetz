@@ -53,7 +53,7 @@ $(PJPROJECT_CONFIG_SITE): $($(PKG)_DIR)/.configured
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured $(PJPROJECT_CONFIG_SITE)
 	for target in dep all; do \
-		$(SUBMAKE1) -C $(PJPROJECT_DIR) \
+		$(PKG_MAKE1) -C $(PJPROJECT_DIR) \
 		CC_CFLAGS="-Wall -ffunction-sections -fdata-sections" \
 		LDFLAGS="-lm" \
 		$$target; \
@@ -64,6 +64,6 @@ $(pkg): $($(PKG)_BINARY)
 $(pkg)-precompiled:
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(PJPROJECT_DIR) clean
+	-$(PKG_MAKE) -C $(PJPROJECT_DIR) clean
 
 $(PKG_FINISH)

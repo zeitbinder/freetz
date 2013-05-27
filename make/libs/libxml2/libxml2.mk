@@ -59,10 +59,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBXML2_DIR)
+	$(PKG_MAKE) -C $(LIBXML2_DIR)
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) \
+	$(PKG_MAKE) \
 		DESTDIR="$(STAGING_DIR)" \
 		-C $(LIBXML2_DIR) install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -79,7 +79,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBXML2_DIR) clean
+	-$(PKG_MAKE) -C $(LIBXML2_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libxml2* \
 		$(STAGING_DIR)/usr/bin/xml2-config \

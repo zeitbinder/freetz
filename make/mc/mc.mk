@@ -67,10 +67,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(MC_DIR)
+	$(PKG_MAKE) -C $(MC_DIR)
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(MC_DIR) \
+	$(PKG_MAKE) -C $(MC_DIR) \
 		DESTDIR="$(abspath $(MC_DEST_DIR))" \
 		install
 	$(TARGET_STRIP) $@ $(MC_TARGET_CONS_SAVER_BINARY)
@@ -87,7 +87,7 @@ $(pkg): $($(PKG)_TARGET_DIR)/.exclude
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(MC_DIR) clean
+	-$(PKG_MAKE) -C $(MC_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) -r $(MC_DEST_DIR)/usr/bin/mc* $(MC_DEST_DIR)/usr/lib/mc $(MC_DEST_DIR)/usr/share/mc

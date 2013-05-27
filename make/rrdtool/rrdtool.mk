@@ -43,14 +43,14 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY) $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(RRDTOOL_DIR) all \
+	$(PKG_MAKE) -C $(RRDTOOL_DIR) all \
 		CPPFLAGS="$(TARGET_CPPFLAGS) $(RRDTOOL_LIBART_CPPFLAGS) $(RRDTOOL_FREETYPE_CPPFLAGS)"
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
-	$(SUBMAKE) -C $(RRDTOOL_DIR)/src \
+	$(PKG_MAKE) -C $(RRDTOOL_DIR)/src \
 		DESTDIR="$(STAGING_DIR)" \
 		install-includeHEADERS \
 		install-libLTLIBRARIES
@@ -66,7 +66,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIBS_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(RRDTOOL_DIR) clean
+	-$(PKG_MAKE) -C $(RRDTOOL_DIR) clean
 	$(RM) \
 		$(STAGING_DIR)/usr/lib/librrd* \
 		$(STAGING_DIR)/usr/include/rrd.h

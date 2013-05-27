@@ -20,11 +20,11 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBFTDI_DIR) \
+	$(PKG_MAKE) -C $(LIBFTDI_DIR) \
 		all
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(LIBFTDI_DIR) \
+	$(PKG_MAKE) -C $(LIBFTDI_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -40,7 +40,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBFTDI_DIR) clean
+	-$(PKG_MAKE) -C $(LIBFTDI_DIR) clean
 	$(RM) $(STAGING_DIR)/lib/libftdi* \
 		$(STAGING_DIR)/lib/pkgconfig/libftdi.pc \
 		$(STAGING_DIR)/bin/libftdi-config \

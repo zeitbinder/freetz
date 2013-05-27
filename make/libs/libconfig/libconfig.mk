@@ -18,10 +18,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBCONFIG_DIR)
+	$(PKG_MAKE) -C $(LIBCONFIG_DIR)
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(LIBCONFIG_DIR) \
+	$(PKG_MAKE) -C $(LIBCONFIG_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -36,7 +36,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBCONFIG_DIR) clean
+	-$(PKG_MAKE) -C $(LIBCONFIG_DIR) clean
 	$(RM) \
 		$(STAGING_DIR)/usr/lib/libconfig* \
 		$(STAGING_DIR)/usr/include/libconfig.h \

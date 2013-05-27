@@ -13,13 +13,13 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBCAPI_DIR) \
+	$(PKG_MAKE) -C $(LIBCAPI_DIR) \
 		CROSS_COMPILE="$(TARGET_CROSS)" \
 		CAPI20OPTS="$(TARGET_CFLAGS)" \
 		all
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(LIBCAPI_DIR) \
+	$(PKG_MAKE) -C $(LIBCAPI_DIR) \
 		CROSS_COMPILE="$(TARGET_CROSS)" \
 		CAPI20OPTS="$(TARGET_CFLAGS)" \
 		FILESYSTEM="$(STAGING_DIR)/usr" \
@@ -33,7 +33,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBCAPI_DIR) clean
+	-$(PKG_MAKE) -C $(LIBCAPI_DIR) clean
 	$(RM) $(STAGING_DIR)/usr/lib/libcapi20.* \
 			$(STAGING_DIR)/include/capi20.h \
 			$(STAGING_DIR)/include/capiutils.h \

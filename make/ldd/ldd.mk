@@ -26,7 +26,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LDD_DIR) clean
+	-$(PKG_MAKE) -C $(LDD_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(LDD_TARGET_BINARY)

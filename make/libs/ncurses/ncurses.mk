@@ -52,11 +52,11 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(NCURSES_DIR) \
+	$(PKG_MAKE) -C $(NCURSES_DIR) \
 		libs panel menu form headers
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
-	$(SUBMAKE) -C $(NCURSES_DIR) \
+	$(PKG_MAKE) -C $(NCURSES_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install.libs
 	$(PKG_FIX_LIBTOOL_LA) $(STAGING_DIR)/usr/bin/ncurses5-config
@@ -64,7 +64,7 @@ $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
 	$(PKG_FIX_LIBTOOL_LA) $(NCURSES_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/pkgconfig/%.pc)
 
 $($(PKG)_TABSET_STAGING_DIR)/$($(PKG)_TABSET_MARKER_FILE): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(NCURSES_DIR)/misc \
+	$(PKG_MAKE) -C $(NCURSES_DIR)/misc \
 		DESTDIR="$(STAGING_DIR)" \
 		all install.data
 	touch $@
@@ -96,7 +96,7 @@ $(pkg)-terminfo-clean:
 	$(RM) -r $(NCURSES_TABSET_STAGING_DIR) $(NCURSES_TERMINFO_STAGING_DIR)
 
 $(pkg)-clean: $(pkg)-terminfo-clean
-	-$(SUBMAKE) -C $(NCURSES_DIR) clean
+	-$(PKG_MAKE) -C $(NCURSES_DIR) clean
 	$(RM) \
 		$(NCURSES_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/lib%*) \
 		$(NCURSES_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/pkgconfig/%.pc) \

@@ -17,7 +17,7 @@ $(PKG_LOCALSOURCE_PACKAGE)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(DEBOOTSTRAP_DIR) \
+	$(PKG_MAKE) -C $(DEBOOTSTRAP_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)"
 
@@ -29,7 +29,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(DEBOOTSTRAP_DIR) clean
+	-$(PKG_MAKE) -C $(DEBOOTSTRAP_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(DEBOOTSTRAP_TARGET_BINARY)

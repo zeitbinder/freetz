@@ -73,7 +73,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARIES_BUILD_DIR) $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE1) -C $(IPSEC_TOOLS_DIR)  IPSEC_TOOLS_STATIC="$(IPSEC_TOOLS_STATIC)" all
+	$(PKG_MAKE1) -C $(IPSEC_TOOLS_DIR)  IPSEC_TOOLS_STATIC="$(IPSEC_TOOLS_STATIC)" all
 
 $(foreach binary,$($(PKG)_BINARIES_BUILD_DIR),$(eval $(call INSTALL_BINARY_STRIP_RULE,$(binary),/usr/sbin)))
 
@@ -85,7 +85,7 @@ $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR) $($(PKG)_LIBS_TARGET_DIR)
 
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(IPSEC_TOOLS_DIR) clean
+	-$(PKG_MAKE) -C $(IPSEC_TOOLS_DIR) clean
 	$(RM) $(IPSEC_TOOLS_FREETZ_CONFIG_FILE)
 
 $(pkg)-uninstall:

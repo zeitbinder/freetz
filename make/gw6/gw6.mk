@@ -21,11 +21,11 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(GW6_DIR)/gw6c-config \
+	$(PKG_MAKE) -C $(GW6_DIR)/gw6c-config \
 		$(GW6_MAKE_DEFINES)
-	$(SUBMAKE) -C $(GW6_DIR)/gw6c-messaging \
+	$(PKG_MAKE) -C $(GW6_DIR)/gw6c-messaging \
 		$(GW6_MAKE_DEFINES)
-	$(SUBMAKE) -C $(GW6_DIR)/tspc-advanced \
+	$(PKG_MAKE) -C $(GW6_DIR)/tspc-advanced \
 		$(GW6_MAKE_DEFINES) \
 		target="openwrt"
 
@@ -37,9 +37,9 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(GW6_DIR)/tspc-advanced $(GW6_MAKE_DEFINES) target=openwrt clean
-	-$(SUBMAKE) -C $(GW6_DIR)/gw6c-messaging $(GW6_MAKE_DEFINES) clean
-	-$(SUBMAKE) -C $(GW6_DIR)/gw6c-config $(GW6_MAKE_DEFINES) clean
+	-$(PKG_MAKE) -C $(GW6_DIR)/tspc-advanced $(GW6_MAKE_DEFINES) target=openwrt clean
+	-$(PKG_MAKE) -C $(GW6_DIR)/gw6c-messaging $(GW6_MAKE_DEFINES) clean
+	-$(PKG_MAKE) -C $(GW6_DIR)/gw6c-config $(GW6_MAKE_DEFINES) clean
 
 $(pkg)-uninstall:
 	$(RM) $(GW6_TARGET_BINARY)

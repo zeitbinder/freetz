@@ -22,7 +22,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(DNSMASQ_DIR) \
+	$(PKG_MAKE) -C $(DNSMASQ_DIR) \
 		CC="$(TARGET_CC)" \
 		COPTS="$(DNSMASQ_COPTS)" \
 		CFLAGS="$(TARGET_CFLAGS) -ffunction-sections -fdata-sections" \
@@ -36,7 +36,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(DNSMASQ_DIR) clean
+	-$(PKG_MAKE) -C $(DNSMASQ_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(DNSMASQ_TARGET_BINARY)

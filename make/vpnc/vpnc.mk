@@ -23,7 +23,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(VPNC_DIR) vpnc \
+	$(PKG_MAKE) -C $(VPNC_DIR) vpnc \
 		CC="$(TARGET_CC)" \
 		EXTRA_CFLAGS="$(TARGET_CFLAGS)" \
 		OPENSSL_GPL_VIOLATION="$(VPNC_OPENSSL_GPL_VIOLATION)" \
@@ -42,7 +42,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $(PKG)_NAT_SUPPORT
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(VPNC_DIR) clean
+	-$(PKG_MAKE) -C $(VPNC_DIR) clean
 	$(RM) $(VPNC_FREETZ_CONFIG_FILE)
 
 $(pkg)-uninstall:

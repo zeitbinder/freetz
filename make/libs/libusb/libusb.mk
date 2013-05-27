@@ -17,10 +17,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBUSB_DIR) all
+	$(PKG_MAKE) -C $(LIBUSB_DIR) all
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(LIBUSB_DIR) \
+	$(PKG_MAKE) -C $(LIBUSB_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -36,7 +36,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBUSB_DIR) clean
+	-$(PKG_MAKE) -C $(LIBUSB_DIR) clean
 	$(RM) \
 		$(STAGING_DIR)/bin/libusb-config \
 		$(STAGING_DIR)/includes/usb*.h \

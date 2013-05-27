@@ -20,7 +20,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(RTMPDUMP_DIR) \
+	$(PKG_MAKE) -C $(RTMPDUMP_DIR) \
 		CC="$(TARGET_CC)" \
 		LD="$(TARGET_CC)" \
 		AR="$(TARGET_AR)" \
@@ -38,7 +38,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(RTMPDUMP_DIR) clean
+	-$(PKG_MAKE) -C $(RTMPDUMP_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(RTMPDUMP_BINARIES_ALL:%=$(RTMPDUMP_DEST_DIR)/usr/bin/%)

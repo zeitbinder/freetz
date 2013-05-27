@@ -71,11 +71,11 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY) $($(PKG)_LIB_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(CURL_DIR) \
+	$(PKG_MAKE) -C $(CURL_DIR) \
 		$(if $(FREETZ_PACKAGE_CURL_STATIC),STATIC_LDFLAGS=-all-static)
 
 $($(PKG)_LIB_STAGING_BINARY): $($(PKG)_LIB_BINARY)
-	$(SUBMAKE) -C $(CURL_DIR) \
+	$(PKG_MAKE) -C $(CURL_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -94,7 +94,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIB_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(CURL_DIR) clean
+	-$(PKG_MAKE) -C $(CURL_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libcurl* \
 		$(STAGING_DIR)/lib/pkgconfig/libcurl.pc \

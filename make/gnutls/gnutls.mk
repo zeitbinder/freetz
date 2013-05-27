@@ -58,10 +58,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARIES_BUILD_DIR) $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(GNUTLS_DIR)
+	$(PKG_MAKE) -C $(GNUTLS_DIR)
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
-	$(SUBMAKE) -C $(GNUTLS_DIR) \
+	$(PKG_MAKE) -C $(GNUTLS_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -79,7 +79,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR) $($(PKG)_LIBS_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(GNUTLS_DIR) clean
+	-$(PKG_MAKE) -C $(GNUTLS_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libgnutls* \
 		$(STAGING_DIR)/usr/lib/pkgconfig/gnutls*.pc \

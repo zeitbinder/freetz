@@ -23,7 +23,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LUA_DIR) \
+	$(PKG_MAKE) -C $(LUA_DIR) \
 		CC="$(TARGET_CC)" \
 		LD="$(TARGET_LD)" \
 		MYCFLAGS="-I$(STAGING_DIR)/usr/include $(TARGET_CFLAGS) $(FPIC)" \
@@ -64,7 +64,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIB_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LUA_DIR) clean
+	-$(PKG_MAKE) -C $(LUA_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/liblua* \
 		$(STAGING_DIR)$(LUA_INCLUDE_DIR) \

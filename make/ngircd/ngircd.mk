@@ -47,7 +47,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(NGIRCD_DIR) \
+	$(PKG_MAKE) -C $(NGIRCD_DIR) \
 		LDFLAGS="$(TARGET_LDFLAGS) $(NGIRCD_LDFLAGS)"
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
@@ -58,7 +58,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(NGIRCD_DIR) clean
+	-$(PKG_MAKE) -C $(NGIRCD_DIR) clean
 	$(RM) $(NGIRCD_FREETZ_CONFIG_FILE)
 
 $(pkg)-uninstall:

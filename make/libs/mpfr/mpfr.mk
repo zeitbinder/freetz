@@ -22,10 +22,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(MPFR_DIR)
+	$(PKG_MAKE) -C $(MPFR_DIR)
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(MPFR_DIR)/src \
+	$(PKG_MAKE) -C $(MPFR_DIR)/src \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -39,7 +39,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(MPFR_DIR) clean
+	-$(PKG_MAKE) -C $(MPFR_DIR) clean
 	$(RM) \
 		$(STAGING_DIR)/usr/lib/libmpfr.* \
 		$(STAGING_DIR)/usr/include/*mpfr*.h

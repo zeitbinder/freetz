@@ -16,10 +16,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBTASN1_DIR)
+	$(PKG_MAKE) -C $(LIBTASN1_DIR)
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(LIBTASN1_DIR) \
+	$(PKG_MAKE) -C $(LIBTASN1_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -34,7 +34,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBTASN1_DIR) clean
+	-$(PKG_MAKE) -C $(LIBTASN1_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libtasn1* \
 		$(STAGING_DIR)/usr/lib/pkgconfig/libtasn1.pc \

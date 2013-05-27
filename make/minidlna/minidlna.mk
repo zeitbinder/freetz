@@ -41,7 +41,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(MINIDLNA_DIR) \
+	$(PKG_MAKE) -C $(MINIDLNA_DIR) \
 		EXTRA_CFLAGS="-ffunction-sections -fdata-sections" \
 		EXTRA_LDFLAGS="-Wl,--gc-sections" \
 		EXTRA_LIBS="$(MINIDLNA_EXTRA_LIBS)" \
@@ -55,7 +55,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(MINIDLNA_DIR) clean
+	-$(PKG_MAKE) -C $(MINIDLNA_DIR) clean
 	$(RM) $(MINIDLNA_DIR)/.configured
 
 $(pkg)-uninstall:

@@ -11,7 +11,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(SMSTOOLS3_DIR) \
+	$(PKG_MAKE) -C $(SMSTOOLS3_DIR) \
 	CC="$(TARGET_CC)" \
 	CFLAGS="$(TARGET_CFLAGS) -DNOSTATS"
 
@@ -23,7 +23,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(SMSTOOLS3_DIR) clean
+	-$(PKG_MAKE) -C $(SMSTOOLS3_DIR) clean
 	$(RM) $(SMSTOOLS3_DIR)/.configured
 
 $(pkg)-uninstall:

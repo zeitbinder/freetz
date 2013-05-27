@@ -28,10 +28,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBVORBIS_DIR) all
+	$(PKG_MAKE) -C $(LIBVORBIS_DIR) all
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
-	$(SUBMAKE) -C $(LIBVORBIS_DIR) \
+	$(PKG_MAKE) -C $(LIBVORBIS_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -46,7 +46,7 @@ $(pkg): $($(PKG)_LIBS_STAGING_DIR)
 $(pkg)-precompiled: $($(PKG)_LIBS_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBVORBIS_DIR) clean
+	-$(PKG_MAKE) -C $(LIBVORBIS_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libvorbis* \
 		$(STAGING_DIR)/usr/lib/pkgconfig/vorbis* \

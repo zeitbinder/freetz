@@ -20,7 +20,7 @@ $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY) $($(PKG)_LIB_BINARY): $($(PKG)_DIR)/.configured
 	for target in config-check all; do \
-	$(SUBMAKE) -C $(TCP_WRAPPERS_DIR) \
+	$(PKG_MAKE) -C $(TCP_WRAPPERS_DIR) \
 		CC="$(TARGET_CC)" \
 		COPTS="$(TARGET_CFLAGS)" \
 		EXTRA_CFLAGS="-DSYS_ERRLIST_DEFINED -DHAVE_STRERROR -DHAVE_WEAKSYMS -D_REENTRANT -DINET6=$(if $(FREETZ_TARGET_IPV6_SUPPORT),1,0) -Dss_family=__ss_family -Dss_len=__ss_len" \
@@ -57,7 +57,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIB_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(TCP_WRAPPERS_DIR) clean
+	-$(PKG_MAKE) -C $(TCP_WRAPPERS_DIR) clean
 	$(RM) \
 		$(STAGING_DIR)/usr/include/tcpd.h \
 		$(STAGING_DIR)/usr/lib/libwrap.a \

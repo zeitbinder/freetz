@@ -10,7 +10,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(PPTP_DIR) \
+	$(PKG_MAKE) -C $(PPTP_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)"
 
@@ -22,7 +22,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(PPTP_DIR) clean
+	-$(PKG_MAKE) -C $(PPTP_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(PPTP_TARGET_BINARY)

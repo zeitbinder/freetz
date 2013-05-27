@@ -19,10 +19,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LIBOPING_DIR) all
+	$(PKG_MAKE) -C $(LIBOPING_DIR) all
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(LIBOPING_DIR) \
+	$(PKG_MAKE) -C $(LIBOPING_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -36,7 +36,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LIBOPING_DIR) clean
+	-$(PKG_MAKE) -C $(LIBOPING_DIR) clean
 	$(RM) \
 		$(STAGING_DIR)/usr/lib/liboping* \
 		$(STAGING_DIR)/usr/include/oping.h \

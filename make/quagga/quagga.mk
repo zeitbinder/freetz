@@ -65,7 +65,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_LIBS_BUILD_DIR) $($(PKG)_BINARIES_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(QUAGGA_DIR) \
+	$(PKG_MAKE) -C $(QUAGGA_DIR) \
 		MAKEINFO=true
 
 $(foreach binary,$($(PKG)_BINARIES_BUILD_DIR),$(eval $(call INSTALL_BINARY_STRIP_RULE,$(binary),/usr/sbin)))
@@ -77,7 +77,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_LIBS_TARGET_DIR) $($(PKG)_BINARIES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(QUAGGA_DIR) clean
+	-$(PKG_MAKE) -C $(QUAGGA_DIR) clean
 	$(RM) $(QUAGGA_FREETZ_CONFIG_FILE)
 
 $(pkg)-uninstall:

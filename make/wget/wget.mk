@@ -52,7 +52,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(WGET_DIR) \
+	$(PKG_MAKE) -C $(WGET_DIR) \
 		EXTRA_CFLAGS="$(WGET_EXTRA_CFLAGS)" \
 		EXTRA_LDFLAGS="$(WGET_EXTRA_LDFLAGS)" \
 		STATIC_LIBS="$(WGET_STATIC_LIBS)"
@@ -65,7 +65,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(WGET_DIR) clean
+	-$(PKG_MAKE) -C $(WGET_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(WGET_DEST_DIR)/usr/bin/wget*

@@ -57,13 +57,13 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY) $($(PKG)_LIB_BINARY) $($(PKG)_TOOLS_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(DBUS_DIR)
+	$(PKG_MAKE) -C $(DBUS_DIR)
 
 $($(PKG)_LIB_STAGING_BINARY): $($(PKG)_LIB_BINARY)
-	$(SUBMAKE) -C $(DBUS_DIR)/dbus \
+	$(PKG_MAKE) -C $(DBUS_DIR)/dbus \
 		DESTDIR="$(STAGING_DIR)" \
 		install
-	$(SUBMAKE) -C $(DBUS_DIR) \
+	$(PKG_MAKE) -C $(DBUS_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install-pkgconfigDATA
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -90,7 +90,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_LIB_TARGET_BINARY) $($(PKG)_TOOLS_TARGET_DIR) $($(PKG)_CONFIG_TEMPLATE_FILES_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(DBUS_DIR) clean
+	-$(PKG_MAKE) -C $(DBUS_DIR) clean
 	 $(RM) -r \
 		$(STAGING_DIR)/usr/lib/libdbus-1* \
 		$(STAGING_DIR)/usr/lib/pkgconfig/dbus-1.pc \

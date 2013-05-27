@@ -33,12 +33,12 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY_BUILD_DIR) $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(XSLTPROC_DIR) \
+	$(PKG_MAKE) -C $(XSLTPROC_DIR) \
 		$(if $(FREETZ_PACKAGE_XSLTPROC_STATIC),xsltproc_LDFLAGS="-all-static") \
 		all
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
-	$(SUBMAKE) -C $(XSLTPROC_DIR) \
+	$(PKG_MAKE) -C $(XSLTPROC_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -57,7 +57,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARY_TARGET_DIR) $($(PKG)_LIBS_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(XSLTPROC_DIR) clean
+	-$(PKG_MAKE) -C $(XSLTPROC_DIR) clean
 	$(RM) -r \
 		$(XSLTPROC_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/%.*) \
 		$(XSLTPROC_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/%-plugins) \

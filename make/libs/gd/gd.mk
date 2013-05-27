@@ -30,10 +30,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(GD_DIR)
+	$(PKG_MAKE) -C $(GD_DIR)
 
 $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
-	$(SUBMAKE) -C $(GD_DIR) \
+	$(PKG_MAKE) -C $(GD_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install-libLTLIBRARIES install-includeHEADERS install-binSCRIPTS
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -48,7 +48,7 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(GD_DIR) clean
+	-$(PKG_MAKE) -C $(GD_DIR) clean
 	$(RM) \
 		$(STAGING_DIR)/usr/lib/libgd.* \
 		$(STAGING_DIR)/usr/include/{entities,gdcache,gdfontg,gdfontl,gdfontmb,gdfonts,gdfontt,gdfx,gd,gd_io}.h \

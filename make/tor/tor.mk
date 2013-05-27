@@ -44,7 +44,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(TOR_DIR) \
+	$(PKG_MAKE) -C $(TOR_DIR) \
 		EXTRA_CFLAGS="$(TOR_EXTRA_CFLAGS)" \
 		EXTRA_LDFLAGS="$(TOR_EXTRA_LDFLAGS)"
 
@@ -56,7 +56,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(TOR_DIR) clean
+	-$(PKG_MAKE) -C $(TOR_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(TOR_TARGET_BINARY)

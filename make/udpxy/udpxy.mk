@@ -10,7 +10,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(UDPXY_DIR) \
+	$(PKG_MAKE) -C $(UDPXY_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)"
 
@@ -22,7 +22,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(UDPXY_DIR) clean
+	-$(PKG_MAKE) -C $(UDPXY_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(UDPXY_TARGET_BINARY)

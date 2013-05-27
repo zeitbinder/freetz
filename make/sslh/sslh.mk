@@ -12,7 +12,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(SSLH_DIR) \
+	$(PKG_MAKE) -C $(SSLH_DIR) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS) -DLIBCONFIG" \
 		USELIBWRAP= \
@@ -26,7 +26,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(SSLH_DIR) clean
+	-$(PKG_MAKE) -C $(SSLH_DIR) clean
 	$(RM) $(SSLH_FREETZ_CONFIG_FILE)
 
 $(pkg)-uninstall:

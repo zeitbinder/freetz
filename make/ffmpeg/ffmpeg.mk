@@ -92,10 +92,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARIES_BUILD_DIR) $($(PKG)_LIBS_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(FFMPEG_DIR) V=1
+	$(PKG_MAKE) -C $(FFMPEG_DIR) V=1
 
 $($(PKG)_LIBS_STAGING_DIR): $($(PKG)_LIBS_BUILD_DIR)
-	$(SUBMAKE) -C $(FFMPEG_DIR) \
+	$(PKG_MAKE) -C $(FFMPEG_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(call PKG_FIX_LIBTOOL_LA,prefix) $(FFMPEG_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/pkgconfig/lib%.pc)
@@ -112,7 +112,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_BINARIES_TARGET_DIR) $($(PKG)_LIBS_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(FFMPEG_DIR) clean
+	-$(PKG_MAKE) -C $(FFMPEG_DIR) clean
 	$(RM) -r \
 		$(FFMPEG_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/include/lib%) \
 		$(FFMPEG_LIBNAMES_SHORT:%=$(STAGING_DIR)/usr/lib/pkgconfig/lib%.pc) \

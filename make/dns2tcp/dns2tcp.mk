@@ -12,7 +12,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(DNS2TCP_DIR)
+	$(PKG_MAKE) -C $(DNS2TCP_DIR)
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_BINARY)
 	$(INSTALL_BINARY_STRIP)
@@ -22,7 +22,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(DNS2TCP_DIR) clean
+	-$(PKG_MAKE) -C $(DNS2TCP_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(DNS2TCP_TARGET_BINARY)

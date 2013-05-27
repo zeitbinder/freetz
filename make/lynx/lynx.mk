@@ -36,7 +36,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY) $($(PKG)_CFG) $($(PKG)_LSS): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(LYNX_DIR) \
+	$(PKG_MAKE) -C $(LYNX_DIR) \
 		LD="$(TARGET_LD)"
 	touch $@
 
@@ -54,7 +54,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY) $($(PKG)_TARGET_CFG) $($(PKG)_TARGET_LSS)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(LYNX_DIR) clean
+	-$(PKG_MAKE) -C $(LYNX_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(LYNX_TARGET_BINARY) $(LYNX_TARGET_CFG) $(LYNX_TARGET_LSS)

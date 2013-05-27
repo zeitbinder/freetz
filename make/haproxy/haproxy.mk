@@ -13,7 +13,7 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_NOP)
 
 $($(PKG)_BINARY): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(HAPROXY_DIR) \
+	$(PKG_MAKE) -C $(HAPROXY_DIR) \
 		TARGET=$(if $(FREETZ_KERNEL_VERSION_2_6_28_MIN),linux2628,linux26) \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS) -ffunction-sections -fdata-sections" \
@@ -27,7 +27,7 @@ $(pkg):
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(HAPROXY_DIR) clean
+	-$(PKG_MAKE) -C $(HAPROXY_DIR) clean
 
 $(pkg)-uninstall:
 	$(RM) $(HAPROXY_TARGET_BINARY)

@@ -36,18 +36,18 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY_BUILD_DIR) $($(PKG)_TOOLS_BUILD_DIR) $($(PKG)_LIBRARY_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(TESSERACT_DIR)
+	$(PKG_MAKE) -C $(TESSERACT_DIR)
 
 $($(PKG)_LIBRARY_STAGING_DIR): $($(PKG)_LIBRARY_BUILD_DIR)
-	$(SUBMAKE) -C $(TESSERACT_DIR)/api \
+	$(PKG_MAKE) -C $(TESSERACT_DIR)/api \
 		DESTDIR="$(STAGING_DIR)" \
 		install-libLTLIBRARIES
 	for subdir in api ccutil ccmain ccstruct; do \
-		$(SUBMAKE) -C $(TESSERACT_DIR)/$${subdir} \
+		$(PKG_MAKE) -C $(TESSERACT_DIR)/$${subdir} \
 			DESTDIR="$(STAGING_DIR)" \
 			install-includeHEADERS; \
 	done
-	$(SUBMAKE) -C $(TESSERACT_DIR) \
+	$(PKG_MAKE) -C $(TESSERACT_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install-pkgconfigDATA
 	$(PKG_FIX_LIBTOOL_LA) \
@@ -55,7 +55,7 @@ $($(PKG)_LIBRARY_STAGING_DIR): $($(PKG)_LIBRARY_BUILD_DIR)
 		$(STAGING_DIR)/usr/lib/pkgconfig/tesseract.pc
 
 $($(PKG)_BINARY_TARGET_DIR): $($(PKG)_BINARY_BUILD_DIR)
-	$(SUBMAKE) -C $(TESSERACT_DIR)/tessdata \
+	$(PKG_MAKE) -C $(TESSERACT_DIR)/tessdata \
 		DESTDIR="$(abspath $(TESSERACT_DEST_DIR))" \
 		install
 	$(INSTALL_BINARY_STRIP)
@@ -74,7 +74,7 @@ $($(PKG)_TARGET_DIR)/.exclude: $(TOPDIR)/.config
 $(pkg)-precompiled: $($(PKG)_BINARY_TARGET_DIR) $($(PKG)_TOOLS_TARGET_DIR) $($(PKG)_LIBRARY_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(TESSERACT_DIR) clean
+	-$(PKG_MAKE) -C $(TESSERACT_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libtesseract.* \
 		$(STAGING_DIR)/usr/lib/pkgconfig/tesseract.pc \

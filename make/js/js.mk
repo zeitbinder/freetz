@@ -26,10 +26,10 @@ $(PKG_UNPACKED)
 $(PKG_CONFIGURED_CONFIGURE)
 
 $($(PKG)_BINARY_BUILD_DIR) $($(PKG)_LIBRARY_BUILD_DIR): $($(PKG)_DIR)/.configured
-	$(SUBMAKE) -C $(JS_DIR)
+	$(PKG_MAKE) -C $(JS_DIR)
 
 $($(PKG)_LIBRARY_STAGING_DIR): $($(PKG)_LIBRARY_BUILD_DIR)
-	$(SUBMAKE) -C $(JS_DIR) \
+	$(PKG_MAKE) -C $(JS_DIR) \
 		DESTDIR="$(STAGING_DIR)" \
 		install
 	$(PKG_FIX_LIBTOOL_LA) $(STAGING_DIR)/usr/lib/libjs.la
@@ -47,7 +47,7 @@ $(pkg): $($(PKG)_LIBRARY_STAGING_DIR)
 $(pkg)-precompiled: $($(PKG)_BINARY_TARGET_DIR) $($(PKG)_LIBRARY_TARGET_DIR)
 
 $(pkg)-clean:
-	-$(SUBMAKE) -C $(JS_DIR) clean
+	-$(PKG_MAKE) -C $(JS_DIR) clean
 	$(RM) -r \
 		$(STAGING_DIR)/usr/lib/libjs.* \
 		$(STAGING_DIR)/usr/lib/pkgconfig/js.pc \
