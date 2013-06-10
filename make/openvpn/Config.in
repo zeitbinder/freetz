@@ -1,6 +1,7 @@
 config FREETZ_PACKAGE_OPENVPN
 	bool "OpenVPN"
 	select FREETZ_BUSYBOX_BRCTL if ! FREETZ_PACKAGE_BRIDGE_UTILS
+	select FREETZ_PACKAGE_OPENVPN_CGI if ! FREETZ_PACKAGE_OPENVPN_USE_V2_CGI || ! FREETZ_SHOW_ADVANCED
 	default n
 	help
 		VPN Server
@@ -11,7 +12,7 @@ choice
 	default FREETZ_PACKAGE_OPENVPN_VERSION_2_3
 
 	config FREETZ_PACKAGE_OPENVPN_VERSION_2_3
-		bool "2.3.1"
+		bool "2.3.2"
 		help
 			Latest stable version of OpenVPN with support for polarSSL
 
@@ -91,3 +92,14 @@ config FREETZ_PACKAGE_OPENVPN_USE_IPROUTE
 	help
 		Enables openvpn to use ip when setting IPs, link parameters and routes.
 		This selects busybox's 'IP' applet.
+
+config FREETZ_PACKAGE_OPENVPN_USE_V2_CGI
+	bool "Use new (very experimental) GUI. ! Old configs are deleted !"
+	depends on FREETZ_PACKAGE_OPENVPN && FREETZ_SHOW_ADVANCED
+	select FREETZ_PACKAGE_OPENVPN_V2_CGI
+	default n
+	help
+		!! CAUTION: Tis option will delete configurations made with "old" GUI. !!
+		New quite simple OpenVPN configuration interface.
+		It will not generate a configuration file based on GUI settings
+		but just ask for an existing configuration.

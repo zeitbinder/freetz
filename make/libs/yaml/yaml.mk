@@ -4,7 +4,7 @@ $(PKG)_SOURCE:=yaml-$($(PKG)_VERSION).tar.gz
 $(PKG)_SOURCE_MD5:=36c852831d02cf90508c29852361d01b
 $(PKG)_SITE:=http://pyyaml.org/download/libyaml/
 
-$(PKG)_BINARY:=$($(PKG)_DIR)/libyaml-0.so.$($(PKG)_LIB_VERSION)
+$(PKG)_BINARY:=$($(PKG)_DIR)/src/.libs/libyaml-0.so.$($(PKG)_LIB_VERSION)
 $(PKG)_STAGING_BINARY:=$(STAGING_DIR)/lib/libyaml-0.so.$($(PKG)_LIB_VERSION)
 $(PKG)_TARGET_BINARY:=$($(PKG)_TARGET_DIR)/libyaml-0.so.$($(PKG)_LIB_VERSION)
 
@@ -21,6 +21,7 @@ $($(PKG)_STAGING_BINARY): $($(PKG)_BINARY)
 		install
 	$(PKG_FIX_LIBTOOL_LA) \
 		$(STAGING_DIR)/usr/lib/libyaml.a
+		$(STAGING_DIR)/usr/lib/pkgconfig/yaml*.pc
 
 $($(PKG)_TARGET_BINARY): $($(PKG)_STAGING_BINARY)
 	$(INSTALL_LIBRARY_STRIP)
@@ -30,10 +31,11 @@ $(pkg): $($(PKG)_STAGING_BINARY)
 $(pkg)-precompiled: $($(PKG)_TARGET_BINARY)
 
 $(pkg)-clean:
-	$(PKG_MAKE) -C $(YAML_DIR) clean
-	$(RM) $(STAGING_DIR)/usr/lib/libyaml*.* \
-		$(STAGING_DIR)/include/yaml.h \
-		$(STAGING_DIR)/include/pkgconfig\yaml*.pc
+	-$(PKG_MAKE) -C $(YAML_DIR) clean
+	$(RM) \
+		$(STAGING_DIR)/usr/lib/libyaml*.* \
+		$(STAGING_DIR)/usr/include/yaml.h \
+		$(STAGING_DIR)/usr/lib/pkgconfig/yaml*.pc
 
 $(pkg)-uninstall:
 	$(RM) $(YAML_TARGET_DIR)/libyaml*.so*

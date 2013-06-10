@@ -33,6 +33,7 @@ source make/libs/glib2/external.in
 source make/libs/gmp/external.in
 source make/gnutls/external.in.libs
 source make/libs/libgpg-error/external.in
+source make/libs/libgsm/external.in
 source make/libs/readline/external.in
 source make/libs/libiconv/external.in
 source make/libs/libid3tag/external.in
@@ -57,6 +58,7 @@ source make/libs/openobex/external.in
 source make/libs/liboping/external.in
 source make/libs/opus/external.in
 source make/libs/libosip2/external.in
+source make/libs/pjproject2/external.in
 source make/rrdtool/external.in.libs
 source make/libs/libpcap/external.in
 source make/libs/pcre/external.in
@@ -65,8 +67,11 @@ source make/libs/polarssl/external.in
 source make/libs/popt/external.in
 source make/libs/protobuf-c/external.in
 source make/python/external.in.libs
+source make/libs/serf/external.in
 source make/slang/external.in.libs
+source make/libs/speex/external.in
 source make/sqlite/external.in.libs
+source make/libs/srtp/external.in
 source make/libs/libstdcxx/external.in
 source make/libs/libsynce/external.in
 source make/libs/sysfsutils/external.in

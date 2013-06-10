@@ -1,6 +1,6 @@
-$(call PKG_INIT_BIN,02.24.36)
+$(call PKG_INIT_BIN,02.24.38)
 $(PKG)_SOURCE:=$(pkg).v.$($(PKG)_VERSION).tar.gz
-$(PKG)_SOURCE_MD5:=14c044a2754417b344be364eeccc6779
+$(PKG)_SOURCE_MD5:=e868ab86df2eb20a1d98c11e8564e52c
 $(PKG)_SITE:=@SF/inadyn-mt
 
 $(PKG)_DIR:=$($(PKG)_SOURCE_DIR)/$(pkg).v.$($(PKG)_VERSION)
@@ -8,8 +8,9 @@ $(PKG)_BINARY:=$($(PKG)_DIR)/src/inadyn-mt
 $(PKG)_TARGET_BINARY:=$($(PKG)_DEST_DIR)/usr/sbin/inadyn-mt
 
 
+$(PKG)_CONFIGURE_OPTIONS += --disable-dynamic
 $(PKG)_CONFIGURE_OPTIONS += --disable-sound
-$(PKG)_CONFIGURE_OPTIONS += --enable-threads
+$(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_TARGET_ARCH_BE),--disable-threads,--enable-threads)
 #$(PKG)_CONFIGURE_OPTIONS += --enable-debug
 
 $(PKG_SOURCE_DOWNLOAD)

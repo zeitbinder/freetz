@@ -13,7 +13,14 @@ Latest changes:
 - New patches (read online help for more info):
 
 - New packages, libs, modules:
+    * asterisk 11.4.0
     * E-MailRelay 1.8.2
+    * libgsm-1.0.13
+    * libsrtp-1.4.4+20100615
+    * PJProject 2.1.0-git
+    * serf 1.2.0
+    * ScanButton 0.2.3.cvs20090713
+    * speex 1.2rc1
 
 - Updated tools and hooks:
 
@@ -25,18 +32,24 @@ Latest changes:
     * dnsmasq 2.66
     * dropbear 2013.58
     * ffmpeg 1.2.1
-    * git 1.8.2.3
+    * git 1.8.3
     * gmp 5.1.2
+    * inadyn-mt 02.24.38
     * libconfig 1.4.9
     * libxml 2.9.1
     * minidlna 1.1.0
     * nano 2.2.6
     * ngircd 20.2
+    * openssh 6.2p2
+    * openvpn 2.3.2
+    * pcre 8.33
     * php 5.3.25/5.4.15
     * Python 2.7.5
     * samba 3.6.14
+    * sqlite 3.7.17
+    * subversion 1.7.10
     * tmux 1.8
-    * umurmur 0.2.11
+    * umurmur 0.2.12
     * zlib 1.2.8
 
 - Remove packages, libs, modules, tools:

@@ -91,6 +91,8 @@ Currently supported boxes and firmwares
 	* Labor 74.05.50 rev24717
 	* Alien 7270 v1
 	* 54/74.05.23 rev22845 (International)
+	* 54/74.05.51 rev25395 (International)
+	* Alien 7570 (International)
 
 * Fritz!Box Fon WLAN 7312
 	* 117.05.23 rev22847
@@ -150,3 +152,5 @@ Currently supported boxes and firmwares
 	* 7270v2: AVM 7270v1
 	* 7320: AVM 7330
 	* 7340: AVM 7390
+	* 7570: AVM 7270 (International)
+

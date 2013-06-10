@@ -1,0 +1,257 @@
+--- a/ Makefile.in
++++ b/ Makefile.in
+@@ -46204,6 +46204,7 @@
+ all-stage4-target-libstdc++-v3: maybe-configure-stage4-target-libgomp
+ all-stageprofile-target-libstdc++-v3: maybe-configure-stageprofile-target-libgomp
+ all-stagefeedback-target-libstdc++-v3: maybe-configure-stagefeedback-target-libgomp
++install-target-libiberty: maybe-install-libiberty
+ install-target-libgo: maybe-install-target-libatomic
+ install-target-libgfortran: maybe-install-target-libquadmath
+ install-target-libgfortran: maybe-install-target-libgcc
+--- a/ boehm-gc/Makefile.in
++++ b/ boehm-gc/Makefile.in
+@@ -626,6 +626,7 @@
+ 
+ install-am: all-am
+ 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-multi
+ 
+ installcheck: installcheck-recursive
+ install-strip:
+@@ -674,7 +675,7 @@
+ 
+ install-dvi-am:
+ 
+-install-exec-am: install-multi
++install-exec-am:
+ 
+ install-html: install-html-recursive
+ 
+--- a/ libffi/Makefile.in
++++ b/ libffi/Makefile.in
+@@ -1421,6 +1421,7 @@
+ 
+ install-am: all-am
+ 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-multi
+ 
+ installcheck: installcheck-recursive
+ install-strip:
+@@ -1523,7 +1524,7 @@
+ 	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(dvidir)'"; \
+ 	  $(INSTALL_DATA) $$files "$(DESTDIR)$(dvidir)" || exit $$?; \
+ 	done
+-install-exec-am: install-multi install-toolexeclibLTLIBRARIES
++install-exec-am: install-toolexeclibLTLIBRARIES
+ 
+ install-html: install-html-recursive
+ 
+--- a/ libgfortran/Makefile.in
++++ b/ libgfortran/Makefile.in
+@@ -5759,6 +5759,7 @@
+ 
+ install-am: all-am
+ 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-multi
+ 
+ installcheck: installcheck-am
+ install-strip:
+@@ -5814,7 +5815,7 @@
+ 
+ install-dvi-am:
+ 
+-install-exec-am: install-cafexeclibLTLIBRARIES install-multi \
++install-exec-am: install-cafexeclibLTLIBRARIES \
+ 	install-myexeclibLTLIBRARIES install-toolexeclibDATA \
+ 	install-toolexeclibLTLIBRARIES
+ 
+--- a/ libgo/Makefile.in
++++ b/ libgo/Makefile.in
+@@ -4170,6 +4170,7 @@
+ 
+ install-am: all-am
+ 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-multi
+ 
+ installcheck: installcheck-recursive
+ install-strip:
+@@ -4220,7 +4221,7 @@
+ 
+ install-dvi-am:
+ 
+-install-exec-am: install-multi install-toolexeclibLIBRARIES \
++install-exec-am: install-toolexeclibLIBRARIES \
+ 	install-toolexeclibLTLIBRARIES install-toolexeclibgoDATA \
+ 	install-toolexeclibgoarchiveDATA \
+ 	install-toolexeclibgocompressDATA \
+--- a/ libgomp/Makefile.in
++++ b/ libgomp/Makefile.in
+@@ -858,6 +858,7 @@
+ 
+ install-am: all-am
+ 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-multi
+ 
+ installcheck: installcheck-recursive
+ install-strip:
+@@ -919,7 +920,7 @@
+ 	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(dvidir)'"; \
+ 	  $(INSTALL_DATA) $$files "$(DESTDIR)$(dvidir)" || exit $$?; \
+ 	done
+-install-exec-am: install-multi install-nodist_toolexeclibHEADERS \
++install-exec-am: install-nodist_toolexeclibHEADERS \
+ 	install-toolexeclibLTLIBRARIES
+ 
+ install-html: install-html-recursive
+--- a/ libjava/classpath/Makefile.in
++++ b/ libjava/classpath/Makefile.in
+@@ -546,6 +546,7 @@
+ 
+ install-am: all-am
+ 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-multi
+ 
+ installcheck: installcheck-recursive
+ install-strip:
+@@ -592,7 +593,7 @@
+ 
+ install-dvi-am:
+ 
+-install-exec-am: install-multi
++install-exec-am:
+ 
+ install-html: install-html-recursive
+ 
+--- a/ libjava/libltdl/Makefile.in
++++ b/ libjava/libltdl/Makefile.in
+@@ -467,6 +467,7 @@
+ 
+ install-am: all-am
+ 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-multi
+ 
+ installcheck: installcheck-am
+ install-strip:
+@@ -516,7 +517,7 @@
+ 
+ install-dvi-am:
+ 
+-install-exec-am: install-libLTLIBRARIES install-multi
++install-exec-am: install-libLTLIBRARIES
+ 
+ install-html: install-html-am
+ 
+--- a/ libjava/Makefile.in
++++ b/ libjava/Makefile.in
+@@ -10357,6 +10357,7 @@
+ 
+ install-am: all-am
+ 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-multi
+ 
+ installcheck: installcheck-recursive
+ install-strip:
+@@ -10474,7 +10475,7 @@
+ 
+ install-exec-am: install-binPROGRAMS install-binSCRIPTS \
+ 	install-dbexecDATA install-dbexecLTLIBRARIES \
+-	install-libexecsubPROGRAMS install-multi \
++	install-libexecsubPROGRAMS \
+ 	install-toolexeclibLTLIBRARIES install-toolexecmainlibDATA
+ 	@$(NORMAL_INSTALL)
+ 	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
+--- a/ libmudflap/Makefile.in
++++ b/ libmudflap/Makefile.in
+@@ -698,6 +698,7 @@
+ 
+ install-am: all-am
+ 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-multi
+ 
+ installcheck: installcheck-recursive
+ install-strip:
+@@ -746,7 +747,7 @@
+ 
+ install-dvi-am:
+ 
+-install-exec-am: install-multi install-toolexeclibLTLIBRARIES
++install-exec-am: install-toolexeclibLTLIBRARIES
+ 
+ install-html: install-html-recursive
+ 
+--- a/ libquadmath/Makefile.in
++++ b/ libquadmath/Makefile.in
+@@ -1249,6 +1249,7 @@
+ 
+ install-am: all-am
+ 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-multi
+ 
+ installcheck: installcheck-am
+ install-strip:
+@@ -1315,7 +1316,7 @@
+ 	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(dvidir)'"; \
+ 	  $(INSTALL_DATA) $$files "$(DESTDIR)$(dvidir)" || exit $$?; \
+ 	done
+-install-exec-am: install-multi install-toolexeclibLTLIBRARIES
++install-exec-am: install-toolexeclibLTLIBRARIES
+ 
+ install-html: install-html-am
+ 
+--- a/ libssp/Makefile.in
++++ b/ libssp/Makefile.in
+@@ -583,6 +583,7 @@
+ 
+ install-am: all-am
+ 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-multi
+ 
+ installcheck: installcheck-am
+ install-strip:
+@@ -631,7 +632,7 @@
+ 
+ install-dvi-am:
+ 
+-install-exec-am: install-multi install-toolexeclibLTLIBRARIES
++install-exec-am: install-toolexeclibLTLIBRARIES
+ 
+ install-html: install-html-am
+ 
+--- a/ libstdc++-v3/Makefile.in
++++ b/ libstdc++-v3/Makefile.in
+@@ -581,6 +581,7 @@
+ 
+ install-am: all-am
+ 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-multi
+ 
+ installcheck: installcheck-recursive
+ install-strip:
+@@ -619,7 +620,7 @@
+ 
+ install-dvi-am:
+ 
+-install-exec-am: install-multi
++install-exec-am:
+ 
+ install-html-am:
+ 
+--- a/ zlib/Makefile.in
++++ b/ zlib/Makefile.in
+@@ -580,6 +580,7 @@
+ 
+ install-am: all-am
+ 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-multi
+ 
+ installcheck: installcheck-am
+ install-strip:
+@@ -627,7 +628,7 @@
+ 
+ install-dvi-am:
+ 
+-install-exec-am: install-multi install-toolexeclibLIBRARIES
++install-exec-am: install-toolexeclibLIBRARIES
+ 
+ install-html: install-html-am
+ 

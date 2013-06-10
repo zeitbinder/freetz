@@ -250,6 +250,8 @@ source make/dnsd-cgi/Config.in
 source make/downloader/Config.in
 source make/nfsd-cgi/Config.in
 source make/onlinechanged-cgi/Config.in
+source make/openvpn-cgi/Config.in
+source make/openvpn-v2-cgi/Config.in
 source make/phpxmail/Config.in
 source make/ppp-cgi/Config.in
 source make/rrdstats/Config.in
@@ -262,6 +264,7 @@ endmenu
 
 menu "Unstable packages"
 	visible if FREETZ_SHOW_EXPERT
+source make/asterisk/Config.in
 source make/collectd/Config.in
 source make/dtmfbox/Config.in
 source make/dtmfbox-cgi/Config.in
@@ -272,6 +275,7 @@ source make/iptables/Config.in
 source make/mdev/Config.in
 source make/mini_fo/Config.in
 source make/sane-backends/Config.in
+source make/scanbuttond/Config.in
 source make/squid/Config.in
 source make/truecrypt/Config.in
 source make/virtualip-cgi/Config.in
