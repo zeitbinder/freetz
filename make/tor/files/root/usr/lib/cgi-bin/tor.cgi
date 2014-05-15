@@ -37,6 +37,20 @@ $(lang de:"Port" en:"Port"):&nbsp;<input id="port" type="text" size="5" maxlengt
 EOF
 
 sec_end
+sec_begin '$(lang de:"Erweiterte Einstellungen" en:"Advanced Configuration")'
+cat << EOF
+<p>$(lang de:"Transparent-Proxy-Port" en:"Transparent Proxy port") (optional):&nbsp;<input id="trans_port" type="text" size="5" maxlength="5" name="trans_port" value="$(html "$TOR_TRANS_PORT")"></p>
+<p>$(lang de:"Transparent-Proxy-Adresse" en:"Transparent Proxy address") (optional):&nbsp;<input id="trans_addr" type="text" size="15" maxlength="15" name="trans_addr" value="$(html "$TOR_TRANS_ADDRESS")"></p>
+<p>$(lang de:"NATD-Proxy-Port" en:"NATD proxy port") (optional):&nbsp;<input id="natd_port" type="text" size="5" maxlength="5" name="natd_port" value="$(html "$TOR_NATD_PORT")"></p>
+<p>$(lang de:"NATD-Proxy-Adresse" en:"NATD proxy address") (optional):&nbsp;<input id="natd_addr" type="text" size="15" maxlength="15" name="natd_addr" value="$(html "$TOR_NATD_ADDRESS")"></p>
+<p>$(lang de:"DNS-Resolver-Port" en:"DNS resolver port") (optional):&nbsp;<input id="dns_port" type="text" size="5" maxlength="5" name="dns_port" value="$(html "$TOR_DNS_PORT")"></p><br />
+<p>$(lang de:"DNS-Resolver-Adresse" en:"DNS resolver address") (optional):&nbsp;<input id="dns_addr" type="text" size="15" maxlength="15" name="dns_addr" value="$(html "$TOR_DNS_ADDRESS")"></p><br />
+<p>$(lang de:"Virtuelles Adressnetzwerk" en:"virtual address network") (optional):&nbsp;<input id="virtual_addr_network" type="text" size="44" maxlength="44" name="virtual_addr_network" value="$(html "$TOR_VIRTUAL_ADDR_NETWORK")"></p><br >
+<p>$(lang de:"Virtuelles Adressnetzwerk" en:"virtual address network") IPv4 (optional):&nbsp;<input id="virtual_addr_network_ipv4" type="text" size="18" maxlength="18" name="virtual_addr_network_ipv4" value="$(html "$TOR_VIRTUAL_ADDR_NETWORK_IPV4")"></p><br >
+<p>$(lang de:"Virtuelles Adressnetzwerk" en:"virtual address network") IPv6 (optional):&nbsp;<input id="virtual_addr_network_ipv6" type="text" size="44" maxlength="44" name="virtual_addr_network_ipv6" value="$(html "$TOR_VIRTUAL_ADDR_NETWORK_IPV6")"></p>
+EOF
+
+sec_end
 sec_begin '$(lang de:"Zugriffskontrolle" en:"Access Control")'
 
 cat << EOF

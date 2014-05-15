@@ -47,3 +47,17 @@ fi
 
 [ "$TOR_GEOIP_FILE" ] && echo "GeoIPFile $TOR_GEOIP_FILE.IPv4"
 [ "$TOR_GEOIP_FILE" ] && echo "GeoIPv6File $TOR_GEOIP_FILE.IPv6"
+
+[ "$TOR_TRANS_PORT" ] && echo "TransPort $TOR_TRANS_PORT"
+[ "$TOR_TRANS_ADDRESS" ] && echo "TransListenAddress $TOR_TRANS_ADDRESS"
+
+[ "$TOR_NATD_PORT" ] && echo "NATDPort $TOR_NATD_PORT"
+[ "$TOR_NATD_ADDRESS" ] && echo "NATDListenAddress $TOR_NATD_ADDRESS"
+
+[ "$TOR_DNS_PORT" ] && echo "DNSPort $TOR_DNS_PORT"
+[ "$TOR_DNS_ADDRESS" ] && echo "DNSListenAddress $TOR_DNS_ADDRESS"
+
+
+[ "$TOR_VIRTUAL_ADDR_NETWORK" ] && echo "VirtualAddrNetwork $TOR_VIRTUAL_ADDR_NETWORK"
+[ "$TOR_VIRTUAL_ADDR_NETWORK_IPV4" ] && echo "VirtualAddrNetworkIPv4 $TOR_VIRTUAL_ADDR_NETWORK_IPV4"
+[ "$TOR_VIRTUAL_ADDR_NETWORK_IPV6" ] && echo "VirtualAddrNetworkIPv6 $TOR_VIRTUAL_ADDR_NETWORK_IPV6"
