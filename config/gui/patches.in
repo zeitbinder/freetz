@@ -303,7 +303,7 @@ config FREETZ_REMOVE_AVM_VPN
 config FREETZ_REMOVE_WEBSRV
 	bool "Remove websrv"
 	depends on \
-		! FREETZ_AVM_VERSION_05_2X_MIN \
+		FREETZ_AVM_VERSION_04_XX_MAX \
 		&& ! FREETZ_TYPE_2170 \
 		&& ! FREETZ_TYPE_3131 \
 		&& ! FREETZ_TYPE_3170 \
@@ -999,7 +999,7 @@ comment "Web menu patches -----------------------"
 
 config FREETZ_PATCH_VCC
 	bool "Patch 2nd VCC"
-	depends on FREETZ_AVM_HAS_PHONE && FREETZ_TYPE_LANG_DE && !FREETZ_AVM_VERSION_05_5X
+	depends on FREETZ_AVM_HAS_PHONE && FREETZ_TYPE_LANG_DE && FREETZ_AVM_VERSION_05_2X_MAX
 	default n
 	help
 		Patches the setting for 2nd VCC into web menu. It also adds two additional
@@ -1052,11 +1052,25 @@ config FREETZ_PATCH_ENUM
 	help
 		Patches the enum configuration pages into the web menu.
 
+config FREETZ_PATCH_BETA_ATTRIBUTES
+	bool "Patch Beta/Labor attributes"
+	depends on \
+		FREETZ_AVM_VERSION_05_2X && \
+		FREETZ_TYPE_LANG_DE && \
+		( \
+		FREETZ_TYPE_7270_16 || \
+		FREETZ_TYPE_7390 \
+		)
+	default n
+	help
+		This patch removes Beta/Labor attributes from some
+		(older) firmwares AVM released only as Betas so far.
+
 config FREETZ_PATCH_DSL_EXPERT
 	bool "Patch extended DSL settings"
 	depends on \
 		! FREETZ_REMOVE_DSLD && \
-		! FREETZ_AVM_VERSION_05_5X_MIN && \
+		FREETZ_AVM_VERSION_05_2X_MAX && \
 		( \
 			FREETZ_TYPE_3270 || \
 			FREETZ_TYPE_3370 || \
@@ -1090,7 +1104,7 @@ config FREETZ_ADD_REGEXT_GUI
 	bool "Patch GUI to enable external SIP connections"
 	depends on \
 		FREETZ_TYPE_7570 || \
-		( ! FREETZ_AVM_VERSION_05_5X && \
+		( FREETZ_AVM_VERSION_05_2X_MAX && \
 			FREETZ_TYPE_LANG_DE && ( \
 				FREETZ_TYPE_7170 || \
 				FREETZ_TYPE_7240 || \

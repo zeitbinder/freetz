@@ -1,7 +1,7 @@
-$(call PKG_INIT_BIN, 7.36.0)
+$(call PKG_INIT_BIN, 7.37.0)
 $(PKG)_LIB_VERSION:=4.3.0
 $(PKG)_SOURCE:=$(pkg)-$($(PKG)_VERSION).tar.bz2
-$(PKG)_SOURCE_MD5:=e6d1f9d1b59da5062109ffe14e0569a4
+$(PKG)_SOURCE_MD5:=7dda0cc2e4136f78d5801ac347be696b
 $(PKG)_SITE:=http://curl.haxx.se/download
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/src$(if $(FREETZ_PACKAGE_CURL_STATIC),,/.libs)/curl
@@ -18,11 +18,13 @@ $(PKG)_REBUILD_SUBOPTS += FREETZ_OPENSSL_SHLIB_VERSION
 $(PKG)_DEPENDS_ON += openssl
 endif
 ifeq ($(strip $(FREETZ_LIB_libcurl_WITH_POLARSSL)),y)
-$(PKG)_DEPENDS_ON += polarssl
+$(PKG)_DEPENDS_ON += polarssl13
 endif
 ifeq ($(strip $(FREETZ_LIB_libcurl_WITH_ZLIB)),y)
 $(PKG)_DEPENDS_ON += zlib
 endif
+
+$(PKG)_PATCH_POST_CMDS += $(call POLARSSL_HARDCODE_VERSION,13,configure lib/urldata.h lib/vtls/polarssl.c)
 
 $(PKG)_REBUILD_SUBOPTS += FREETZ_LIB_libcurl_WITH_SSL
 $(PKG)_REBUILD_SUBOPTS += FREETZ_LIB_libcurl_WITH_CYASSL

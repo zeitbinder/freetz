@@ -6,7 +6,7 @@ GCC_MAKE_DIR:=$(TOOLCHAIN_DIR)/make/target/gcc
 
 GCC_MD5_4.6.4 := b407a3d1480c11667f293bfb1f17d1a4
 GCC_MD5_4.7.3 := 86f428a30379bdee0224e353ee2f999e
-GCC_MD5_4.8.2 := a3d7d63b9cb6b6ea049469a0c4a43c9d
+GCC_MD5_4.8.3 := 7c60f24fab389f77af203d2516ee110f
 GCC_MD5       := $(GCC_MD5_$(GCC_VERSION))
 
 GCC_INITIAL_PREREQ=
@@ -81,7 +81,7 @@ $(GCC_DIR)/.unpacked: $(DL_DIR)/$(GCC_SOURCE) | $(TARGET_TOOLCHAIN_DIR)
 	$(RM) -r $(GCC_DIR)
 	tar -C $(TARGET_TOOLCHAIN_DIR) $(VERBOSE) -xf $(DL_DIR)/$(GCC_SOURCE)
 	set -e; \
-	for i in $(GCC_MAKE_DIR)/$(GCC_VERSION)/*.patch; do \
+	for i in $(GCC_MAKE_DIR)/$(call GET_MAJOR_VERSION,$(GCC_VERSION))/*.patch; do \
 		$(PATCH_TOOL) $(GCC_DIR) $$i; \
 	done
 	for f in $$(find $(GCC_DIR) \( -name "configure" -o -name "config.rpath" \)); do $(call PKG_PREVENT_RPATH_HARDCODING1,$$f) done

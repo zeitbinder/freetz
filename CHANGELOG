@@ -9,7 +9,7 @@ Latest changes:
     + add EXPERIMENTAL support for binutils-2.24.x
   * kconfig 3.11-rc3
   * kernel-/target-toolchain:
-    + add EXPERIMENTAL support for gcc-4.8.x
+    + add support for gcc-4.8.x
   * support for a 3rd (auxiliary) firmware
   * fakeroot: bump version to 1.20
 
@@ -20,7 +20,7 @@ Latest changes:
 - New patches (read online help for more info):
 
 - New packages, libs, modules:
-    * asterisk 11.9.0
+    * asterisk 11.10.0
     * asterisk-chan-capi post-1.1.6 with asterisk11 adjustments by Mihai Moldovan
     * asterisk-chan-dongle 1.1-git (asterisk11 branch)
     * asterisk-chan-sccp 4.1.0RC1
@@ -36,7 +36,7 @@ Latest changes:
     * libnettle 2.7.1
     * libsrtp-1.4.4+20100615
     * libusb-compat 0.1.5
-    * php 5.5.12
+    * php 5.5.13
     * PJProject 2.2.1
     * python-mechanize 0.2.5
     * serf 1.2.1
@@ -50,24 +50,24 @@ Latest changes:
 
 - Updated packages and libs:
     * apache 2.4.9
-    * apr 1.5.0
+    * apr 1.5.1
     * apr-util 1.5.3
     * bind 9.8.4-P2
     * bip 0.8.9
     * bird 1.4.0
     * CCID 1.4.13
     * cifs-utils 6.2
-    * curl 7.36.0
+    * curl 7.37.0
     * cyassl 2.9.0
-    * dbus 1.6.18
-    * dnsmasq 2.70
+    * dbus 1.8.2
+    * dnsmasq 2.71
     * dosfstools 3.0.25
     * dropbear 2014.63
     * e2fsprogs 1.42.9
     * expat 2.1.0
-    * ffmpeg 1.2.5
-    * gdb 7.7
-    * git 1.9.3
+    * ffmpeg 1.2.6
+    * gdb 7.7.1
+    * git 2.0.0
     * gmp 5.1.3
     * gnu-make 4.0
     * gnutls 2.12.23
@@ -77,12 +77,14 @@ Latest changes:
     * httpry 0.1.7
     * ImageMagick 6.8.7-8
     * inadyn-mt 02.24.38
-    * lftp 4.4.15
+    * iodine 0.7.0
+    * lftp 4.5.2
     * libcapi avm-(7390|7270).05.50
     * libgcrypt 1.5.3
     * libgd 2.1.0
     * libgpg-error 1.12
     * libconfig 1.4.9
+    * libffi 3.1
     * libogg 1.3.1
     * libopus 1.1
     * litasn1 3.4
@@ -101,12 +103,12 @@ Latest changes:
     * noip 2.1.9-1
     * obexftp 0.23
     * openssh 6.6p1
-    * openssl 1.0.1g
+    * openssl 0.9.8za/1.0.1h
     * openvpn 2.3.4
     * pcre 8.34
     * pcscd 1.8.10
-    * php 5.3.28/5.4.28
-    * polarssl 1.2.10
+    * php 5.3.28/5.4.29
+    * polarssl 1.2.10/1.3.7
     * pptpd 1.4.0
     * Python 2.7.6
     * python-bjoern 1.3.4
@@ -118,13 +120,13 @@ Latest changes:
     * samba 3.6.23
     * sane-backends 1.0.24
     * smartmontools 6.2
-    * sqlite 3.8.4.3
+    * sqlite 3.8.5
     * sslh 1.16
     * strace 4.8
-    * subversion 1.7.16/1.8.9
+    * subversion 1.7.17/1.8.9
     * tinyproxy 1.8.3
     * tmux 1.8
-    * tor 0.2.4.21
+    * tor 0.2.4.22
     * transmission 2.82
     * usbutils 007
     * umurmur 0.2.14
