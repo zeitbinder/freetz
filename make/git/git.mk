@@ -1,6 +1,6 @@
-$(call PKG_INIT_BIN, 2.0.0)
+$(call PKG_INIT_BIN, 2.0.1)
 $(PKG)_SOURCE:=$(pkg)-$($(PKG)_VERSION).tar.xz
-$(PKG)_SOURCE_SHA1:=85061efe1dbfde3e7b28987d0bc27d66aaba18a8
+$(PKG)_SOURCE_SHA1:=838cf529fddc562a30ddc5038393a82d3fd54124
 $(PKG)_SITE:=http://git-core.googlecode.com/files,@KERNEL/software/scm/git
 
 # files to be moved from /usr/lib/git-core to /usr/bin
@@ -13,7 +13,7 @@ $(PKG)_BINARY_TARGET_DIR := $($(PKG)_DEST_DIR)/usr/bin/git
 
 $(PKG)_DEPENDS_ON += curl expat openssl zlib
 ifeq ($(strip $(FREETZ_TARGET_UCLIBC_0_9_28)),y)
-$(PKG)_DEPENDS_ON += libiconv
+$(PKG)_DEPENDS_ON += iconv
 endif
 
 $(PKG)_REBUILD_SUBOPTS += FREETZ_PACKAGE_GIT_WITH_PCRE

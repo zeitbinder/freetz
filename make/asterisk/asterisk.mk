@@ -1,6 +1,6 @@
-$(call PKG_INIT_BIN, 11.10.0)
+$(call PKG_INIT_BIN, 11.11.0)
 $(PKG)_SOURCE:=$(pkg)-$($(PKG)_VERSION).tar.gz
-$(PKG)_SOURCE_SHA1:=5e39e3184501260ae900d11ce515d706c9939d0c
+$(PKG)_SOURCE_SHA1:=b50975d7eee7d365678cebad6bb3331a7293cf20
 $(PKG)_SITE:=http://downloads.asterisk.org/pub/telephony/asterisk/releases
 
 $(PKG)_CATEGORY:=Unstable
@@ -36,7 +36,7 @@ $(PKG)_DEPENDS_ON += sqlite
 $(PKG)_DEPENDS_ON += srtp
 $(PKG)_DEPENDS_ON += zlib
 ifeq ($(strip $(FREETZ_TARGET_UCLIBC_0_9_28)),y)
-$(PKG)_DEPENDS_ON += libiconv
+$(PKG)_DEPENDS_ON += iconv
 endif
 
 $(PKG)_REBUILD_SUBOPTS += FREETZ_PACKAGE_ASTERISK_LOWMEMORY

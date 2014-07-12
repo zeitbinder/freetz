@@ -1,12 +1,12 @@
-$(call PKG_INIT_BIN, 3.1.0)
+$(call PKG_INIT_BIN, 3.1.1)
 $(PKG)_SOURCE:=$(pkg)-$($(PKG)_VERSION).tar.gz
-$(PKG)_SOURCE_MD5:=3be148772a33224771a8d4d2a028b132
-$(PKG)_SITE:=http://samba.anu.edu.au/ftp/rsync
+$(PKG)_SOURCE_MD5:=43bd6676f0b404326eee2d63be3cdcfe
+$(PKG)_SITE:=http://samba.org/ftp/rsync/src
 
 $(PKG)_BINARY:=$($(PKG)_DIR)/rsync
 $(PKG)_TARGET_BINARY:=$($(PKG)_DEST_DIR)/usr/bin/rsync
 
-$(PKG)_DEPENDS_ON := popt
+$(PKG)_DEPENDS_ON := popt zlib
 
 $(PKG)_REBUILD_SUBOPTS += FREETZ_TARGET_IPV6_SUPPORT
 
@@ -17,6 +17,7 @@ $(PKG)_CONFIGURE_PRE_CMDS += $(call PKG_MAKE_AC_VARIABLES_PACKAGE_SPECIFIC,$($(P
 $(PKG)_CONFIGURE_OPTIONS += --disable-iconv
 $(PKG)_CONFIGURE_OPTIONS += --disable-locale
 $(PKG)_CONFIGURE_OPTIONS += --without-included-popt
+$(PKG)_CONFIGURE_OPTIONS += --without-included-zlib
 $(PKG)_CONFIGURE_OPTIONS += $(if $(FREETZ_TARGET_IPV6_SUPPORT),,--disable-ipv6)
 
 $(PKG_SOURCE_DOWNLOAD)

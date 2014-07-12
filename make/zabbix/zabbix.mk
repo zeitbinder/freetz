@@ -1,6 +1,6 @@
-$(call PKG_INIT_BIN, 2.2.3)
+$(call PKG_INIT_BIN, 2.2.4)
 $(PKG)_SOURCE:=$(pkg)-$($(PKG)_VERSION).tar.gz
-$(PKG)_SOURCE_MD5:=cb1bda41a742175a445e8d32d103a315
+$(PKG)_SOURCE_MD5:=ea595612988b925ffcd702bee5a2deda
 $(PKG)_SITE:=@SF/$(pkg)
 
 # sender & get should actually be installed to 'bin' and not 'sbin'... but in order to simplify the Makefile we install them all to 'sbin'
@@ -15,7 +15,7 @@ $(PKG)_CATEGORY:=Unstable
 
 $(PKG)_DEPENDS_ON += sqlite
 ifeq ($(strip $(FREETZ_TARGET_UCLIBC_0_9_28)),y)
-$(PKG)_DEPENDS_ON += libiconv
+$(PKG)_DEPENDS_ON += iconv
 endif
 
 $(PKG)_REBUILD_SUBOPTS += FREETZ_TARGET_IPV6_SUPPORT

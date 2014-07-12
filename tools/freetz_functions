@@ -3,9 +3,10 @@
 #linkbox_remove <menu-name>
 #removes links within a box on the left
 linkbox_remove() {
-	local linkbox_file="${HTML_LANG_MOD_DIR}/templates/menu_page_head.html"
-	local linkbox_row=$(cat $linkbox_file |nl| sed -n "s/^ *\([0-9]*\).*menu.write_menu('$1')$/\1/p")
-	modsed "$((linkbox_row-6)),$((linkbox_row+9))d" $linkbox_file
+	# replaces "if menu.show_addition_menu("$menuname") then" with "if false and ... then"
+	modsed -r \
+	  "s,(menu[.]show_additional_menu[(]([\"'])$1\2[)]),false and \1," \
+	  "${HTML_LANG_MOD_DIR}/templates/menu_page_head.html"
 }
 
 #quickstart_remove <target-link>
@@ -97,6 +98,13 @@ rm_files()
 #should be used instead of sed -i -e in patch scripts
 modsed()
 {
+	local extended_regexp=""
+
+	if [ "$1" == "-r" ]; then
+		extended_regexp="$1"
+		shift
+	fi
+
 	[ $# -le 1 ] && error 1 "modsed failed, not enough parameters."
 	case $2 in
 		#since firmware 05.55 HTML_SPEC_MOD_DIR does not exist anymore
@@ -104,7 +112,7 @@ modsed()
 	esac
 	if [ -f "$2" ]; then
 		echo2 "patching $2"
-		sed -i -e "$1" "$2" || error 1 "modsed failed editing $2 (bad sed syntax?)"
+		sed -i $extended_regexp -e "$1" "$2" || error 1 "modsed failed editing $2 (bad sed syntax?)"
 		if [ $# -ge 3 ]; then
 			grep -q "$3" "$2" || error 1 "modsed failed editing $2"
 		fi
@@ -541,4 +549,33 @@ function symlinks-abs2rel() {
 			error 1 "${FUNCNAME}: failed to convert symlink '${LINK#${TARGET_FS_ROOT}}' from '$TARGET' to '$TARGET_RELATIVE'"
 		fi
 	done
+}
+
+# joins all arguments starting from the 2nd one together using the 1st character of $1 as delimiter
+# i.e. converts $1 $2 $3 ... to $2${DELIMITER}$3${DELIMITER}$4${DELIMITER}... whereas DELIMITER=${1:0:1}
+join() {
+	(IFS="$1"; shift; echo -n "$*")
+}
+
+# $1 - file to wrap
+# $2 $3 ... - libraries to preload
+function create_LD_PRELOAD_wrapper() {
+	local file_to_wrap="$1"; shift
+	[ -f "${FILESYSTEM_MOD_DIR}${file_to_wrap}" -a -x "${FILESYSTEM_MOD_DIR}${file_to_wrap}" ] || error 1 "${FUNCNAME}: ${file_to_wrap} is expected to exist and be executable"
+	local libraries_to_preload=$(join ':' "$@")
+	[ -n "${libraries_to_preload}" ] || error 1 "${FUNCNAME}(${file_to_wrap}): no LD_PRELOAD library specified"
+
+	local bname=$(basename "$file_to_wrap")
+	local dname=$(dirname "$file_to_wrap")/avm
+
+	mkdir -p "${FILESYSTEM_MOD_DIR}${dname}"
+	mv "${FILESYSTEM_MOD_DIR}${file_to_wrap}" "${FILESYSTEM_MOD_DIR}${dname}/"
+
+	cat <<- EOF >> "${FILESYSTEM_MOD_DIR}${file_to_wrap}"
+		#!/bin/sh
+		export LD_PRELOAD="${libraries_to_preload}\${LD_PRELOAD:+:}\${LD_PRELOAD}"
+		exec ${dname}/${bname} "\$@"
+	EOF
+
+	chmod 755 "${FILESYSTEM_MOD_DIR}${file_to_wrap}"
 }

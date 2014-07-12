@@ -1,6 +1,6 @@
-$(call PKG_INIT_BIN, 1.1.2)
+$(call PKG_INIT_BIN, 1.1.3)
 $(PKG)_SOURCE:=$(pkg)-$($(PKG)_VERSION).tar.gz
-$(PKG)_SOURCE_MD5:=65cebffaf9b57bf30fbfcf2a3a3253e6
+$(PKG)_SOURCE_MD5:=879027192c89e5376cdd2ae2d1aa33b4
 $(PKG)_SITE:=@SF/minidlna
 
 $(PKG)_CONDITIONAL_PATCHES+=$(FREETZ_PACKAGE_MINIDLNA_LANG)
@@ -13,7 +13,7 @@ $(PKG)_REBUILD_SUBOPTS += FREETZ_PACKAGE_MINIDLNA_STATIC
 
 $(PKG)_DEPENDS_ON += ffmpeg libexif flac libid3tag jpeg libogg libvorbis sqlite
 ifeq ($(strip $(FREETZ_TARGET_UCLIBC_0_9_28)),y)
-$(PKG)_DEPENDS_ON += libiconv
+$(PKG)_DEPENDS_ON += iconv
 $(PKG)_ICONV_LIB += -liconv
 $(PKG)_CONFIGURE_OPTIONS += --with-libiconv-prefix="$(TARGET_TOOLCHAIN_STAGING_DIR)"
 else
