@@ -73,7 +73,7 @@ Latest changes:
     * gmp 6.0.0
     * gnu-make 4.0
     * gnutls 2.12.23
-    * HAProxy 1.5.1
+    * HAProxy 1.5.2
     * haserl 0.9.32
     * hplip 3.14.6
     * httpry 0.1.8
@@ -81,7 +81,7 @@ Latest changes:
     * jpeg 6b2
     * inadyn-mt 02.24.38
     * iodine 0.7.0
-    * lftp 4.5.2
+    * lftp 4.5.3
     * libcapi avm-(7390|7270).05.50
     * libgcrypt 1.5.3
     * libgd 2.1.0
@@ -134,6 +134,7 @@ Latest changes:
     * tmux 1.8
     * tor 0.2.4.22
     * transmission 2.84
+    * uClibc++ 0.2.5-git
     * usbutils 007
     * umurmur 0.2.14
     * unrar 5.1.6 (=rar 5.10)
