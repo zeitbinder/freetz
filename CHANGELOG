@@ -51,7 +51,7 @@ Latest changes:
 - Updated patches:
 
 - Updated packages and libs:
-    * apache 2.4.9
+    * apache 2.4.10
     * apr 1.5.1
     * apr-util 1.5.3
     * bind 9.8.4-P2
@@ -64,13 +64,13 @@ Latest changes:
     * dbus 1.8.6
     * dnsmasq 2.71
     * dosfstools 3.0.25
-    * dropbear 2014.63
+    * dropbear 2014.65
     * e2fsprogs 1.42.9
     * expat 2.1.0
     * ffmpeg 1.2.7
     * freetype 2.5.3
     * gdb 7.7.1
-    * git 2.0.3
+    * git 2.0.4
     * gmp 6.0.0
     * gnu-make 4.0
     * gnutls 2.12.23
@@ -80,9 +80,9 @@ Latest changes:
     * httpry 0.1.8
     * ImageMagick 6.8.9-5
     * jpeg 6b2
-    * inadyn-mt 02.24.38
+    * inadyn-mt 02.24.40
     * iodine 0.7.0
-    * lftp 4.5.3
+    * lftp 4.5.4
     * libcapi avm-(7390|7270).05.50
     * libgcrypt 1.5.3
     * libgd 2.1.0
@@ -109,7 +109,7 @@ Latest changes:
     * noip 2.1.9-1
     * obexftp 0.23
     * openssh 6.6p1
-    * openssl 0.9.8za/1.0.1h
+    * openssl 0.9.8zb/1.0.1i
     * openvpn 2.3.4
     * pcre 8.35
     * pcscd 1.8.11
@@ -132,7 +132,8 @@ Latest changes:
     * sqlite 3.8.5
     * sslh 1.16
     * strace 4.8
-    * subversion 1.7.17/1.8.9
+    * stunnel 5.02
+    * subversion 1.7.18/1.8.10
     * tinyproxy 1.8.3
     * tmux 1.8
     * tor 0.2.4.22
